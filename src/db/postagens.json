@@ -1,0 +1,198 @@
+[
+    {
+      "id": "1",
+      "anunciante": "João da Silva",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "imagem",
+        "url": "https://picsum.photos/600/400"
+      },
+      "legenda": "Legenda aleatória 1: Acompanhando o progresso, mais novidades em breve!",
+      "status": "Aguardando Aprovação"
+    },
+    {
+      "id": "2",
+      "anunciante": "Maria Oliveira",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "video",
+        "url": "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      "legenda": "Legenda aleatória 2: Uma nova era de anúncios interativos está chegando.",
+      "status": "Aguardando Aprovação"
+    },
+    {
+      "id": "3",
+      "anunciante": "Carlos Pereira",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "imagem",
+        "url": "https://picsum.photos/600/400"
+      },
+      "legenda": "Legenda aleatória 3: Preparando uma grande campanha de marketing.",
+      "status": "Aguardando Aprovação"
+    },
+    {
+      "id": "4",
+      "anunciante": "João da Silva",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "imagem",
+        "url": "https://picsum.photos/600/400"
+      },
+      "legenda": "Legenda aleatória 1: Acompanhando o progresso, mais novidades em breve!",
+      "status": "Aguardando Aprovação"
+    },
+    {
+      "id": "5",
+      "anunciante": "Maria Oliveira",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "video",
+        "url": "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      "legenda": "Legenda aleatória 2: Uma nova era de anúncios interativos está chegando.",
+      "status": "Aguardando Aprovação"
+    },
+    {
+      "id": "6",
+      "anunciante": "Carlos Pereira",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "imagem",
+        "url": "https://picsum.photos/600/400"
+      },
+      "legenda": "Legenda aleatória 3: Preparando uma grande campanha de marketing.",
+      "status": "Aguardando Aprovação"
+    },
+    {
+      "id": "7",
+      "anunciante": "João da Silva",
+      "link": "#",
+      "data": "29/03/2025",
+      "hora": "12:30",
+      "midia": {
+        "tipo": "imagem",
+        "url": "https://picsum.photos/600/400"
+      },
+      "legenda": "Legenda aleatória 1: Acompanhando o progresso, mais novidades em breve!",
+      "status": "Aguardando Aprovação"
+    },
+    {
+        "id": "8",
+        "anunciante": "Fernanda Lima",
+        "link": "#",
+        "data": "30/03/2025",
+        "hora": "09:45",
+        "midia": {
+          "tipo": "imagem",
+          "url": "https://picsum.photos/600/401"
+        },
+        "legenda": "Legenda aleatória 4: Novos produtos chegando, fiquem ligados!",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "9",
+        "anunciante": "Lucas Andrade",
+        "link": "#",
+        "data": "30/03/2025",
+        "hora": "10:15",
+        "midia": {
+          "tipo": "video",
+          "url": "https://www.w3schools.com/html/movie.mp4"
+        },
+        "legenda": "Legenda aleatória 5: Explore uma nova experiência em vídeo.",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "10",
+        "anunciante": "Ana Souza",
+        "link": "#",
+        "data": "30/03/2025",
+        "hora": "11:00",
+        "midia": {
+          "tipo": "imagem",
+          "url": "https://picsum.photos/600/402"
+        },
+        "legenda": "Legenda aleatória 6: A inovação começa aqui.",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "11",
+        "anunciante": "Ricardo Mendes",
+        "link": "#",
+        "data": "31/03/2025",
+        "hora": "08:20",
+        "midia": {
+          "tipo": "imagem",
+          "url": "https://picsum.photos/600/403"
+        },
+        "legenda": "Legenda aleatória 7: A campanha está só começando.",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "12",
+        "anunciante": "Camila Ribeiro",
+        "link": "#",
+        "data": "31/03/2025",
+        "hora": "08:55",
+        "midia": {
+          "tipo": "video",
+          "url": "https://www.w3schools.com/html/mov_bbb.mp4"
+        },
+        "legenda": "Legenda aleatória 8: A energia do nosso time em ação!",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "13",
+        "anunciante": "Thiago Costa",
+        "link": "#",
+        "data": "31/03/2025",
+        "hora": "09:30",
+        "midia": {
+          "tipo": "imagem",
+          "url": "https://picsum.photos/600/404"
+        },
+        "legenda": "Legenda aleatória 9: O futuro é agora.",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "14",
+        "anunciante": "Juliana Martins",
+        "link": "#",
+        "data": "31/03/2025",
+        "hora": "10:00",
+        "midia": {
+          "tipo": "video",
+          "url": "https://www.w3schools.com/html/movie.mp4"
+        },
+        "legenda": "Legenda aleatória 10: Dê o play nas suas ideias!",
+        "status": "Aguardando Aprovação"
+      },
+      {
+        "id": "15",
+        "anunciante": "Bruno Ferreira",
+        "link": "#",
+        "data": "31/03/2025",
+        "hora": "10:45",
+        "midia": {
+          "tipo": "imagem",
+          "url": "https://picsum.photos/600/405"
+        },
+        "legenda": "Legenda aleatória 11: Transformando visão em realidade.",
+        "status": "Aguardando Aprovação"
+      }
+  ]
+  

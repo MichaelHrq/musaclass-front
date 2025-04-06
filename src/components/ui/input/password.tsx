@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Input } from "./input";
+import { Input } from "../input";
 
-type InputPasswordProps = React.ComponentProps<"input"> 
+type InputPasswordProps = React.ComponentProps<"input">;
 
-export default function InputPassword(props : InputPasswordProps) {
+export default function InputPassword(props: InputPasswordProps) {
   const [show, setShow] = React.useState(false);
 
   return (

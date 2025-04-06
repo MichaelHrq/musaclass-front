@@ -1,14 +1,14 @@
+import { SearchCPF } from "@/app/gestao/anunciante/action";
 import ButtonPending from "@/components/ui/button/pending";
-import { Input } from "@/components/ui/input/input";
+import InputError from "@/components/ui/error/input";
+import { Input } from "@/components/ui/input";
 import InputField from "@/components/ui/inputField";
 import { Label } from "@/components/ui/label";
 import { SearchCpfSchema, SearchCpfType } from "@/schema/searchCpf";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputMask } from "@react-input/mask";
-import { useForm } from "react-hook-form";
-import InputError from "@/components/ui/error/input";
 import React from "react";
-import { SearchCPF } from "@/app/gestao/anunciante/action";
+import { useForm } from "react-hook-form";
 
 type PropType = {
   setAnuncios: React.Dispatch<React.SetStateAction<any>>;

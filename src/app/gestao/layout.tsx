@@ -8,7 +8,7 @@ export default function GestaoLayout({
   return (
     <>
       <HeaderGestao />
-      <main className="flex flex-col p-20 w-full">
+      <main className="flex flex-col p-4 sm:p-8 w-full items-center justify-center">
         {children}
       </main>
     </>

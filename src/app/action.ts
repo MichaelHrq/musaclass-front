@@ -4,7 +4,7 @@ import { createSession, deleteSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export async function loginAction(data: FormData) {
-  await new Promise((res) => setTimeout(res, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   if (
     data.get("email") !== "michaelhrqfs@gmail.com" ||
@@ -13,18 +13,14 @@ export async function loginAction(data: FormData) {
     return { success: false, message: "E-mail ou senha está incorreto!" };
   }
 
-  console.log('logando...')
-
-  const sessionId = [...crypto.getRandomValues(new Uint8Array(255))]
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
+  const sessionId = Math.random().toString(36).substring(2, 15);
   await createSession({ sessionId });
-  redirect("/anunciante");
+  // return { success: true, message: "Login realizado com sucesso!", redirect: '/gestao' };
+  return { success: true, message: "Login realizado com sucesso!", redirect: '/anunciante' };
 }
 
 export async function logoutAction() {
-  await new Promise((res) => setTimeout(res, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   await deleteSession();
   redirect("/");
 }
