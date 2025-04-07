@@ -3,6 +3,6 @@ import { z } from "zod";
 export const reprovarSchema = z.object({
     motivo: z
       .string()
-      .nonempty("Texto ")
+      .nonempty("Descrição do motivo é obrigatório")
       .trim()
   });

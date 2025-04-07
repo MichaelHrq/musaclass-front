@@ -17,14 +17,12 @@ export default function ButtonPending({
           <p>{label}</p>
         </Button>
       ) : (
-        <>
-          <Image
-            src="\assets\fade-stagger-circles-branco.svg"
-            alt="Loading"
-            width="30"
-            height="30"
-          />
-        </>
+        <Image
+          src="\assets\fade-stagger-circles-branco.svg"
+          alt="Loading"
+          width="30"
+          height="30"
+        />
       )}
     </div>
   );

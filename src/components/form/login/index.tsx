@@ -61,8 +61,6 @@ export default function FormLogin() {
         <InputError error={errors?.password} />
       </InputField>
 
-      <InputError error={errors?.submit} />
-
       <div className="flex justify-end cursor-pointer">
         <p className="text-sm text-neutral-400 hover:underline">
           Esqueceu sua senha?
