@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import InputPassword from "@/components/ui/input/password";
 import InputField from "@/components/ui/inputField";
 import { Label } from "@/components/ui/label";
+import useToastFetch from "@/hooks/use-fetch";
 import { loginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 type FormData = z.infer<typeof loginSchema>;
@@ -26,18 +26,17 @@ export default function FormLogin() {
   });
 
   const router = useRouter();
+  const { toastFetch } = useToastFetch();
 
   async function onSubmit(data: FormData) {
     const formData = new FormData();
     formData.append("email", data.email);
     formData.append("password", data.password);
-
-    const res = await loginAction(formData);
-    if (!res.success) {
-      return toast.error(res.message);
-    }
-    toast.success(res.message);
-    router.push(res.redirect!);
+    await toastFetch(
+      loginAction(formData),
+      "Login realizado com sucesso!",
+      '/anunciante'
+    );
   }
 
   return (

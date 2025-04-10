@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-
 type propsType = {
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   route: string;
@@ -8,38 +6,42 @@ type propsType = {
   next?: NextFetchRequestConfig;
 };
 
-type ApiResponse<T> = {
-  data: T | null;
-  error: string | null;
+export type ApiResponse = {
+  data: any | undefined;
+  error: string | undefined;
   status: number;
 };
 
-export async function fetchApi<T = any>({
-    route,
-    method,
-    body,
-    headers,
-    next,
-  }: propsType): Promise<ApiResponse<T>> {
-    try {
-      const resp = await fetch(route, { method, body, headers, next });
-  
-      if (!resp.ok) {
-        const error = await resp.json().catch(() => ({ message: resp.statusText }));
-        return { 
-          data: null, 
-          error: error.message || `HTTP error ${resp.status}`,
-          status: resp.status 
-        };
-      }
-  
-      const data = await resp.json();
-      return { data, error: null, status: resp.status };
-    } catch (error) {
+export async function fetchApi({
+  route,
+  method,
+  body,
+  headers,
+  next,
+}: propsType): Promise<ApiResponse> {
+  try {
+    const resp = await fetch(route, { method, body, headers, next });
+
+    console.log(resp);
+
+    if (!resp.ok) {
+      const error = await resp
+        .json()
+        .catch(() => ({ message: resp.statusText }));
       return {
-        data: null,
-        error: error instanceof Error ? error.message : "Unknown error",
-        status: 500,
+        data: undefined,
+        error: error.message || `HTTP error ${resp.status}`,
+        status: resp.status,
       };
     }
+
+    const data = await resp.json();
+    return { data, error: undefined, status: resp.status };
+  } catch (error) {
+    return {
+      data: undefined,
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+      status: 500,
+    };
   }
+}
