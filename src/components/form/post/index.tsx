@@ -37,7 +37,7 @@ export default function FormPost() {
     >
       <InputField>
         <InputError error={errors?.post} />
-        <Textarea autoComplete="off" {...register("post")} id="post" />
+        <Textarea placeholder="Escreva algo..." autoComplete="off" {...register("post")} id="post" />
       </InputField>
 
       <InputField>
