@@ -1,15 +1,17 @@
 'use server'
 
-export async function getAnuncioId(id: any) {
+import { AnuncioType } from "@/app/gestao/anunciante/page";
+
+export async function getAnuncioId(id: any) : Promise<AnuncioType | null> {
     await new Promise((res) => setTimeout(res, 1000));
 
     const DATA = [
-      { id: 1, name: "Anúncio 1", status: "ativo", vencimento: "2025-10-01" },
-      { id: 2, name: "Anúncio 2", status: "pendente", vencimento: "2025-11-01" },
-      { id: 3, name: "Anúncio 3", status: "ativo", vencimento: "2025-12-01" },
-      { id: 4, name: "Anúncio 4", status: "recusado", vencimento: "2025-10-15" },
-      { id: 5, name: "Anúncio 5", status: "ativo", vencimento: "2025-11-15" },
+      { id: 1, title: "Anúncio 1", status: "ativo", vencimento: "2025-10-01", url: false },
+      { id: 2, title: "Anúncio 2", status: "pendente", vencimento: "2025-11-01", url: false },
+      { id: 3, title: "Anúncio 3", status: "ativo", vencimento: "2025-12-01", url: false },
+      { id: 4, title: "Anúncio 4", status: "recusado", vencimento: "2025-10-15", url: false },
+      { id: 5, title: "Anúncio 5", status: "ativo", vencimento: "2025-11-15", url: false },
     ];
 
-    return DATA.find(item=>item.id===Number(id))
+    return DATA.find(item => item.id === Number(id)) || null;
 }

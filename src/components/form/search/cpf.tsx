@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { InputMask } from "@react-input/mask";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type PropType = {
   setAnuncios: React.Dispatch<React.SetStateAction<any>>;
@@ -25,11 +26,14 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
   });
 
   async function onSubmit(data: SearchCpfType) {
-    const formData = new FormData();
-    formData.append("cpf", data.cpf);
-    const res = await SearchCPF(formData);
+    const res = await SearchCPF(data);
     if (!res.success) {
-      return setError("submit", { type: "manual", message: res.message });
+      return toast.error(res.message);
+    }
+    if (res.data.length === 0) {
+      toast.info(res.message);
+    } else {
+      toast.success(res.message);
     }
     setAnuncios(res.data);
   }
@@ -53,7 +57,6 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
         />
         <InputError error={errors?.cpf} />
       </InputField>
-      <InputError error={errors?.submit} />
       <ButtonPending isPending={state} />
     </form>
   );

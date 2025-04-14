@@ -60,7 +60,6 @@ export default function useToastFetch() {
       return handleResponse(response, { messageSuccess, redirectSuccessTo });
     } catch (error) {
       toast.error("Erro ao processar requisição");
-      console.error(error);
       return null;
     }
   };

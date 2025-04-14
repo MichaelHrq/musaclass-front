@@ -1,6 +1,4 @@
-'use client'
-
-import { logoutAction } from "@/app/action";
+import { logoutAction } from "@/app/(auth)/action";
 import Link from "next/link";
 
 export default function HeaderAnunciante() {
@@ -15,12 +13,11 @@ export default function HeaderAnunciante() {
             </Link>
           </li>
           <li>
-            <p
-              className="hover:text-gray-400 cursor-pointer"
-              onClick={logoutAction}
-            >
-              Logout
-            </p>
+            <form action={logoutAction}> 
+              <button className="hover:text-gray-400 cursor-pointer">
+                Logout
+              </button>
+            </form>
           </li>
         </ul>
       </nav>
