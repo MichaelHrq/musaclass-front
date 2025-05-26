@@ -1,6 +1,7 @@
 "use client";
 
-import { AnuncioType } from "@/app/gestao/anunciante/page";
+
+import { AnuncioType } from "@/app/gestao/anunciante/type";
 import ListAnuncios from "@/components/list/anuncio";
 import ButtonIcon from "@/components/ui/button/icon";
 import { Ellipsis } from "lucide-react";

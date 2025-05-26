@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export default async function Home({ searchParams }: any) {
   const params = await searchParams;
 
-  if (!params.email || !params.token) redirect("/login?error=invalid-invite");
+  if (!params.email) redirect("/?error=invalid-invite");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">

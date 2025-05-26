@@ -11,7 +11,6 @@ export const SearchCpfSchema = z.object({
     .nonempty("CPF é obrigatório")
     .min(14, "CPF inválido")
     .max(14, "CPF inválido"),
-  submit: z.literal(true).optional(),
 });
 
 export const SendEmailSchema = z.object({
@@ -20,7 +19,6 @@ export const SendEmailSchema = z.object({
     .nonempty("E-mail é obrigatório")
     .email("E-mail inválido")
     .trim(),
-  submit: z.literal(true).optional(),
 });
 
 

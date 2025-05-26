@@ -1,9 +1,9 @@
-import { logoutAction } from "@/app/(auth)/action";
+import { clearTokens } from "@/lib/authTokens";
 import Link from "next/link";
 
 export default function HeaderAnunciante() {
   return (
-    <header className="flex items-center justify-between p-4 bg-[#1E1E1E] text-neutral-100">
+    <header className="flex items-center justify-between p-4 bg-[#1E1E1E] text-neutral-100 border-b border-[#444]">
       <h1 className="text-2xl font-bold">Anunciante</h1>
       <nav>
         <ul className="flex space-x-4">
@@ -13,7 +13,7 @@ export default function HeaderAnunciante() {
             </Link>
           </li>
           <li>
-            <form action={logoutAction}> 
+            <form action={clearTokens}> 
               <button className="hover:text-gray-400 cursor-pointer">
                 Logout
               </button>

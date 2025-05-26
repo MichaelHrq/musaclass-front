@@ -4,14 +4,7 @@ import FormSearchCpf from "@/components/form/search/cpf";
 import FormSendEmail from "@/components/form/send/email";
 import ListAnuncios from "@/components/list/anuncio";
 import React from "react";
-
-export type AnuncioType = {
-  id: number;
-  title: string;
-  url: boolean;
-  vencimento: string;
-  status: string;
-};
+import { AnuncioType } from "./type";
 
 export default function Anunciante() {
   const [anuncios, setAnuncios] = React.useState<AnuncioType[]>();
@@ -24,11 +17,11 @@ export default function Anunciante() {
 
         {anuncios && (
           <>
-            {anuncios.length === 0
-              ? <p className="mt-8">Nenhum anúncio encontrado</p>
-              : anuncios.map((item) => (
-                  <ListAnuncios key={item.id} item={item} />
-                ))}
+            {anuncios.length === 0 ? (
+              <p className="mt-8">Nenhum anúncio encontrado</p>
+            ) : (
+              anuncios.map((item) => <ListAnuncios key={item.id} item={item} />)
+            )}
 
             <h2 className="text-xl text-yellow-400 font-bold mt-8">
               Enviar convite

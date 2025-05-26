@@ -1,16 +1,20 @@
 "use client";
 
+import { createAnuncAction } from "@/app/(auth)/action";
 import ButtonPending from "@/components/ui/button/pending";
 import InputError from "@/components/ui/error/input";
 import { Input } from "@/components/ui/input";
 import InputPassword from "@/components/ui/input/password";
 import InputField from "@/components/ui/inputField";
 import { Label } from "@/components/ui/label";
-import useToastFetch from "@/hooks/use-fetch";
+import { cpfFormat } from "@/lib/format";
 import { cadastroSchema } from "@/schema/cadastro";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { InputMask } from "@react-input/mask";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type FormData = z.infer<typeof cadastroSchema>;
@@ -21,28 +25,37 @@ type PropsType = {
 };
 
 export default function FormCadastro({ email, token }: PropsType) {
+  const [loading, setLoading] = React.useState({
+    submit: false,
+  });
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting: state, errors },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
       email,
-      token,
+      cpf: "",
+      password: "",
+      password_confirmation: "",
     },
   });
 
   const router = useRouter();
-  const { toastFetch } = useToastFetch();
 
   async function onSubmit(data: FormData) {
-    // await toastFetch(
-    //   loginAction(data),
-    //   "Login realizado com sucesso!",
-    //   "/gestao"
-    // );
-    console.log(data);
+    try {
+      setLoading((curr) => ({ ...curr, submit: true }));
+      const resp = await createAnuncAction(JSON.stringify(data));
+      if (resp.sucess) {
+        toast.success(resp.message);
+        return router.push(resp.redirect);
+      }
+      return toast.error(resp.message);
+    } finally {
+      setLoading((curr) => ({ ...curr, submit: false }));
+    }
   }
 
   return (
@@ -56,6 +69,20 @@ export default function FormCadastro({ email, token }: PropsType) {
         </Label>
         <Input disabled autoComplete="off" {...register("email")} id="email" />
         <InputError error={errors?.email} />
+      </InputField>
+
+      <InputField>
+        <Label htmlFor="cpf" className="text-left mb-2">
+          CPF
+        </Label>
+        <InputMask
+          component={Input}
+          id="cpf"
+          autoComplete="off"
+          {...register("cpf")}
+          {...cpfFormat}
+        />
+        <InputError error={errors?.password} />
       </InputField>
 
       <InputField>
@@ -77,9 +104,9 @@ export default function FormCadastro({ email, token }: PropsType) {
         <InputError error={errors?.password_confirmation} />
       </InputField>
 
-      <InputError error={errors?.token} />
+      {/* <InputError error={errors?.token} /> */}
 
-      <ButtonPending label="Salvar" isPending={state} />
+      <ButtonPending label="Salvar" isPending={loading.submit} />
     </form>
   );
 }

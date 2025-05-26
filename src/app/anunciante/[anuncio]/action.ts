@@ -1,6 +1,7 @@
 'use server'
 
-import { AnuncioType } from "@/app/gestao/anunciante/page";
+import { AnuncioType } from "@/app/gestao/anunciante/type";
+
 
 export async function getAnuncioId(id: any) : Promise<AnuncioType | null> {
     await new Promise((res) => setTimeout(res, 1000));

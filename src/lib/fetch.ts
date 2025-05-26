@@ -1,55 +1,52 @@
-type propsType = {
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  route: string;
-  body?: BodyInit | null;
-  headers?: HeadersInit;
-  next?: NextFetchRequestConfig;
-};
+"use server";
 
-export type ApiResponse = {
-  data: any | undefined;
-  error: string | undefined;
-  status: number;
-  sucess: boolean;
-};
+import { env } from "@/locales/env";
+import { getTokens } from "./authTokens";
 
-export async function fetchApi({
-  route,
-  method,
-  body,
-  headers,
-  next,
-}: propsType): Promise<ApiResponse> {
+class ApiError extends Error {
+  constructor(
+    public status: number,
+    public message: string,
+    public data?: any
+  ) {
+    super(message);
+  }
+}
+
+export async function serverFetch<T = any>(
+  input: RequestInfo | URL,
+  init?: RequestInit
+): Promise<T> {
+  const tokens = await getTokens();
+
+  const headers = new Headers(init?.headers);
+  headers.set(
+    "Cookie",
+    `access_token=${tokens.access_token};refresh_token=${tokens.refresh_token}`
+  );
+
   try {
-    const resp = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/${route}`, {
-      method,
-      body,
+    const response = await fetch(`${env.server}${input}`, {
+      ...init,
       headers,
-      next,
+      credentials: "include",
     });
 
-    console.log(resp)
-    
-    if (!resp.ok) {
-      const error = await resp
-        .json()
-        .catch(() => ({ message: resp.statusText }));
-      return {
-        data: undefined,
-        error: error.message || `HTTP error ${resp.status}`,
-        status: resp.status,
-        sucess: false,
-      };
+    console.log(response)
+
+    if (!response.ok) {
+      console.log(await response.json())
+      console.log(await response.text())
+      const errorData = await response.json().catch(() => ({}));
+      throw new ApiError(response.status, response.statusText, errorData);
     }
 
-    const data = await resp.json();
-    return { data, error: undefined, status: resp.status, sucess: true };
-  } catch (error) {
-    return {
-      data: undefined,
-      error: error instanceof Error ? error.message : "Erro desconhecido",
-      status: 500,
-      sucess: false,
-    };
+    return await response.json();
+  } catch (error: any) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+
+    throw new ApiError(error.status, error.message, error.data);
   }
 }

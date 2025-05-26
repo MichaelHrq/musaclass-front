@@ -1,9 +1,10 @@
-import { SearchCPF } from "@/app/gestao/anunciante/action";
+import { searchCpfAction } from "@/app/gestao/anunciante/action";
 import ButtonPending from "@/components/ui/button/pending";
 import InputError from "@/components/ui/error/input";
 import { Input } from "@/components/ui/input";
 import InputField from "@/components/ui/inputField";
 import { Label } from "@/components/ui/label";
+import { cpfFormat } from "@/lib/format";
 import { SearchCpfSchema, SearchCpfType } from "@/schema/searchCpf";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputMask } from "@react-input/mask";
@@ -26,14 +27,9 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
   });
 
   async function onSubmit(data: SearchCpfType) {
-    const res = await SearchCPF(data);
+    const res = await searchCpfAction(data);
     if (!res.success) {
       return toast.error(res.message);
-    }
-    if (res.data.length === 0) {
-      toast.info(res.message);
-    } else {
-      toast.success(res.message);
     }
     setAnuncios(res.data);
   }
@@ -49,11 +45,10 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
         </Label>
         <InputMask
           component={Input}
-          mask="___.___.___-__"
-          replacement={{ _: /\d/ }}
           id="cpf"
-          {...register("cpf")}
           autoComplete="off"
+          {...register("cpf")}
+          {...cpfFormat}
         />
         <InputError error={errors?.cpf} />
       </InputField>

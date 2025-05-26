@@ -98,7 +98,7 @@
         "hora": "09:45",
         "midia": {
           "tipo": "imagem",
-          "url": "https://picsum.photos/600/401"
+          "url": "https://picsum.photos/600/400"
         },
         "legenda": "Legenda aleatória 4: Novos produtos chegando, fiquem ligados!",
         "status": "Aguardando Aprovação"
@@ -124,7 +124,7 @@
         "hora": "11:00",
         "midia": {
           "tipo": "imagem",
-          "url": "https://picsum.photos/600/402"
+          "url": "https://picsum.photos/600/400"
         },
         "legenda": "Legenda aleatória 6: A inovação começa aqui.",
         "status": "Aguardando Aprovação"
@@ -137,7 +137,7 @@
         "hora": "08:20",
         "midia": {
           "tipo": "imagem",
-          "url": "https://picsum.photos/600/403"
+          "url": "https://picsum.photos/600/400"
         },
         "legenda": "Legenda aleatória 7: A campanha está só começando.",
         "status": "Aguardando Aprovação"
@@ -163,7 +163,7 @@
         "hora": "09:30",
         "midia": {
           "tipo": "imagem",
-          "url": "https://picsum.photos/600/404"
+          "url": "https://picsum.photos/600/400"
         },
         "legenda": "Legenda aleatória 9: O futuro é agora.",
         "status": "Aguardando Aprovação"
@@ -189,7 +189,7 @@
         "hora": "10:45",
         "midia": {
           "tipo": "imagem",
-          "url": "https://picsum.photos/600/405"
+          "url": "https://picsum.photos/600/400"
         },
         "legenda": "Legenda aleatória 11: Transformando visão em realidade.",
         "status": "Aguardando Aprovação"

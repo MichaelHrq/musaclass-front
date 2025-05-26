@@ -1,34 +1,50 @@
 "use server";
 
-import { fetchApi } from "@/lib/fetch";
-import { SearchCpfType } from "@/schema/searchCpf";
+import { serverFetch } from "@/lib/fetch";
+import withAuth from "@/lib/withAuth";
+import { api } from "@/locales/api";
+import { SearchCpfType, SendEmailType } from "@/schema/searchCpf";
 
-export async function SearchCPF(data: SearchCpfType) {
-  const cpf = `?cpf=${data.cpf.replace(/[^\d]/g, "")}`;
-  const resp = await fetchApi({
-    method: "GET",
-    route: cpf,
-  });
-
-  if (resp.sucess) {
+export const searchCpfAction = withAuth(async function (data: SearchCpfType) {
+  try {
+    const resp = await serverFetch(api.gestao.searchAnuncCpf, {
+      method: "post",
+      body: JSON.stringify({ cpf: data.cpf.replace(/[^\d]/g, "") }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return {
       success: true,
-      message:
-        resp.data.length === 0
-          ? "Nenhum anúncio foi encontrado!"
-          : "Anúncios encontrados!",
-      data: resp.data,
+      message: undefined,
+      data: resp,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.data.message ?? `Falha ao buscar CPF`,
+      data: undefined,
     };
   }
+});
 
-  return { success: false, message: resp.error, data: undefined };
-}
-
-export async function SendEmail(data: FormData) {
-  await new Promise((res) => setTimeout(res, 2000));
-
-  if (data.get("email") === "michaelhrqfs@gmail.com") {
-    return { success: true, message: "Convite enviado" };
+export async function SendEmail(data: SendEmailType) {
+  try {
+    const resp = await serverFetch(api.gestao.sendInvite, {
+      method: "post",
+      body: JSON.stringify({ ...data }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return {
+      success: true,
+      message: resp?.message ?? `Convite enviado com sucesso!`,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.data.message ?? `Falha em enviar convite`,
+    };
   }
-  return { success: false, message: "Erro ao enviar convite" };
 }

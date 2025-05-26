@@ -1,4 +1,5 @@
-import { AnuncioType } from "@/app/gestao/anunciante/page";
+
+import { AnuncioType } from "@/app/gestao/anunciante/type";
 import React from "react";
 
 export default function ListAnuncios({

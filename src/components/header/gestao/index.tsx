@@ -1,9 +1,9 @@
-import { logoutAction } from "@/app/(auth)/action";
+import { clearTokens } from "@/lib/authTokens";
 import Link from "next/link";
 
 export default function HeaderGestao() {
   return (
-    <header className="flex items-center justify-between p-4 bg-[#1E1E1E] text-neutral-100">
+    <header className="flex items-center justify-between p-4 bg-[#1E1E1E] text-neutral-100 border-b border-[#444]">
       <h1 className="text-2xl font-bold">Gestão</h1>
       <nav>
         <ul className="flex space-x-4">
@@ -18,8 +18,11 @@ export default function HeaderGestao() {
             </Link>
           </li>
           <li>
-            <form action={logoutAction}>
-              <button className="hover:text-gray-400 cursor-pointer">
+            <form action={clearTokens}>
+              <button
+                type="submit"
+                className="hover:text-gray-400 cursor-pointer"
+              >
                 Logout
               </button>
             </form>

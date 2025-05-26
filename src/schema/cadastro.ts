@@ -7,7 +7,13 @@ export const cadastroSchema = z
       .nonempty("E-mail é obrigatório")
       .email("E-mail inválido")
       .trim(),
-    token: z.string({ message: "Token é obrigatório" }),
+    // token: z.string({ message: "Token é obrigatório" }),
+    cpf: z
+      .string()
+      .trim()
+      .nonempty("CPF é obrigatório")
+      .min(14, "CPF inválido")
+      .max(14, "CPF inválido"),
     password: z
       .string({ message: "Senha é obrigatória" })
       .nonempty("Senha é obrigatória"),

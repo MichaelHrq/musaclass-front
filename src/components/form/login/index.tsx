@@ -7,31 +7,39 @@ import { Input } from "@/components/ui/input";
 import InputPassword from "@/components/ui/input/password";
 import InputField from "@/components/ui/inputField";
 import { Label } from "@/components/ui/label";
-import useToastFetch from "@/hooks/use-fetch";
 import { loginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type FormData = z.infer<typeof loginSchema>;
 
 export default function FormLogin() {
+  const router = useRouter();
+  const [loading, setLoading] = React.useState({
+    submit: false,
+  });
+
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting: state, errors },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const { toastFetch } = useToastFetch();
-
   async function onSubmit(data: FormData) {
-    await toastFetch(
-      loginAction(data),
-      "Login realizado com sucesso",
-      "/gestao"
-    );
+    setLoading((curr) => ({ ...curr, submit: true }));
+    const resp = await loginAction(JSON.stringify(data));
+    setLoading((curr) => ({ ...curr, submit: false }));
+    if (resp.sucess) {
+      toast.success(resp.message);
+      return router.push(resp.redirect);
+    }
+    return toast.error(resp.message);
   }
 
   return (
@@ -61,7 +69,7 @@ export default function FormLogin() {
         </p>
       </div>
 
-      <ButtonPending label="Entrar" isPending={state} />
+      <ButtonPending label="Entrar" isPending={loading.submit} />
     </form>
   );
 }

@@ -1,6 +1,5 @@
-import React from "react";
-import getAnunciosAction from "./action";
 import Anuncios from "@/components/page/dashboard/anunciante/anuncios";
+import { getAnunciosAction } from "./action";
 
 export default async function DashboardAnct() {
   const anuncios = await getAnunciosAction();
