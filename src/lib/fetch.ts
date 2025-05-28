@@ -38,7 +38,7 @@ export async function serverFetch<T = any>(
       console.log(await response.json())
       console.log(await response.text())
       const errorData = await response.json().catch(() => ({}));
-      throw new ApiError(response.status, response.statusText, errorData);
+      throw new ApiError(response?.status, response?.statusText, errorData);
     }
 
     return await response.json();
@@ -47,6 +47,6 @@ export async function serverFetch<T = any>(
       throw error;
     }
 
-    throw new ApiError(error.status, error.message, error.data);
+    throw new ApiError(error?.status, error?.message, error?.data);
   }
 }

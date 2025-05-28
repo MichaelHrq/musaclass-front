@@ -22,7 +22,7 @@ export const searchCpfAction = withAuth(async function (data: SearchCpfType) {
   } catch (error: any) {
     return {
       success: false,
-      message: error.data.message ?? `Falha ao buscar CPF`,
+      message: error.?data?.message ?? `Falha ao buscar CPF`,
       data: undefined,
     };
   }
@@ -44,7 +44,7 @@ export async function SendEmail(data: SendEmailType) {
   } catch (error: any) {
     return {
       success: false,
-      message: error.data.message ?? `Falha em enviar convite`,
+      message: error.?data?.message ?? `Falha em enviar convite`,
     };
   }
 }

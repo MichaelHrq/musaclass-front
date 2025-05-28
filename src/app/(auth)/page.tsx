@@ -31,7 +31,7 @@ export default async function Home() {
           <p className="mt-2">
             <Link
               href="/recuperar-senha"
-              className="text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-neutral-400 hover:text-neutral-500 transition-colors"
             >
               Esqueceu sua senha?
             </Link>

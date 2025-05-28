@@ -46,7 +46,7 @@ export async function loginAction(data: string) {
     };
   } catch (error: any) {
     return {
-      message: error.data.message ?? `Falha em realizar login`,
+      message: error.?data?.message ?? `Falha em realizar login`,
       sucess: false,
       redirect: `#`,
     };
@@ -74,7 +74,7 @@ export async function createAnuncAction(data: string) {
   } catch (error: any) {
     console.log(Object.entries(error))
     return {
-      message: error.data.message ?? `Falha em realizar login`,
+      message: error.?data?.message ?? `Falha em realizar login`,
       sucess: false,
       redirect: `#`,
     };
