@@ -29,8 +29,6 @@ export async function serverFetch<T = any>(
     });
 
     console.log(`response: `, response);
-    console.log(`json: `, await response.json());
-    console.log(`text: `, await response.text());
 
     if (!response.ok) {
       console.log(`json: `, await response.json());
@@ -39,6 +37,7 @@ export async function serverFetch<T = any>(
         (await response.json().catch(() => ({}))) ?? "Erro desconhecido";
       throw new ApiError(response?.status, errorData);
     }
+
     return await response.json();
   } catch (error: any) {
     console.log(`server fetch catch:`);
