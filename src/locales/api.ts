@@ -11,11 +11,12 @@ export const api = {
     // verifyToken: "api/auth/verify-token",
   },
   gestao: {
-    searchAnuncCpf: `api/anuciante/meus-anuncios`,
+    searchAnuncCpf: `api/anuciante/buscar-anuncios`,
     sendInvite: `api/convite`,
   },
   anunc: {
-    getAnuncios: `api/anuciante`, // cpf
+    getAnuncios: `api/anuciante/meus-anuncios`, // cpf
+    getAnuncioById: `api/anuciante/meus-anuncios/`, // cpf
     updatePost: `api/anuciante/post/`, // id anunciante
     craeteFeed: `api/anuciante/midia/`, // id anunciante
   },

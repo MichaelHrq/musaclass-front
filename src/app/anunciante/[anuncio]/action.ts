@@ -1,10 +1,15 @@
 'use server'
 
 import { AnuncioType } from "@/app/gestao/anunciante/type";
+import { serverFetch } from "@/lib/fetch";
+import { api } from "@/locales/api";
 
 
-export async function getAnuncioId(id: any) : Promise<AnuncioType | null> {
-    await new Promise((res) => setTimeout(res, 1000));
+export async function getAnuncioId(id: string) : Promise<AnuncioType | null> {
+
+    const res = await serverFetch(`${api.anunc.getAnuncioById}${id}`)
+
+    console.log(res);
 
     const DATA = [
       { id: 1, title: "Anúncio 1", status: "ativo", vencimento: "2025-10-01", url: false },
