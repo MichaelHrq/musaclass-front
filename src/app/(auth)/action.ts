@@ -64,7 +64,6 @@ export async function createAnuncAction(data: string) {
       },
     }
   );
-  console.log(resp)
   try {
     return {
       message: `Cadastro realizado com sucesso!`,

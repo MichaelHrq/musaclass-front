@@ -17,6 +17,7 @@ export const api = {
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`, // cpf
     getAnuncioById: `api/anuciante/meus-anuncios/`, // cpf
+    getDados: `api/anunciate/dados/`,
     updatePost: `api/anuciante/post/`, // id anunciante
     craeteFeed: `api/anuciante/midia/`, // id anunciante
   },

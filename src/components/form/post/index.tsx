@@ -27,7 +27,7 @@ export default function FormPost() {
     if (data.midia) {
       formData.append("midia", data.midia);
     }
-    console.log({...data, tipo: data.midia.type});
+    console.log({ ...data, tipo: data.midia.type });
   }
 
   return (
@@ -37,22 +37,28 @@ export default function FormPost() {
     >
       <InputField>
         <InputError error={errors?.post} />
-        <Textarea placeholder="Escreva algo..." autoComplete="off" {...register("post")} id="post" />
+        <Textarea
+          placeholder="Escreva algo..."
+          autoComplete="off"
+          {...register("post")}
+          id="post"
+        />
       </InputField>
 
       <InputField>
         <InputError error={errors?.midia} />
         <Controller
-          name="midia"
+          name="midia" // Nome do campo no seu formulário
           control={control}
-          render={({ field: { onChange, value, ...field } }) => (
+          render={(
+            { field: { onChange, value, name, ref } } // 'ref' do RHF pode ser passado para inputRef se necessário, mas geralmente não para este tipo de wrapper
+          ) => (
             <InputUpload
-              onChange={(e) => {
-                onChange(e.target.files?.[0]);
-              }}
-              {...field}
+              value={value} // Passa o File (ou null)
+              onChange={onChange} // RHF espera que isso seja chamado com File ou null
+              // Outras props como dropzoneText, etc.
             >
-              <Button type="submit">Publicar</Button>
+              <Button type="submit">Enviar Post</Button>
             </InputUpload>
           )}
         />
