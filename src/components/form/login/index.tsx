@@ -2,11 +2,9 @@
 
 import { loginAction } from "@/app/(auth)/action";
 import ButtonPending from "@/components/ui/button/pending";
-import InputError from "@/components/ui/error/input";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import Input from "@/components/ui/input/input";
 import InputPassword from "@/components/ui/input/password";
-import InputField from "@/components/ui/inputField";
-import { Label } from "@/components/ui/label";
 import { loginSchema } from "@/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -23,13 +21,15 @@ export default function FormLogin() {
     submit: false,
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(loginSchema),
   });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   async function onSubmit(data: FormData) {
     setLoading((curr) => ({ ...curr, submit: true }));
@@ -43,27 +43,28 @@ export default function FormLogin() {
   }
 
   return (
-    <form
-      className="flex flex-col gap-6 w-full"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <InputField>
-        <Label htmlFor="email" className="text-left mb-2">
-          Email
-        </Label>
-        <Input autoComplete="off" {...register("email")} id="email" />
-        <InputError error={errors?.email} />
-      </InputField>
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 w-full"
+      >
+        <Input
+          control={control}
+          name="email"
+          autoComplete="off"
+          label="Digite seu email"
+          error={errors.email?.message}
+        />
 
-      <InputField>
-        <Label htmlFor="password" className="text-left mb-2">
-          Senha
-        </Label>
-        <InputPassword {...register("password")} id="password" />
-        <InputError error={errors?.password} />
-      </InputField>
+        <InputPassword
+          control={control}
+          name="password"
+          label="Digite sua senha"
+          error={errors.password?.message}
+        />
 
-      <ButtonPending label="Entrar" isPending={loading.submit} />
-    </form>
+        <ButtonPending label="Entrar" isPending={loading.submit} />
+      </form>
+    </Form>
   );
 }

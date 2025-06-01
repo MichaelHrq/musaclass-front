@@ -1,13 +1,26 @@
 import { z } from "zod";
 
 export const anuncioSchema = z.object({
-  telefone: z.string().nonempty("Telefone é obrigatório").trim(),
-  local: z.string({message:"É obrigatório"}).trim(),
-  cache: z.number({message:"Cachê é obrigatório"}),
-  cartao: z.string({message:"É obrigatório"}).trim(),
-  altura: z.string().nonempty("Altura é obrigatório").trim(),
-  peso: z.string().nonempty("Peso é obrigatório").trim(),
-  manequim: z.string().nonempty("Manequim é obrigatório").trim(),
-  pes: z.string().nonempty("Tamanho dos pés é obrigatório").trim(),
-  acompanha: z.string({message:"É obrigatório"}).trim(),
+  post_id: z.string().min(1, "ID do post é obrigatório"),
+  telefone: z.string().min(1, "Telefone é obrigatório"),
+  local: z
+    .array(z.string({ message: "É obrigatório" }))
+    .min(1, "É obrigatório"),
+  cache: z
+    .string({ message: "Cachê é obrigatório" })
+    .min(1, "Cachê é obrigatório"),
+  cartao: z.string({ message: "É obrigatório" }).min(1, "É obrigatório"),
+  altura: z
+    .string()
+    .nonempty("Altura é obrigatório")
+    .min(1, "Altura é obrigatório"),
+  peso: z.string().nonempty("Peso é obrigatório").min(1, "Peso é obrigatório"),
+  manequim: z.string().min(1, "Manequim é obrigatório"),
+  pes: z.string().min(1, "Tamanho dos pés é obrigatório"),
+  acompanha: z.array(
+    z.object({
+      value: z.string(),
+      label: z.string(),
+    })
+  ),
 });

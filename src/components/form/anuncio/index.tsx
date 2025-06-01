@@ -1,159 +1,122 @@
 "use client";
 
 import ButtonPending from "@/components/ui/button/pending";
-import InputError from "@/components/ui/error/input";
-import { Input } from "@/components/ui/input";
-import { InputCurrency } from "@/components/ui/input/currency";
-import InputField from "@/components/ui/inputField";
-import { Label } from "@/components/ui/label";
-import { SelectControl } from "@/components/ui/select/select-control";
+import { Form } from "@/components/ui/form";
+import Input from "@/components/ui/input/input";
+import InputMask from "@/components/ui/input/mask";
+import InputTag from "@/components/ui/input/tag";
+import MultipleSelector from "@/components/ui/select/multiple";
+import Select from "@/components/ui/select/select";
+import { phoneFormat } from "@/lib/format";
 import { anuncioSchema } from "@/schema/anuncio";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputMask } from "@react-input/mask";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Form from "..";
 
 type FormData = z.infer<typeof anuncioSchema>;
 
-export default function FormAnuncio() {
-  const defaultValues = {
-    telefone: "(92)98548-7210",
-    local: "Sim",
-    cache: 750.5,
-    cartao: "Sim",
-    altura: "1,70",
-    peso: "70",
-    manequim: "40",
-    pes: "39",
-    acompanha: "Mulheres",
-  };
+type PropsType = {
+  edit: FormData;
+};
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { isSubmitting: state, errors },
-  } = useForm({
+export default function FormAnuncio({ edit }: PropsType) {
+  const form = useForm<FormData>({
     resolver: zodResolver(anuncioSchema),
-    defaultValues,
+    defaultValues: edit,
   });
 
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    formState: { isSubmitting: state, errors },
+  } = form;
+
   async function onSubmit(data: FormData) {
-    const formData = new FormData();
     console.log(data);
   }
 
   return (
-    <Form>
-      <InputField>
-        <Label htmlFor="phone">Telefone</Label>
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 w-full"
+      >
         <InputMask
-          component={Input}
-          mask="(__)_____-____"
-          replacement={{ _: /\d/ }}
-          id="phone"
-          autoComplete="off"
-          {...register("telefone")}
+          control={control}
+          name="telefone"
+          label="Digite seu CPF"
+          error={errors.telefone?.message}
+          {...phoneFormat}
         />
-        <InputError error={errors?.telefone} />
-      </InputField>
-      <InputField>
-        <Label>Com local</Label>
-        <SelectControl
+
+        <InputTag
           control={control}
           name="local"
-          items={[
-            { value: "Sim", label: "Sim" },
-            { value: "Não", label: "Não" },
-          ]}
+          label="Local"
+          error={errors.local?.message}
         />
-        <InputError error={errors?.local} />
-      </InputField>
-      <InputField>
-        <Label htmlFor="cache">Cachê</Label>
-        <InputCurrency control={control} name="cache" />
-        <InputError error={errors?.cache} />
-      </InputField>
-      <InputField>
-        <Label>Aceita cartão</Label>
-        <SelectControl
+
+        <Input
+          control={control}
+          name="cache"
+          label="Cachê"
+          error={errors.cache?.message}
+        />
+
+        <Select
           control={control}
           name="cartao"
+          label="Aceita cartão"
+          error={errors.cartao?.message}
           items={[
             { value: "Sim", label: "Sim" },
             { value: "Não", label: "Não" },
           ]}
         />
-        <InputError error={errors?.cartao} />
-      </InputField>
-      <InputField>
-        <Label htmlFor="altura">Altura (m)</Label>
-        <InputMask
-          component={Input}
-          mask="_,__"
-          replacement={{ _: /\d/ }}
-          id="altura"
-          autoComplete="off"
-          {...register("altura")}
+
+        <Input
+          control={control}
+          name="altura"
+          label="Altura (m)"
+          error={errors.altura?.message}
         />
-        <InputError error={errors?.altura} />
-      </InputField>
-      <InputField>
-        <Label htmlFor="peso">Peso (Kg)</Label>
-        <InputMask
-          component={Input}
-          mask="___"
-          replacement={{ _: /\d/ }}
-          id="peso"
-          autoComplete="off"
-          {...register("peso")}
+
+        <Input
+          control={control}
+          name="peso"
+          label="Peso (Kg)"
+          error={errors.peso?.message}
         />
-        <InputError error={errors?.peso} />
-      </InputField>
-      <InputField>
-        <Label htmlFor="manequim">Manequim</Label>
-        <InputMask
-          component={Input}
-          mask="__"
-          replacement={{ _: /\d/ }}
-          id="manequim"
-          autoComplete="off"
-          {...register("manequim")}
+
+        <Input
+          control={control}
+          name="manequim"
+          label="Manequim"
+          error={errors.manequim?.message}
         />
-        <InputError error={errors?.manequim} />
-      </InputField>
-      <InputField>
-        <Label htmlFor="pes">Pés</Label>
-        <InputMask
-          component={Input}
-          mask="__"
-          replacement={{ _: /\d/ }}
-          id="pes"
-          autoComplete="off"
-          {...register("pes")}
+
+        <Input
+          control={control}
+          name="pes"
+          label="Pés"
+          error={errors.pes?.message}
         />
-        <InputError error={errors?.pes} />
-      </InputField>
-      <InputField>
-        <Label>Acompanha</Label>
-        <SelectControl
+
+        <MultipleSelector
           control={control}
           name="acompanha"
+          label="Acompanha"
+          error={errors.acompanha?.message}
           items={[
             { value: "Homens", label: "Homens" },
             { value: "Mulheres", label: "Mulheres" },
-            { value: "Casal", label: "Casal" },
+            { value: "Casais", label: "Casais" },
           ]}
         />
-        <InputError error={errors?.acompanha} />
-      </InputField>
 
-      <ButtonPending
-        onClick={handleSubmit(onSubmit)}
-        isPending={state}
-        label="Salvar alterações"
-      />
+        <ButtonPending isPending={state} label="Salvar alterações" />
+      </form>
     </Form>
   );
 }

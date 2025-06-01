@@ -2,15 +2,13 @@
 
 import { createAnuncAction } from "@/app/(auth)/action";
 import ButtonPending from "@/components/ui/button/pending";
-import InputError from "@/components/ui/error/input";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import Input from "@/components/ui/input/input";
+import InputMask from "@/components/ui/input/mask";
 import InputPassword from "@/components/ui/input/password";
-import InputField from "@/components/ui/inputField";
-import { Label } from "@/components/ui/label";
 import { cpfFormat } from "@/lib/format";
 import { cadastroSchema } from "@/schema/cadastro";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputMask } from "@react-input/mask";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -28,11 +26,7 @@ export default function FormCadastro({ email, token }: PropsType) {
   const [loading, setLoading] = React.useState({
     submit: false,
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
       email,
@@ -41,6 +35,12 @@ export default function FormCadastro({ email, token }: PropsType) {
       password_confirmation: "",
     },
   });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   const router = useRouter();
 
@@ -59,54 +59,43 @@ export default function FormCadastro({ email, token }: PropsType) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-6 w-full"
-    >
-      <InputField>
-        <Label htmlFor="email" className="text-left mb-2">
-          Email
-        </Label>
-        <Input disabled autoComplete="off" {...register("email")} id="email" />
-        <InputError error={errors?.email} />
-      </InputField>
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 w-full"
+      >
+      <Input
+        control={control}
+        name="email"
+        disabled
+        label="Digite seu email"
+        error={errors.email?.message}
+      />
 
-      <InputField>
-        <Label htmlFor="cpf" className="text-left mb-2">
-          CPF
-        </Label>
-        <InputMask
-          component={Input}
-          id="cpf"
-          autoComplete="off"
-          {...register("cpf")}
-          {...cpfFormat}
-        />
-        <InputError error={errors?.password} />
-      </InputField>
+      <InputMask
+        control={control}
+        name="cpf"
+        label="Digite seu CPF"
+        error={errors.cpf?.message}
+        {...cpfFormat}
+      />
 
-      <InputField>
-        <Label htmlFor="password" className="text-left mb-2">
-          Senha
-        </Label>
-        <InputPassword {...register("password")} id="password" />
-        <InputError error={errors?.password} />
-      </InputField>
+      <InputPassword
+        control={control}
+        name="password"
+        label="Digite sua senha"
+        error={errors.password?.message}
+      />
 
-      <InputField>
-        <Label htmlFor="confirmation" className="text-left mb-2">
-          Confirmação de senha
-        </Label>
-        <InputPassword
-          {...register("password_confirmation")}
-          id="confirmation"
-        />
-        <InputError error={errors?.password_confirmation} />
-      </InputField>
-
-      {/* <InputError error={errors?.token} /> */}
+      <InputPassword
+        control={control}
+        name="password_confirmation"
+        label="Confirmação de senha"
+        error={errors.password_confirmation?.message}
+      />
 
       <ButtonPending label="Salvar" isPending={loading.submit} />
-    </form>
+      </form>
+    </Form>
   );
 }

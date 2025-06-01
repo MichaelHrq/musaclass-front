@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default async function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#121212] to-[#1E1E1E] flex items-center justify-center p-4">
+    <main className="h-dvh bg-gradient-to-br from-[#121212] to-[#1E1E1E] flex items-center justify-center p-4">
       <div className="max-w-md w-full p-8 rounded-xl bg-[#1E1E1E]/90 backdrop-blur-sm border border-[#444] shadow-2xl">
         <div className="flex flex-col items-center mb-8">
           <Image

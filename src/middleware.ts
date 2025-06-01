@@ -1,14 +1,9 @@
 // src/middleware.ts
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { verifyAndRefreshTokensIfNeeded } from "./lib/authTokens";
+import { clearTokens, verifyAndRefreshTokensIfNeeded } from "./lib/authTokens";
 import jwtDecode from "./lib/jwtDecode"; // Sua função para decodificar JWT
 import { env } from "./locales/env"; // Para o nome do cookie ao limpar
-
-type DecodedRole = {
-  role?: string;
-  // Outras propriedades que seu JWT possa ter no payload
-};
 
 // Função utilitária para criar respostas de redirecionamento
 function createRedirectResponse(
@@ -35,6 +30,8 @@ function createRedirectResponse(
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
   // console.log(`Middleware: Processing request for ${pathname}`);
+
+  // await clearTokens()
 
   const verificationResult = await verifyAndRefreshTokensIfNeeded();
 

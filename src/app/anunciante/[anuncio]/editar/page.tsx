@@ -1,9 +1,12 @@
 import FormAnuncio from "@/components/form/anuncio";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getAnuncioInfos } from "../action";
 
 export default async function EditarAnuncio({ params }: any) {
   const { anuncio } = await params;
+  const infosAnunc = await getAnuncioInfos(anuncio);
+  console.log(infosAnunc)
   return (
     <div className="container flex flex-col items-center justify-center">
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg gap-6">
@@ -16,7 +19,7 @@ export default async function EditarAnuncio({ params }: any) {
             <Button>Vizualizar anúncio</Button>
           </Link>
         </div>
-        <FormAnuncio />
+        <FormAnuncio edit={infosAnunc} />
       </div>
     </div>
   );
