@@ -28,6 +28,8 @@ function createRedirectResponse(
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  // return NextResponse.next();
+
   const { pathname } = request.nextUrl;
   // console.log(`Middleware: Processing request for ${pathname}`);
 
@@ -38,13 +40,16 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   let isAuth = false;
   let currentAccessToken: string | undefined;
 
-  if (verificationResult.status === "valid" || verificationResult.status === "refreshed") {
+  if (
+    verificationResult.status === "valid" ||
+    verificationResult.status === "refreshed"
+  ) {
     isAuth = true;
     currentAccessToken = verificationResult.accessToken;
     // console.log(`Middleware: User is authenticated. Status: ${verificationResult.status}`);
-  } 
+  }
   // else {
-    // console.log(`Middleware: User is not authenticated. Reason: ${verificationResult.reason || 'unknown'}`);
+  // console.log(`Middleware: User is not authenticated. Reason: ${verificationResult.reason || 'unknown'}`);
   // }
   // Se verificationResult.status === "unauthorized", isAuth permanece false.
   // clearTokens() já foi chamado dentro de verifyAndRefreshTokensIfNeeded se uma falha crítica ocorreu.
@@ -111,7 +116,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     // Se `setTokens` foi chamado, a instância de `cookies()` já foi atualizada.
     // O Next.js deve incluir os cabeçalhos Set-Cookie automaticamente na `response`.
     return response;
-
   } else {
     // Usuário NÃO está autenticado (ou a verificação resultou em não autorizado)
     // console.log("Middleware: User not authenticated.");

@@ -100,7 +100,7 @@ export default function Header({ logo, nav }: PropsType) {
       <div
         className={`fixed inset-0 z-40 bg-black bg-opacity-50 transition-opacity duration-300 ${
           isMobileMenuOpen
-            ? "opacity-100 pointer-events-auto"
+            ? "opacity-70 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         } md:hidden`}
         onClick={() => setIsMobileMenuOpen(false)}
