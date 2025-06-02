@@ -6,7 +6,6 @@ import { getAnuncioInfos } from "../action";
 export default async function EditarAnuncio({ params }: any) {
   const { anuncio } = await params;
   const infosAnunc = await getAnuncioInfos(anuncio);
-  console.log(infosAnunc)
   return (
     <div className="container flex flex-col items-center justify-center">
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg gap-6">

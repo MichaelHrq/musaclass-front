@@ -15,10 +15,10 @@ export const api = {
     sendInvite: `api/convite`,
   },
   anunc: {
-    getAnuncios: `api/anuciante/meus-anuncios`, // cpf
-    getAnuncioById: `api/anuciante/meus-anuncios/`, // cpf
-    getDados: `api/anunciate/dados/`,
-    updatePost: `api/anuciante/post/`, // id anunciante
-    craeteFeed: `api/anuciante/midia/`, // id anunciante
+    getAnuncios: `api/anuciante/meus-anuncios`,
+    getAnuncioDadosById: `api/anuciante/dados`, // id anuncio
+    getDados: `api/anunciate/dados`,
+    updatePost: `api/anuciante/post`,
+    craeteFeed: `api/anuciante/midia`,
   },
 };

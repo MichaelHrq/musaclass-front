@@ -1,12 +1,11 @@
-// src/lib/auth-tokens.ts
-"use server"; // Pode ser útil se algumas dessas funções forem chamadas como Server Actions depois
+"use server";
 
 import { cookies } from "next/headers";
 import { env } from "@/locales/env";
 import { api } from "@/locales/api";
-import { serverFetch } from "./fetch"; // Sua função de fetch do lado do servidor
-import { encryptData, decryptData } from "./encryption"; // Suas funções de criptografia
-import jwtDecode from "./jwtDecode"; // Sua função para decodificar JWT
+import { serverFetch } from "./fetch";
+// import { encryptData, decryptData } from "./encryption";
+import jwtDecode from "./jwtDecode";
 
 export type Tokens = {
   access_token: string | undefined;
@@ -14,18 +13,18 @@ export type Tokens = {
 };
 
 export async function getTokens(): Promise<Tokens> {
-  const encryptedTokens = (await cookies()).get(env.token!)?.value;
+  const cookieStore = await cookies();
+  const encryptedTokens = cookieStore.get(env.token!)?.value;
 
   if (!encryptedTokens) {
     return { access_token: undefined, refresh_token: undefined };
   }
 
   try {
-    const decrypted = decryptData(encryptedTokens);
-    return JSON.parse(decrypted) as Tokens;
+    // const decrypted = decryptData(encryptedTokens);
+    return JSON.parse(encryptedTokens) as Tokens;
   } catch (error) {
-    console.error("Failed to decrypt/parse tokens in getTokens:", error);
-    // Se falhar a decriptografia ou parse, limpa o cookie corrompido
+    // console.error("Failed to decrypt/parse tokens in getTokens:", error);
     await clearTokensOnError();
     return { access_token: undefined, refresh_token: undefined };
   }
@@ -33,14 +32,14 @@ export async function getTokens(): Promise<Tokens> {
 
 export async function setTokens(tokens: Tokens): Promise<void> {
   if (!tokens.access_token || !tokens.refresh_token) {
-    console.warn("Attempted to set invalid tokens:", tokens);
-    await clearTokens(); // Limpa se os tokens a serem setados são inválidos
+    // console.warn("Attempted to set invalid tokens:", tokens);
+    await clearTokens();
     return;
   }
   (await cookies()).set({
-    // Removido await desnecessário
     name: env.token!,
-    value: encryptData(JSON.stringify(tokens)),
+    // value: encryptData(JSON.stringify(tokens)),
+    value: JSON.stringify(tokens),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7, // 7 dias
@@ -51,7 +50,6 @@ export async function setTokens(tokens: Tokens): Promise<void> {
 
 export async function setTokensTeste(teste: string): Promise<void> {
   (await cookies()).set({
-    // Removido await desnecessário
     name: `teste`,
     value: teste,
     httpOnly: true,
@@ -64,7 +62,6 @@ export async function setTokensTeste(teste: string): Promise<void> {
 
 export async function clearTokens(): Promise<void> {
   (await cookies()).set({
-    // Removido await desnecessário
     name: env.token!,
     value: "",
     httpOnly: true,
@@ -74,12 +71,7 @@ export async function clearTokens(): Promise<void> {
   });
 }
 
-// Função auxiliar para limpar tokens em caso de erro na obtenção/decriptografia
 async function clearTokensOnError(): Promise<void> {
-  // Esta função é similar a clearTokens, mas existe para o caso de
-  // getTokens precisar limpar um cookie corrompido sem causar loop se clearTokens também chamar getTokens.
-  // Neste setup, clearTokens não chama getTokens, então poderíamos usar clearTokens diretamente.
-  // Mas manter separado pode ser uma salvaguarda.
   (await cookies()).set({
     name: env.token!,
     value: "",
@@ -94,30 +86,27 @@ async function attemptRefreshToken(
   existingRefreshToken: string | undefined
 ): Promise<Tokens> {
   if (!existingRefreshToken) {
-    console.log("No existing refresh token provided to attemptRefreshToken.");
+    // console.log("No existing refresh token provided to attemptRefreshToken.");
     return { access_token: undefined, refresh_token: undefined };
   }
   try {
-    console.log("Attempting to refresh token with:", existingRefreshToken);
-    const newTokens = await serverFetch<Tokens>(
-      api.auth.refresh, // Endpoint da sua API para refresh
-      {
-        method: "POST",
-        body: JSON.stringify({ refresh_token: existingRefreshToken }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log("Refresh API call returned new tokens:", newTokens);
+    // console.log("Attempting to refresh token with:", existingRefreshToken);
+    const newTokens = await serverFetch<Tokens>(api.auth.refresh, {
+      method: "POST",
+      body: JSON.stringify({ refresh_token: existingRefreshToken }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log("Refresh API call returned new tokens:", newTokens);
     if (!newTokens.access_token) {
-      console.warn("Refresh API call did not return a new access_token.");
+      // console.warn("Refresh API call did not return a new access_token.");
       return { access_token: undefined, refresh_token: undefined };
     }
     return newTokens;
   } catch (error) {
-    console.error("Error during refresh token API call:", error);
-    return { access_token: undefined, refresh_token: undefined }; // Falha no refresh
+    // console.error("Error during refresh token API call:", error);
+    return { access_token: undefined, refresh_token: undefined };
   }
 }
 
@@ -132,22 +121,23 @@ export async function isTokenExpired(accessToken?: string): Promise<boolean> {
       // console.log(
       //   "isTokenExpired: 'exp' field is missing or not a number in token."
       // );
-      return true; // Considera expirado se não houver 'exp'
+      return true;
     }
     const expirationTimeInSeconds = exp;
     const nowInSeconds = Date.now() / 1000;
-    const bufferInSeconds =  5 * 60; // Buffer de 5 minutos
-    // const bufferInSeconds =  0
+    const bufferInSeconds = 5 * 60; // Buffer de 5 minutos
+    // const bufferInSeconds = 0;
 
     // console.log(
-    //   `isTokenExpired: ExpirationTime: ${new Date(
-    //     expirationTimeInSeconds * 1000
-    //   )}, Now+Buffer: ${new Date((nowInSeconds + bufferInSeconds) * 1000)}`
+    //   `isTokenExpired: ${
+    //     expirationTimeInSeconds < nowInSeconds + bufferInSeconds
+    //   }`
     // );
+
     return expirationTimeInSeconds < nowInSeconds + bufferInSeconds;
   } catch (error) {
     // console.error("isTokenExpired: Error decoding token:", error);
-    return true; // Considera expirado se houver erro ao decodificar
+    return true;
   }
 }
 
@@ -160,44 +150,42 @@ export async function verifyAndRefreshTokensIfNeeded(): Promise<VerificationOutc
   let currentTokens = await getTokens();
 
   if (!currentTokens.access_token) {
-    console.log("verifyAndRefresh: No access token found initially.");
+    // console.log("verifyAndRefresh: No access token found initially.");
     return { status: "unauthorized", reason: "no_initial_token" };
   }
 
   try {
     if (await isTokenExpired(currentTokens.access_token)) {
-      console.log(
-        "verifyAndRefresh: Access token expired. Attempting refresh."
-      );
+      // console.log(
+      //   "verifyAndRefresh: Access token expired. Attempting refresh."
+      // );
       const newTokens = await attemptRefreshToken(currentTokens.refresh_token);
-
-      console.log(newTokens)
 
       if (newTokens.access_token && newTokens.refresh_token) {
         await setTokens(newTokens);
-        console.log("verifyAndRefresh: Token refreshed and set successfully.");
+        // console.log("verifyAndRefresh: Token refreshed and set successfully.");
         return {
           status: "refreshed",
           accessToken: newTokens.access_token,
           tokens: newTokens,
         };
       } else {
-        console.log("verifyAndRefresh: Refresh failed. Clearing tokens.");
+        // console.log("verifyAndRefresh: Refresh failed. Clearing tokens.");
         await clearTokens();
         return { status: "unauthorized", reason: "refresh_failed" };
       }
     }
-    console.log("verifyAndRefresh: Access token is valid.");
+    // console.log("verifyAndRefresh: Access token is valid.");
     return {
       status: "valid",
       accessToken: currentTokens.access_token,
       tokens: currentTokens,
     };
   } catch (error: any) {
-    console.error(
-      "verifyAndRefresh: General error during verification. Clearing tokens.",
-      error.message ? error.message : error
-    );
+    // console.log(
+    //   "verifyAndRefresh: General error during verification. Clearing tokens.",
+    //   error.message ? error.message : error
+    // );
     await clearTokens();
     return { status: "unauthorized", reason: "verification_error" };
   }

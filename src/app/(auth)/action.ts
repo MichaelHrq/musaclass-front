@@ -21,8 +21,6 @@ export async function loginAction(data: string) {
     await setTokens({ access_token, refresh_token });
     const { role } = jwtDecode(access_token!);
 
-    console.log(role)
-
     if (role === `admn`) {
       return {
         message: "Login realizado com sucesso",

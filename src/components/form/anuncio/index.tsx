@@ -1,5 +1,6 @@
 "use client";
 
+import { updateDadosAnuncio } from "@/app/anunciante/[anuncio]/action";
 import ButtonPending from "@/components/ui/button/pending";
 import { Form } from "@/components/ui/form";
 import Input from "@/components/ui/input/input";
@@ -8,19 +9,20 @@ import InputTag from "@/components/ui/input/tag";
 import MultipleSelector from "@/components/ui/select/multiple";
 import Select from "@/components/ui/select/select";
 import { phoneFormat } from "@/lib/format";
-import { anuncioSchema } from "@/schema/anuncio";
+import { anuncioSchema, AnuncioType } from "@/schema/anuncio";
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-type FormData = z.infer<typeof anuncioSchema>;
 
 type PropsType = {
-  edit: FormData;
+  edit: AnuncioType;
 };
 
 export default function FormAnuncio({ edit }: PropsType) {
-  const form = useForm<FormData>({
+  const [loading, setLoading] = React.useState({
+    submit: false,
+  });
+  const form = useForm<AnuncioType>({
     resolver: zodResolver(anuncioSchema),
     defaultValues: edit,
   });
@@ -28,12 +30,12 @@ export default function FormAnuncio({ edit }: PropsType) {
   const {
     control,
     handleSubmit,
-    getValues,
     formState: { isSubmitting: state, errors },
   } = form;
 
-  async function onSubmit(data: FormData) {
-    console.log(data);
+  async function onSubmit(data: AnuncioType) {
+    setLoading((cur) => ({ ...cur, submit: true }));
+    await updateDadosAnuncio(data);
   }
 
   return (

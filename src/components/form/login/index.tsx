@@ -51,7 +51,7 @@ export default function FormLogin() {
         <Input
           control={control}
           name="email"
-          autoComplete="off"
+          // autoComplete="off"
           label="Digite seu email"
           error={errors.email?.message}
         />

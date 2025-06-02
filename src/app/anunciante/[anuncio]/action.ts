@@ -3,6 +3,10 @@
 import { phoneFormat } from "@/lib/format";
 import { format } from "@react-input/mask";
 import { getAnunciosAction } from "../action";
+import { serverFetch } from "@/lib/fetch";
+import { api } from "@/locales/api";
+import { AnuncioType } from "@/schema/anuncio";
+import withAuth from "@/lib/withAuth";
 
 export async function getAnuncioId(id: string) {
   const anuncios = await getAnunciosAction();
@@ -25,26 +29,46 @@ type getAnuncioInfosType = {
 };
 
 export async function getAnuncioInfos(id: string) {
-  const resp = await fetch(
-    `https://musaclass.com.br/wp-json/anuncios/v1/anuncio/${id}/dados`
+  const resp = await serverFetch<getAnuncioInfosType>(
+    `${api.anunc.getAnuncioDadosById}/${id}`
   );
-  const infos: getAnuncioInfosType = await resp.json();
   return {
-    post_id: infos.post_id.toString(),
+    post_id: resp.post_id.toString(),
     telefone: format(
-      infos.meta.whatsapp_acompanhante.replace(/\D/g, ""),
+      resp.meta.whatsapp_acompanhante.replace(/\D/g, ""),
       phoneFormat
     ),
-    local: infos.meta.novoatendimento_acompanhante,
-    cache: infos.meta.cache_acompanhante,
-    cartao: infos.meta.cartao_acompanhante,
-    altura: infos.meta.novoaltura_acompanhante,
-    peso: infos.meta.novopeso_acompanhante,
-    manequim: infos.meta.quadril_acompanhante,
-    pes: infos.meta.novopes_acompanhante,
-    acompanha: infos.meta.novoacompanha_acompanhante.map((item) => ({
+    local: resp.meta.novoatendimento_acompanhante,
+    cache: resp.meta.cache_acompanhante,
+    cartao: resp.meta.cartao_acompanhante,
+    altura: resp.meta.novoaltura_acompanhante,
+    peso: resp.meta.novopeso_acompanhante,
+    manequim: resp.meta.quadril_acompanhante,
+    pes: resp.meta.novopes_acompanhante,
+    acompanha: resp.meta.novoacompanha_acompanhante.map((item) => ({
       value: item,
       label: item,
     })),
   };
 }
+
+// export async function updateDadosAnuncio(data: AnuncioType) = withAuth()
+
+export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
+  const submit = {
+    ...data,
+    acompanha: data.acompanha.map((item) => item.value),
+  };
+
+  try {
+    const resp = await serverFetch<getAnuncioInfosType>(
+      `${api.anunc.getAnuncioDadosById}/${data.post_id}`,
+      {
+        method: "post",
+        body: JSON.stringify(submit),
+      }
+    );
+  } catch (error: any) {
+    console.log(Object.entries(error));
+  }
+});

@@ -14,7 +14,7 @@ export const anuncioSchema = z.object({
     .string()
     .nonempty("Altura é obrigatório")
     .min(1, "Altura é obrigatório"),
-  peso: z.string().nonempty("Peso é obrigatório").min(1, "Peso é obrigatório"),
+  peso: z.string().min(1, "Peso é obrigatório"),
   manequim: z.string().min(1, "Manequim é obrigatório"),
   pes: z.string().min(1, "Tamanho dos pés é obrigatório"),
   acompanha: z.array(
@@ -24,3 +24,6 @@ export const anuncioSchema = z.object({
     })
   ),
 });
+
+export type AnuncioType = z.infer<typeof anuncioSchema>;
+

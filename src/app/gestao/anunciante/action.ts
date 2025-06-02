@@ -5,7 +5,7 @@ import withAuth from "@/lib/withAuth";
 import { api } from "@/locales/api";
 import { SearchCpfType, SendEmailType } from "@/schema/searchCpf";
 
-export const searchCpfAction = withAuth(async function (data: SearchCpfType) {
+export const searchCpfAction = withAuth(async (data: SearchCpfType) => {
   try {
     const resp = await serverFetch(api.gestao.searchAnuncCpf, {
       method: "post",

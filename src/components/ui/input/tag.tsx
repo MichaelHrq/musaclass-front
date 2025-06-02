@@ -38,7 +38,7 @@ export default function InputTag<T extends FieldValues>({
             <InputTags
               value={field.value}
               onChange={field.onChange}
-              placeholder="Digite valores, separados por vírgula ou enter..."
+              placeholder="Digite valores, separados por vírgula..."
             />
           </FormControl>
           <FormDescription>{description}</FormDescription>
