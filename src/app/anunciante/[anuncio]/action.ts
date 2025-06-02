@@ -62,13 +62,21 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
 
   try {
     const resp = await serverFetch<getAnuncioInfosType>(
-      `${api.anunc.getAnuncioDadosById}/${data.post_id}`,
+      `${api.anunc.updateAnuncio}/${data.post_id}`,
       {
         method: "post",
         body: JSON.stringify(submit),
       }
     );
+    return {
+      sucess: true,
+      message: "Anúncio atualizado com sucesso",
+    };
   } catch (error: any) {
     console.log(Object.entries(error));
+    return {
+      sucess: false,
+      message: "Falha em atualizar anúncio",
+    };
   }
 });

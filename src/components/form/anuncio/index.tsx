@@ -13,6 +13,7 @@ import { anuncioSchema, AnuncioType } from "@/schema/anuncio";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type PropsType = {
   edit: AnuncioType;
@@ -35,7 +36,11 @@ export default function FormAnuncio({ edit }: PropsType) {
 
   async function onSubmit(data: AnuncioType) {
     setLoading((cur) => ({ ...cur, submit: true }));
-    await updateDadosAnuncio(data);
+    const resp = await updateDadosAnuncio(data);
+    if (resp.sucess) {
+      return toast.success(resp.message);
+    }
+    return toast.error(resp.message);
   }
 
   return (
