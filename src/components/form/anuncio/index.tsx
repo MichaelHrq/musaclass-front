@@ -52,7 +52,7 @@ export default function FormAnuncio({ edit }: PropsType) {
         <InputMask
           control={control}
           name="telefone"
-          label="Digite seu CPF"
+          label="Digite seu telefone"
           error={errors.telefone?.message}
           {...phoneFormat}
         />
