@@ -51,31 +51,31 @@ export default function FormAnuncio({ edit }: PropsType) {
       >
         <InputMask
           control={control}
-          name="telefone"
+          name="whatsapp_acompanhante"
           label="Digite seu telefone"
-          error={errors.telefone?.message}
+          error={errors.whatsapp_acompanhante?.message}
           {...phoneFormat}
         />
 
         <InputTag
           control={control}
-          name="local"
+          name="novoatendimento_acompanhante"
           label="Local"
-          error={errors.local?.message}
+          error={errors.novoatendimento_acompanhante?.message}
         />
 
         <Input
           control={control}
-          name="cache"
+          name="cache_acompanhante"
           label="Cachê"
-          error={errors.cache?.message}
+          error={errors.cache_acompanhante?.message}
         />
 
         <Select
           control={control}
-          name="cartao"
+          name="cartao_acompanhante"
           label="Aceita cartão"
-          error={errors.cartao?.message}
+          error={errors.cartao_acompanhante?.message}
           items={[
             { value: "Sim", label: "Sim" },
             { value: "Não", label: "Não" },
@@ -84,37 +84,37 @@ export default function FormAnuncio({ edit }: PropsType) {
 
         <Input
           control={control}
-          name="altura"
+          name="novoaltura_acompanhante"
           label="Altura (m)"
-          error={errors.altura?.message}
+          error={errors.novoaltura_acompanhante?.message}
         />
 
         <Input
           control={control}
-          name="peso"
+          name="novopeso_acompanhante"
           label="Peso (Kg)"
-          error={errors.peso?.message}
+          error={errors.novopeso_acompanhante?.message}
         />
 
         <Input
           control={control}
-          name="manequim"
+          name="quadril_acompanhante"
           label="Manequim"
-          error={errors.manequim?.message}
+          error={errors.quadril_acompanhante?.message}
         />
 
         <Input
           control={control}
-          name="pes"
+          name="novopes_acompanhante"
           label="Pés"
-          error={errors.pes?.message}
+          error={errors.novopes_acompanhante?.message}
         />
 
         <MultipleSelector
           control={control}
-          name="acompanha"
+          name="novoacompanha_acompanhante"
           label="Acompanha"
-          error={errors.acompanha?.message}
+          error={errors.novoacompanha_acompanhante?.message}
           items={[
             { value: "Homens", label: "Homens" },
             { value: "Mulheres", label: "Mulheres" },
