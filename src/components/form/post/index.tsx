@@ -1,6 +1,6 @@
 "use client";
 
-import ButtonPending from "@/components/ui/button/pending";
+// import ButtonPending from "@/components/ui/button/pending";
 import { Form } from "@/components/ui/form";
 import Textarea from "@/components/ui/input/area";
 import MediaPreviewInput from "@/components/ui/input/upload2";
@@ -55,7 +55,7 @@ export default function FormPost() {
         />
       </form>
 
-      <ButtonPending isPending={loading.submit} />
+      {/* <ButtonPending isPending={loading.submit} /> */}
     </Form>
   );
 }

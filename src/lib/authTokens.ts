@@ -156,9 +156,9 @@ export async function verifyAndRefreshTokensIfNeeded(): Promise<VerificationOutc
 
   try {
     if (await isTokenExpired(currentTokens.access_token)) {
-      // console.log(
-      //   "verifyAndRefresh: Access token expired. Attempting refresh."
-      // );
+      console.log(
+        "verifyAndRefresh: Access token expired. Attempting refresh."
+      );
       const newTokens = await attemptRefreshToken(currentTokens.refresh_token);
 
       if (newTokens.access_token && newTokens.refresh_token) {
@@ -175,7 +175,7 @@ export async function verifyAndRefreshTokensIfNeeded(): Promise<VerificationOutc
         return { status: "unauthorized", reason: "refresh_failed" };
       }
     }
-    // console.log("verifyAndRefresh: Access token is valid.");
+    console.log("verifyAndRefresh: Access token is valid.");
     return {
       status: "valid",
       accessToken: currentTokens.access_token,
