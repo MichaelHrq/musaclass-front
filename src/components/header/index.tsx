@@ -1,6 +1,6 @@
 'use client'
 
-import { clearTokens } from "@/lib/authTokens";
+import { logoutAction } from "@/app/(auth)/action";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -77,7 +77,7 @@ export default function Header({ logo, nav }: PropsType) {
               </li>
             ))}
             <li>
-              <form action={clearTokens}>
+              <form action={logoutAction}>
                 <button className="hover:text-gray-400 cursor-pointer">
                   Logout
                 </button>
@@ -135,7 +135,7 @@ export default function Header({ logo, nav }: PropsType) {
               </li>
             ))}
             <li>
-              <form action={clearTokens}>
+              <form action={logoutAction}>
                 <button
                   className="block py-2 hover:text-gray-400 cursor-pointer w-full text-left"
                   onClick={() => setIsMobileMenuOpen(false)}

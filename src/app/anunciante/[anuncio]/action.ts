@@ -31,7 +31,7 @@ type getAnuncioInfosType = {
 
 export async function getAnuncioInfos(id: string) {
   const resp = await serverFetch<getAnuncioInfosType>(
-    `${api.anunc.getAnuncioDadosById}/${id}`
+    `${api.anunc.getAnuncioDadosById}/${id}`,
   );
 
   console.log(resp);

@@ -1,9 +1,10 @@
 "use server";
 
-import { setTokens, Tokens } from "@/lib/authTokens";
+import { clearTokens, setTokens, Tokens } from "@/lib/authTokens";
 import { serverFetch } from "@/lib/fetch";
 import jwtDecode from "@/lib/jwtDecode";
 import { api } from "@/locales/api";
+import { redirect } from "next/navigation";
 
 export async function loginAction(data: string) {
   try {
@@ -43,6 +44,7 @@ export async function loginAction(data: string) {
       redirect: `#`,
     };
   } catch (error: any) {
+    console.log(Object.entries(error))
     return {
       message: error?.data?.message ?? `Falha em realizar login`,
       sucess: false,
@@ -76,4 +78,9 @@ export async function createAnuncAction(data: string) {
       redirect: `#`,
     };
   }
+}
+
+export async function logoutAction() {
+  await clearTokens()
+  redirect(`/`)
 }

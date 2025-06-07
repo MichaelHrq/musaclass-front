@@ -38,33 +38,18 @@ export async function serverFetch<T = any>(
     );
   }
 
+  console.log(response.headers)
+
   if (!response.ok) {
     console.error(`serverFetch: API error - Status ${response.status} for ${response.url}`);
     let errorMessage = `Erro na API: ${
       response.statusText || "Resposta inválida"
     }`;
-    let errorData: any = null;
 
-    try {
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        errorData = await response.json();
-        errorMessage =
-          errorData?.message ||
-          errorData?.error?.message ||
-          errorData?.error ||
-          errorMessage;
-      } else {
-        // Tenta ler como texto se não for JSON (ex: HTML de erro do servidor)
-        const textError = await response.text();
-        if (textError) {
-          errorMessage = textError; // Use o texto do erro se disponível e não vazio
-        }
-      }
-    } catch (e) {
-      // Falhou ao analisar o corpo da resposta de erro, mantém a mensagem baseada no statusText
-      console.error("serverFetch: Could not parse error response body -", e);
-    }
+    const errorData = await response.json();
+
+    console.log(errorData)
+
     throw new ApiError(response.status, errorMessage, errorData);
   }
 
