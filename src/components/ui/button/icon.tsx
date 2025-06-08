@@ -19,7 +19,7 @@ export default function ButtonIcon({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger {...rest} className="cursor-pointer absolute top-[20%] right-[3%] hover:bg-neutral-800 ease-in-out duration-300 rounded-full p-2">{children}</TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent className="bg-neutral-950">
           <p>{tooltip}</p>
         </TooltipContent>
       </Tooltip>
