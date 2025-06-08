@@ -38,8 +38,6 @@ export async function serverFetch<T = any>(
     );
   }
 
-  console.log(response.headers)
-
   if (!response.ok) {
     console.error(`serverFetch: API error - Status ${response.status} for ${response.url}`);
     let errorMessage = `Erro na API: ${

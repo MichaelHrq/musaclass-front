@@ -2,11 +2,13 @@
 
 import { updateDadosAnuncio } from "@/app/anunciante/[anuncio]/action";
 import ButtonPending from "@/components/ui/button/pending";
-import { Form } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox as CheckboxCustom } from "@/components/ui/custom/checkbox";
+import { Form, FormMessage } from "@/components/ui/form";
+import InputCurrency from "@/components/ui/input/currency";
 import Input from "@/components/ui/input/input";
 import InputMask from "@/components/ui/input/mask";
-import InputTag from "@/components/ui/input/tag";
-import MultipleSelector from "@/components/ui/select/multiple";
+import { Label } from "@/components/ui/label";
 import Select from "@/components/ui/select/select";
 import { phoneFormat } from "@/lib/format";
 import { anuncioSchema, AnuncioType } from "@/schema/anuncio";
@@ -31,17 +33,28 @@ export default function FormAnuncio({ edit }: PropsType) {
   const {
     control,
     handleSubmit,
+    setValue,
+    getValues,
+    watch,
     formState: { isSubmitting: state, errors },
   } = form;
 
   async function onSubmit(data: AnuncioType) {
     setLoading((cur) => ({ ...cur, submit: true }));
+    // console.log(data);
     const resp = await updateDadosAnuncio(data);
     if (resp.sucess) {
       return toast.success(resp.message);
     }
     return toast.error(resp.message);
   }
+
+  function handleCheckCache() {
+    const check = getValues()?.combinar;
+    setValue(`combinar`, !check);
+  }
+
+  const isComb = watch(`combinar`)
 
   return (
     <Form {...form}>
@@ -57,19 +70,33 @@ export default function FormAnuncio({ edit }: PropsType) {
           {...phoneFormat}
         />
 
-        <InputTag
+        <CheckboxCustom
           control={control}
           name="novoatendimento_acompanhante"
           label="Local"
           error={errors.novoatendimento_acompanhante?.message}
+          items={[{ value: "Flat próprio", label: "Flat próprio" }]}
         />
 
-        <Input
-          control={control}
-          name="cache_acompanhante"
-          label="Cachê"
-          error={errors.cache_acompanhante?.message}
-        />
+        <div>
+          <InputCurrency
+            control={control}
+            name="cache_acompanhante"
+            label="Cachê"
+            disabled={isComb}
+          />
+          <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id="terms-2"
+              checked={getValues()?.combinar}
+              onClick={handleCheckCache}
+            />
+            <div className="grid gap-2 items-end">
+              <Label htmlFor="terms-2">A Combinar</Label>
+            </div>
+          </div>
+          <FormMessage className="mt-2">{errors.cache_acompanhante?.message}</FormMessage>
+        </div>
 
         <Select
           control={control}
@@ -87,6 +114,8 @@ export default function FormAnuncio({ edit }: PropsType) {
           name="novoaltura_acompanhante"
           label="Altura (m)"
           error={errors.novoaltura_acompanhante?.message}
+          type="number"
+          step="0.01"
         />
 
         <Input
@@ -94,6 +123,7 @@ export default function FormAnuncio({ edit }: PropsType) {
           name="novopeso_acompanhante"
           label="Peso (Kg)"
           error={errors.novopeso_acompanhante?.message}
+          type="number"
         />
 
         <Input
@@ -101,6 +131,7 @@ export default function FormAnuncio({ edit }: PropsType) {
           name="quadril_acompanhante"
           label="Manequim"
           error={errors.quadril_acompanhante?.message}
+          type="number"
         />
 
         <Input
@@ -108,9 +139,10 @@ export default function FormAnuncio({ edit }: PropsType) {
           name="novopes_acompanhante"
           label="Pés"
           error={errors.novopes_acompanhante?.message}
+          type="number"
         />
 
-        <MultipleSelector
+        <CheckboxCustom
           control={control}
           name="novoacompanha_acompanhante"
           label="Acompanha"

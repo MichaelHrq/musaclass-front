@@ -1,23 +1,35 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Input } from "../input";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input as Input_ } from "@/components/ui/input";
+import { Control, FieldValues, Path } from "react-hook-form";
 
-type InputCurrencyProps<T extends FieldValues> = {
-  name: Path<T>;
+type PropsType<T extends FieldValues> = {
   control: Control<T>;
-  disabled?: boolean;
-  placeholder?: string;
-};
+  name: Path<T>;
+  label: string;
+  error?: string;
+  description?: string;
+} & React.ComponentProps<"input">;
 
-export function InputCurrency<T extends FieldValues>({
-  name,
+export default function InputCurrency<T extends FieldValues>({
   control,
-  disabled = false,
+  name,
+  label,
+  description,
   placeholder = "R$ 0,00",
-}: InputCurrencyProps<T>) {
+  error,
+  ...rest
+}: PropsType<T>) {
   return (
-    <Controller
-      name={name}
+    <FormField
       control={control}
+      name={name}
       render={({ field }) => {
         const formattedValue = field.value
           ? new Intl.NumberFormat("pt-BR", {
@@ -26,18 +38,25 @@ export function InputCurrency<T extends FieldValues>({
             }).format(Number(field.value))
           : "";
         return (
-          <Input
-            {...field}
-            value={formattedValue}
-            onChange={(e) => {
-              const rawValue = e.target.value.replace(/\D/g, "");
-              const numericValue = parseFloat(rawValue) / 100;
-              field.onChange(isNaN(numericValue) ? 0 : numericValue);
-            }}
-            id={name}
-            disabled={disabled}
-            placeholder={placeholder}
-          />
+          <FormItem className="w-full">
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <Input_
+                {...field}
+                {...rest}
+                value={formattedValue}
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/\D/g, "");
+                  const numericValue = parseFloat(rawValue) / 100;
+                  field.onChange(isNaN(numericValue) ? 0 : numericValue);
+                }}
+                id={name}
+                placeholder={placeholder}
+              />
+            </FormControl>
+            <FormDescription>{description}</FormDescription>
+            {error && <FormMessage>{error}</FormMessage>}
+          </FormItem>
         );
       }}
     />
