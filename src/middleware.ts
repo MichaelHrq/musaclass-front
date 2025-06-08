@@ -22,6 +22,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
   const verificationResult = await verifyAndRefreshTokensIfNeeded();
 
+  // return createRedirectResponse(`/`, request, true)
+
   //console.log(`pathname: `, pathname)
 
   let isAuth = false;

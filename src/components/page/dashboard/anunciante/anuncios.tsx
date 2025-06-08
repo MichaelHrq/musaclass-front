@@ -15,7 +15,7 @@ export default function Anuncios({ items }: { items?: AnuncioType[] }) {
             <ListAnuncios item={item} />
             <ButtonIcon tooltip="Ver detalhes">
               <Link href={`anunciante/${item.id}`}>
-                <Ellipsis />
+                <Ellipsis size={18} />
               </Link>
             </ButtonIcon>
           </div>

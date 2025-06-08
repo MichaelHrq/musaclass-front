@@ -94,7 +94,7 @@ export default function FormAnuncio({ edit }: PropsType) {
               onClick={handleCheckCache}
             />
             <div className="grid gap-2 items-end">
-              <Label htmlFor="terms-2">A Combinar</Label>
+              <Label htmlFor="terms-2" className="text-xs md:text-sm">A Combinar</Label>
             </div>
           </div>
           <FormMessage className="mt-2">{errors.cache_acompanhante?.message}</FormMessage>

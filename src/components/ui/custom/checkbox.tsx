@@ -67,7 +67,7 @@ export function Checkbox<T extends FieldValues>({
                         }}
                       />
                     </FormControl>
-                    <FormLabel className="text-sm font-normal">
+                    <FormLabel className="text-xs md:text-sm font-normal">
                       {item.label}
                     </FormLabel>
                   </FormItem>
