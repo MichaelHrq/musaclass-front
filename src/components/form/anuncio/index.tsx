@@ -67,6 +67,7 @@ export default function FormAnuncio({ edit }: PropsType) {
           name="whatsapp_acompanhante"
           label="Digite seu telefone"
           error={errors.whatsapp_acompanhante?.message}
+          inputMode="numeric"
           {...phoneFormat}
         />
 
@@ -84,6 +85,7 @@ export default function FormAnuncio({ edit }: PropsType) {
             name="cache_acompanhante"
             label="Cachê"
             disabled={isComb}
+            inputMode="numeric"
           />
           <div className="flex items-start gap-3 mt-1">
             <Checkbox

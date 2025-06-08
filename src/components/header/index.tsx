@@ -57,7 +57,7 @@ export default function Header({ logo, nav }: PropsType) {
           isScrolled ? "shadow-lg" : ""
         }`}
       >
-        <Link href="/gestao" className="hover:text-gray-400">
+        <Link href="/gestao" className="hover:text-gray-400 z-50">
           <Image
             src={`https://musaclass.com.br/wp-content/themes/2022/assets/images/logomc23.png`}
             alt="logo"
@@ -107,7 +107,7 @@ export default function Header({ logo, nav }: PropsType) {
       ></div>
 
       <aside
-        className={`fixed top-0 right-0 h-full w-64 bg-[#1E1E1E] z-50 shadow-xl transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-64 bg-[#1E1E1E] z-40 shadow-xl transform transition-transform duration-300 ${
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         } md:hidden`}
       >
