@@ -1,14 +1,15 @@
 "use server";
 
+import { api } from "@/constants/api";
+import { currency } from "@/lib/currency";
 import { serverFetch } from "@/lib/fetch";
 import { phoneFormat } from "@/lib/format";
 import { isValidJson } from "@/lib/isJson";
 import withAuth from "@/lib/withAuth";
-import { api } from "@/locales/api";
 import { AnuncioType } from "@/schema/anuncio";
 import { format } from "@react-input/mask";
 import { getAnunciosAction } from "../action";
-import { currency } from "@/lib/currency";
+import { PostFormData } from "@/schema/post";
 
 export async function getAnuncioId(id: string) {
   const anuncios = await getAnunciosAction();
@@ -41,7 +42,7 @@ export async function getAnuncioInfos(id: string) {
 
   const cache = Number(resp.meta.cache_acompanhante.replace(/\D/g, "")) / 100;
 
-  console.log(resp)
+  console.log(resp);
 
   return {
     edit: {
@@ -110,3 +111,50 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
     };
   }
 });
+
+export const createFeedAction = withAuth(async (data: FormData) => {
+  try {
+    await serverFetch(`${api.anunc.craeteFeed}`, {
+      method: "post",
+      body: data,
+    });
+    return {
+      sucess: true,
+      message: "Feed salvo com sucesso",
+    };
+  } catch (error: any) {
+    return {
+      sucess: false,
+      message: error.message ?? "Falha em salvar feed",
+    };
+  }
+});
+
+type getFeedType = {
+  id: number;
+  user_id: string;
+  tipo: string;
+  titulo: string;
+  conteudo: string;
+  midia_path_master: string;
+  midia_path_thumbnail1: string;
+  midia_path_thumbnail2: string;
+  ativo: boolean;
+  publicado_em: string; // 30/07/2025 14:03:47
+  anunciante: any;
+  midia: {
+    id: number;
+    feed_id: number;
+    midia: string;
+    url: string;
+  }[];
+};
+
+export const getFeedAction = async () => {
+  try {
+    const resp = await serverFetch(api.anunc.getFeed)
+    return resp.data as getFeedType[];
+  } catch (error) {
+    return [];
+  }
+};

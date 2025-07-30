@@ -1,11 +1,10 @@
 "use server";
 
+import { env } from "@/constants/env";
 import { cookies } from "next/headers";
-import { env } from "@/locales/env";
-import { api } from "@/locales/api";
 import { serverFetch } from "./fetch";
-// import { encryptData, decryptData } from "./encryption";
 import jwtDecode from "./jwtDecode";
+import { api } from "@/constants/api";
 
 export type Tokens = {
   access_token: string | undefined;
@@ -21,10 +20,8 @@ export async function getTokens(): Promise<Tokens> {
   }
 
   try {
-    // const decrypted = decryptData(encryptedTokens);
     return JSON.parse(encryptedTokens) as Tokens;
   } catch (error) {
-    // console.error("Failed to decrypt/parse tokens in getTokens:", error);
     await clearTokensOnError();
     return { access_token: undefined, refresh_token: undefined };
   }
@@ -38,7 +35,6 @@ export async function setTokens(tokens: Tokens): Promise<void> {
   }
   (await cookies()).set({
     name: env.token!,
-    // value: encryptData(JSON.stringify(tokens)),
     value: JSON.stringify(tokens),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -93,10 +89,7 @@ async function attemptRefreshToken(
     // console.log("Attempting to refresh token with:", existingRefreshToken);
     const newTokens = await serverFetch<Tokens>(api.auth.refresh, {
       method: "POST",
-      body: JSON.stringify({ refresh_token: existingRefreshToken }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${existingRefreshToken}` },
     });
     // console.log("Refresh API call returned new tokens:", newTokens);
     if (!newTokens.access_token) {
@@ -125,7 +118,7 @@ export async function isTokenExpired(accessToken?: string): Promise<boolean> {
     }
     const expirationTimeInSeconds = exp;
     const nowInSeconds = Date.now() / 1000;
-    const bufferInSeconds = 5 * 60; // Buffer de 5 minutos
+    const bufferInSeconds = 3 * 60; // Buffer de 3 minutos
     // const bufferInSeconds = 0;
 
     // console.log(
@@ -156,9 +149,9 @@ export async function verifyAndRefreshTokensIfNeeded(): Promise<VerificationOutc
 
   try {
     if (await isTokenExpired(currentTokens.access_token)) {
-      console.log(
-        "verifyAndRefresh: Access token expired. Attempting refresh."
-      );
+      // console.log(
+      //   "verifyAndRefresh: Access token expired. Attempting refresh."
+      // );
       const newTokens = await attemptRefreshToken(currentTokens.refresh_token);
 
       if (newTokens.access_token && newTokens.refresh_token) {
@@ -175,7 +168,7 @@ export async function verifyAndRefreshTokensIfNeeded(): Promise<VerificationOutc
         return { status: "unauthorized", reason: "refresh_failed" };
       }
     }
-    console.log("verifyAndRefresh: Access token is valid.");
+    // console.log("verifyAndRefresh: Access token is valid.");
     return {
       status: "valid",
       accessToken: currentTokens.access_token,

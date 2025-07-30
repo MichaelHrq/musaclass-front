@@ -14,6 +14,8 @@ export default function withAuth<TArgs extends any[], TReturn>(
   return async function (...args: TArgs): Promise<TReturn> {
     // console.log(`withAuth: Verifying tokens before executing action: ${action.name}`);
 
+    // return await action(...args);
+
     const verificationResult: VerificationOutcome =
       await verifyAndRefreshTokensIfNeeded();
 

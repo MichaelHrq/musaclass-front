@@ -1,6 +1,7 @@
 "use client";
 
-// import ButtonPending from "@/components/ui/button/pending";
+import { createFeedAction } from "@/app/anunciante/[anuncio]/action";
+import ButtonPending from "@/components/ui/button/pending";
 import { Form } from "@/components/ui/form";
 import Textarea from "@/components/ui/input/area";
 import MediaPreviewInput from "@/components/ui/input/upload2";
@@ -8,6 +9,7 @@ import { PostFormData, postSchema } from "@/schema/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function FormPost() {
   const [loading, setLoading] = React.useState({
@@ -18,6 +20,7 @@ export default function FormPost() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = form;
 
@@ -25,12 +28,17 @@ export default function FormPost() {
     setLoading((cur) => ({ ...cur, submit: true }));
     const formData = new FormData();
     formData.append("post", data.post);
-    formData.append("tipo", data.midia.type);
-    if (data.midia) {
-      formData.append("midia", data.midia);
+    formData.append("tipo", data.file[0].type);
+    if (data.file) {
+      formData.append("file", data.file[0]);
     }
-    console.log({ ...data, tipo: data.midia.type });
+    const res = await createFeedAction(formData);
     setLoading((cur) => ({ ...cur, submit: false }));
+    if (res.sucess) {
+      reset()
+      return toast.success("Salvo com sucesso");
+    }
+    toast.error(res.message);
   }
 
   return (
@@ -48,14 +56,12 @@ export default function FormPost() {
         />
 
         <MediaPreviewInput
-          name="midia"
+          name="file"
           control={control}
           accept="image/*,video/*,.mkv"
-          
         />
+        <ButtonPending type="submit" isPending={loading.submit} />
       </form>
-
-      {/* <ButtonPending isPending={loading.submit} /> */}
     </Form>
   );
 }

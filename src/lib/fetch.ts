@@ -1,55 +1,60 @@
 "use server";
 
-import { env } from "@/locales/env";
+import { env } from "@/constants/env";
 import { getTokens } from "./authTokens";
-import { ApiError } from "./api-error";
 
 export async function serverFetch<T = any>(
   input: RequestInfo | URL,
   init?: RequestInit
 ): Promise<T> {
-  const { access_token, refresh_token } = await getTokens();
-
+  const { access_token } = await getTokens();
   const headers = new Headers(init?.headers);
 
-  if (access_token) {
+  if (access_token && input !== "auth/refresh-token") {
     headers.set("Authorization", `Bearer ${access_token}`);
-    headers.set(
-      "Cookie",
-      `access_token=${access_token};refresh_token=${refresh_token}`
-    );
   }
 
-  if (init?.body && !headers.has("Content-Type")) {
+  if (
+    init?.body &&
+    !(init.body instanceof FormData) &&
+    !headers.has("Content-Type")
+  ) {
     headers.set("Content-Type", "application/json");
   }
 
   let response: Response;
   try {
-    console.log(`serverFetch: Requesting ${env.server}${input}`);
+    // console.log(`serverFetch: Requesting ${env.server}${input}`);
+    // console.log(`${env.server}${input}`, {
+    //   ...init,
+    //   headers,
+    // });
+
     response = await fetch(`${env.server}${input}`, {
       ...init,
       headers,
     });
   } catch (networkError: any) {
-    throw new ApiError(
-      503,
+    // console.error(
+    //   `serverFetch: API error - Status 500 for ${env.server}${input}`
+    // );
+    throw new Error(
       `Erro de rede: ${networkError.message || "Serviço indisponível"}`
     );
   }
 
+  // console.log(response);
+
   if (!response.ok) {
-    console.error(`serverFetch: API error - Status ${response.status} for ${response.url}`);
-    let errorMessage = `Erro na API: ${
-      response.statusText || "Resposta inválida"
-    }`;
+    // console.error(
+    //   `API error - Status ${response.status} - ${response.statusText} - ${response.url}`
+    // );
 
-    const errorData = await response.json();
+    let errorData = await response.json();
 
-    console.log(errorData)
-
-    throw new ApiError(response.status, errorMessage, errorData);
+    throw new Error(errorData.message);
   }
 
-   return await response.json();
+  // console.log(`serverFetch: Request successful`);
+  return await response.json();
 }

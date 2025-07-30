@@ -1,4 +1,4 @@
-import { env } from '@/locales/env';
+import { env } from '@/constants/env';
 import CryptoJS from 'crypto-js';
 
 export function encryptData(data: string): string {

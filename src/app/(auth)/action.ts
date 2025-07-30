@@ -1,9 +1,9 @@
 "use server";
 
+import { api } from "@/constants/api";
 import { clearTokens, setTokens, Tokens } from "@/lib/authTokens";
 import { serverFetch } from "@/lib/fetch";
 import jwtDecode from "@/lib/jwtDecode";
-import { api } from "@/locales/api";
 import { redirect } from "next/navigation";
 
 export async function loginAction(data: string) {

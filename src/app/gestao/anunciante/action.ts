@@ -1,8 +1,8 @@
 "use server";
 
+import { api } from "@/constants/api";
 import { serverFetch } from "@/lib/fetch";
 import withAuth from "@/lib/withAuth";
-import { api } from "@/locales/api";
 import { SearchCpfType, SendEmailType } from "@/schema/searchCpf";
 
 export const searchCpfAction = withAuth(async (data: SearchCpfType) => {

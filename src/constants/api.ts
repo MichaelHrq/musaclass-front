@@ -19,6 +19,7 @@ export const api = {
     getAnuncioDadosById: `api/anuciante/dados`, // id anuncio
     getDados: `api/anunciate/dados`,
     updateAnuncio: `api/anuciante/post`, // id anuncio
-    craeteFeed: `api/anuciante/midia`,
+    craeteFeed: `api/post-feed`,
+    getFeed: `api/posts/user`,
   },
 };

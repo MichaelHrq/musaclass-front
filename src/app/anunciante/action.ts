@@ -1,7 +1,7 @@
 "use server";
 
+import { api } from "@/constants/api";
 import { serverFetch } from "@/lib/fetch";
-import { api } from "@/locales/api";
 import { AnuncioType } from "../gestao/anunciante/type";
 
 export const getAnunciosAction = async (): Promise<AnuncioType[]> => {
