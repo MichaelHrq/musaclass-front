@@ -24,20 +24,14 @@ export async function serverFetch<T = any>(
 
   let response: Response;
   try {
-    // console.log(`serverFetch: Requesting ${env.server}${input}`);
-    // console.log(`${env.server}${input}`, {
-    //   ...init,
-    //   headers,
-    // });
-
     response = await fetch(`${env.server}${input}`, {
       ...init,
       headers,
     });
   } catch (networkError: any) {
-    // console.error(
-    //   `serverFetch: API error - Status 500 for ${env.server}${input}`
-    // );
+    console.error(
+      `serverFetch: API error - Status 500 for ${env.server}${input}`
+    );
     throw new Error(
       `Erro de rede: ${networkError.message || "Serviço indisponível"}`
     );
@@ -46,15 +40,14 @@ export async function serverFetch<T = any>(
   // console.log(response);
 
   if (!response.ok) {
-    // console.error(
-    //   `API error - Status ${response.status} - ${response.statusText} - ${response.url}`
-    // );
+    console.error(
+      `API error - Status ${response.status} - ${response.statusText} - ${response.url}`
+    );
 
     let errorData = await response.json();
 
     throw new Error(errorData.message);
   }
 
-  // console.log(`serverFetch: Request successful`);
   return await response.json();
 }

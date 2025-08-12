@@ -14,7 +14,7 @@ export const getAnunciosAction = async (): Promise<AnuncioType[]> => {
 
   return resp;
   } catch (error: any) {
-    console.log(Object.entries(error))
+    console.error(error.message)
     return [] as AnuncioType[]
   }
 

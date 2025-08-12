@@ -10,6 +10,8 @@ import { AnuncioType } from "@/schema/anuncio";
 import { format } from "@react-input/mask";
 import { getAnunciosAction } from "../action";
 import { PostFormData } from "@/schema/post";
+import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export async function getAnuncioId(id: string) {
   const anuncios = await getAnunciosAction();
@@ -112,34 +114,36 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
   }
 });
 
-export const createFeedAction = withAuth(async (data: FormData) => {
-  try {
-    await serverFetch(`${api.anunc.craeteFeed}`, {
-      method: "post",
-      body: data,
-    });
-    return {
-      sucess: true,
-      message: "Feed salvo com sucesso",
-    };
-  } catch (error: any) {
-    return {
-      sucess: false,
-      message: error.message ?? "Falha em salvar feed",
-    };
+export const createFeedAction = withAuth(
+  async (data: FormData, anuncio: string) => {
+    try {
+      await serverFetch(`${api.anunc.craeteFeed}`, {
+        method: "post",
+        body: data,
+      });
+      return {
+        sucess: true,
+        message: "Feed salvo com sucesso",
+      };
+    } catch (error: any) {
+      return {
+        sucess: false,
+        message: error.message ?? "Falha em salvar feed",
+      };
+    }
   }
-});
+);
 
-type getFeedType = {
+export type getFeedType = {
   id: number;
   user_id: string;
-  tipo: string;
   titulo: string;
-  conteudo: string;
+  post: string;
   midia_path_master: string;
   midia_path_thumbnail1: string;
   midia_path_thumbnail2: string;
   ativo: boolean;
+  publish: string;
   publicado_em: string; // 30/07/2025 14:03:47
   anunciante: any;
   midia: {
@@ -147,12 +151,13 @@ type getFeedType = {
     feed_id: number;
     midia: string;
     url: string;
+    tipo: string;
   }[];
 };
 
-export const getFeedAction = async () => {
+export const getFeedAction = async (anuncio: string) => {
   try {
-    const resp = await serverFetch(api.anunc.getFeed)
+    const resp = await serverFetch(`${api.anunc.getFeedByAnuncio}/${anuncio}`);
     return resp.data as getFeedType[];
   } catch (error) {
     return [];

@@ -22,7 +22,7 @@ export const searchCpfAction = withAuth(async (data: SearchCpfType) => {
   } catch (error: any) {
     return {
       success: false,
-      message: error?.data?.message ?? `Falha ao buscar CPF`,
+      message: error?.message ?? `Falha ao buscar CPF`,
       data: undefined,
     };
   }

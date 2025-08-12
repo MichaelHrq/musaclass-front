@@ -62,10 +62,9 @@ export default function VideoPost({ url }: VideoPostProps) {
             className="w-full h-full rounded-md"
             preload="metadata"
             loop
-            muted // Muted por padrão; considere uma prop para controlar isso
-            playsInline // Importante para autoplay (mesmo que não usado) em mobile
+            muted 
+            playsInline
             onError={handleVideoError}
-            // src é definido no useEffect
           >
             Seu navegador não suporta a tag de vídeo.
           </video>

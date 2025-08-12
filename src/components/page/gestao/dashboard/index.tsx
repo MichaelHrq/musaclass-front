@@ -1,10 +1,10 @@
 // @/app/gestao/dashboard/page.tsx (ou caminho similar)
 import getPostagensAction from "@/app/gestao/action";
-import Link from "next/link";
-import TypeMedia from "./type-media"; // Ajuste o caminho se necessário
+import { MediaProps } from "@/app/gestao/types"; // Supondo que MediaProps venha de um arquivo de tipos
 import AprovarDialog from "@/components/modal/dashboard/aprovar"; // Ajuste o caminho
 import ReprovarDialog from "@/components/modal/dashboard/reprovar"; // Ajuste o caminho
-import { MediaProps } from "@/app/gestao/types"; // Supondo que MediaProps venha de um arquivo de tipos
+import Link from "next/link";
+import TypeMedia from "./type-media"; // Ajuste o caminho se necessário
 
 // Defina um tipo para suas postagens para melhor type safety
 interface Postagem {
@@ -19,6 +19,7 @@ interface Postagem {
 }
 
 export default async function Dashboard() {
+
   let postagens: Postagem[] = [];
   let errorLoadingPosts: string | null = null;
 

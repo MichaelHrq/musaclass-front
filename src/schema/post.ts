@@ -3,10 +3,20 @@ import { z } from "zod";
 const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "video/mp4"];
 
 export const postSchema = z.object({
-  post: z.string().nonempty("Descrição do post é obrigatório").trim(),
+  post_id: z.string(),
+  post: z
+    .string({ message: "Descrição do post é obrigatório" })
+    .min(1, "Descrição do post é obrigatório")
+    .trim(),
   file: z
     .any()
-    .refine((files) => files?.length > 0, "É necessário selecionar um arquivo.")
+    .refine(
+      (files) => typeof FileList === 'undefined' || files instanceof FileList,
+      {
+        message: "Ocorreu um erro com o upload do arquivo.",
+      }
+    )
+    .refine((files) => files?.length > 0, "Selecione um arquivo de imagem ou vídeo")
     .refine(
       (files) =>
         files?.[0]?.type.startsWith("image/") ||

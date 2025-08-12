@@ -44,9 +44,8 @@ export async function loginAction(data: string) {
       redirect: `#`,
     };
   } catch (error: any) {
-    console.log(Object.entries(error))
     return {
-      message: error?.data?.message ?? `Falha em realizar login`,
+      message: error?.message ?? `Falha em realizar login`,
       sucess: false,
       redirect: `#`,
     };

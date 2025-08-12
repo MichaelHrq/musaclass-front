@@ -13,6 +13,7 @@ export const api = {
   gestao: {
     searchAnuncCpf: `api/anuciante/buscar-anuncios`,
     sendInvite: `api/convite`,
+    dashboard: `api/posts`,
   },
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`,
@@ -20,6 +21,6 @@ export const api = {
     getDados: `api/anunciate/dados`,
     updateAnuncio: `api/anuciante/post`, // id anuncio
     craeteFeed: `api/post-feed`,
-    getFeed: `api/posts/user`,
+    getFeedByAnuncio: `api/posts/feed`, //id anuncio
   },
 };
