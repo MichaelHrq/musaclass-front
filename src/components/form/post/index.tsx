@@ -1,4 +1,5 @@
-"use client"
+// components/form/post.tsx
+"use client";
 
 import { createFeedAction } from "@/app/anunciante/[anuncio]/action";
 import ButtonPending from "@/components/ui/button/pending";
@@ -13,15 +14,20 @@ import { toast } from "sonner";
 
 type PropsType = {
   postId: string;
-  fetchData: () => Promise<void>
+  fetchData: () => Promise<void>;
 };
 
 export default function FormPost({ postId, fetchData }: PropsType) {
-  const [loading, setLoading] = React.useState({
-    submit: false,
-  });
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const form = useForm<PostFormData>({ resolver: zodResolver(postSchema) });
+  const form = useForm<PostFormData>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      post_id: postId,
+      post: "",
+      file: undefined,
+    },
+  });
   const {
     reset,
     control,
@@ -31,26 +37,27 @@ export default function FormPost({ postId, fetchData }: PropsType) {
   } = form;
 
   async function onSubmit(data: PostFormData) {
-    setLoading((cur) => ({ ...cur, submit: true }));
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append("post", data.post);
-    formData.append("tipo", data.file[0].type);
     formData.append("post_id", data.post_id);
-    if (data.file) {
+
+    if (data.file?.[0]) {
       formData.append("file", data.file[0]);
+      formData.append("tipo", data.file[0].type);
     }
+
     const res = await createFeedAction(formData, postId);
-    setLoading((cur) => ({ ...cur, submit: false }));
+
     if (res.sucess) {
-      reset({
-        post_id: postId,
-        post: "",
-        file: undefined,
-      });
-      fetchData()
-      return toast.success("Salvo com sucesso");
+      toast.success("Salvo com sucesso!");
+      reset(); // Reseta para os defaultValues
+      await fetchData(); // Atualiza a lista de posts com o novo item
+    } else {
+      toast.error(res.message);
     }
-    toast.error(res.message);
+
+    setIsSubmitting(false);
   }
 
   return (
@@ -74,7 +81,7 @@ export default function FormPost({ postId, fetchData }: PropsType) {
           control={control}
           accept="image/jpeg,image/jpg,image/png,video/mp4"
         />
-        <ButtonPending type="submit" isPending={loading.submit} />
+        <ButtonPending type="submit" isPending={isSubmitting} />
       </form>
     </Form>
   );

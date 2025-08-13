@@ -14,13 +14,15 @@ export const api = {
     searchAnuncCpf: `api/anuciante/buscar-anuncios`,
     sendInvite: `api/convite`,
     dashboard: `api/posts`,
+    aprovarFeed: `api/post/aprovar`, // /id_feed
   },
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`,
-    getAnuncioDadosById: `api/anuciante/dados`, // id anuncio
+    getAnuncioDadosById: `api/anuciante/dados`, // /id_anuncio
     getDados: `api/anunciate/dados`,
-    updateAnuncio: `api/anuciante/post`, // id anuncio
+    updateAnuncio: `api/anuciante/post`, // /id_anuncio
     craeteFeed: `api/post-feed`,
-    getFeedByAnuncio: `api/posts/feed`, //id anuncio
+    getFeedByAnuncio: `api/posts/feed`, // /id_anuncio
+    deleteFeed: `api/delete/feed`, // /id_feed
   },
 };

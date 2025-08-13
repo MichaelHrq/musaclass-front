@@ -1,13 +1,16 @@
+// components/ui/input/MediaPreviewInput.tsx (sugestão de novo caminho)
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ImageUp, XCircle } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { ImageUp, Trash2, XCircle } from "lucide-react";
+import React, { useEffect, useId, useMemo } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
+
 interface MediaPreviewInputProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
-  label?: string;
   accept?: string;
 }
 
@@ -16,112 +19,111 @@ export default function MediaPreviewInput<T extends FieldValues>({
   control,
   accept = "image/*,video/*",
 }: MediaPreviewInputProps<T>) {
-  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
-  const [fileType, setFileType] = useState<string | null>(null);
-
-  useEffect(() => {
-    const currentSrc = previewSrc;
-    return () => {
-      if (currentSrc && currentSrc.startsWith("blob:")) {
-        URL.revokeObjectURL(currentSrc);
-      }
-    };
-  }, [previewSrc]);
-
-  const handleFileChange = useCallback(
-    (
-      event: React.ChangeEvent<HTMLInputElement>,
-      fieldOnChange: (...event: any[]) => void
-    ) => {
-      const file = event.target.files?.[0];
-
-      if (previewSrc && previewSrc.startsWith("blob:")) {
-        URL.revokeObjectURL(previewSrc);
-      }
-
-      if (file) {
-        fieldOnChange(event.target.files);
-        setFileType(file.type);
-        setPreviewSrc(URL.createObjectURL(file));
-      } else {
-        fieldOnChange(null);
-        setPreviewSrc(null);
-        setFileType(null);
-      }
-    },
-    [previewSrc]
-  );
+  // Hook useId para gerar um ID único e conectar a label ao input, melhorando a acessibilidade.
+  const inputId = useId();
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => {
-        useEffect(() => {
-          if (!field.value && previewSrc) {
-            setPreviewSrc(null);
-            setFileType(null);
+        // Derivamos o estado diretamente do valor do formulário (`field.value`).
+        // Isso evita problemas de sincronização com estados locais (useState).
+        const file = field.value?.[0];
+
+        const { previewUrl, fileType } = useMemo(() => {
+          if (file instanceof File) {
+            return {
+              previewUrl: URL.createObjectURL(file),
+              fileType: file.type,
+            };
           }
-        }, [field.value, previewSrc]);
+          return { previewUrl: null, fileType: null };
+        }, [file]);
+
+        // Efeito para limpar o blob URL da memória quando o componente
+        // for desmontado ou a URL mudar. Essencial para evitar memory leaks.
+        useEffect(() => {
+          return () => {
+            if (previewUrl) {
+              URL.revokeObjectURL(previewUrl);
+            }
+          };
+        }, [previewUrl]);
+
+        const handleRemoveFile = () => {
+          // A forma correta de limpar o campo no react-hook-form
+          field.onChange(null);
+        };
 
         return (
           <div className="space-y-2 w-full">
-            {previewSrc ? (
-              <div className="relative group w-full border border-dashed border-[#444] rounded-lg p-2 flex flex-col items-center">
+            {previewUrl ? (
+              // --- ESTADO COM ARQUIVO SELECIONADO ---
+              <div className="relative group w-full border border-dashed border-[#444] rounded-lg p-2 flex flex-col items-center gap-3">
                 {fileType?.startsWith("image/") ? (
                   <img
-                    src={previewSrc}
-                    alt="Preview"
+                    src={previewUrl}
+                    alt="Pré-visualização"
                     className="max-h-96 w-auto object-contain rounded-md"
                   />
                 ) : fileType?.startsWith("video/") ? (
                   <video
-                    src={previewSrc}
+                    src={previewUrl}
                     controls
                     className="max-h-96 w-full rounded-md"
                   >
                     Seu navegador não suporta o elemento de vídeo.
                   </video>
                 ) : (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Tipo de arquivo não suportado para prévia.
+                  <p className="text-sm text-neutral-400">
+                    Prévia não disponível para este tipo de arquivo.
                   </p>
                 )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="mt-4"
-                  onClick={() => document.getElementById(`file-input-${name}`)?.click()}
-                >
-                  Alterar Arquivo
-                </Button>
+
+                <div className="flex items-center gap-3">
+                  {/* Usar label é semanticamente melhor para acionar o input */}
+                  <Button type="button" variant="outline" asChild>
+                    <label htmlFor={inputId} className="cursor-pointer">
+                      Alterar
+                    </label>
+                  </Button>
+                  {/* Botão para remover o arquivo */}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={handleRemoveFile}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             ) : (
-              <div
+              // --- ESTADO SEM ARQUIVO (PLACEHOLDER) ---
+              <label
+                htmlFor={inputId}
                 className="mt-1 flex flex-col items-center justify-center bg-[#2A2A2A] px-4 sm:px-6 py-10 border-2 border-[#444] border-dashed rounded-md cursor-pointer hover:border-primary transition-colors text-center"
-                onClick={() => document.getElementById(`file-input-${name}`)?.click()}
               >
                 <ImageUp size={32} className="mx-auto mb-3 text-neutral-500" />
-                <span className="block text-sm font-medium text-primary hover:text-primary-focus mb-1">
+                <span className="block text-sm font-medium text-primary mb-1">
                   Carregar um arquivo
                 </span>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  PNG, JPG, ou MP4
-                </p>
-              </div>
+                <p className="text-xs text-neutral-500">PNG, JPG, ou MP4</p>
+              </label>
             )}
+
             <Input
-              id={`file-input-${name}`}
+              id={inputId}
               type="file"
               accept={accept}
-              className="hidden"
-              onClick={(e) => {
-                (e.target as HTMLInputElement).value = "";
-              }}
-              onChange={(e) => handleFileChange(e, field.onChange)}
+              className="hidden" // O input fica escondido, a UI é controlada pela label
+              onChange={(e) => field.onChange(e.target.files)}
               ref={field.ref}
+              // O `onClick` para limpar o valor foi removido pois a lógica de `field.onChange(null)`
+              // já garante que o campo possa ser re-selecionado.
             />
+
             {error?.message && (
               <FormMessage>{error.message as React.ReactNode}</FormMessage>
             )}

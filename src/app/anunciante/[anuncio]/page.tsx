@@ -1,19 +1,26 @@
+// app/anunciante/[anuncio]/page.tsx
 import Feed from "@/components/feed";
 import ListAnuncios from "@/components/list/anuncio";
 import { Button } from "@/components/ui/button";
 import { ParamsType } from "@/interface";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getAnuncioId } from "./action";
+import { getAnuncioId, getFeedAction } from "./action";
 
 export default async function Anuncio({ params }: ParamsType) {
   const { anuncio } = await params;
 
-  const item = await getAnuncioId(anuncio as string);
+  // Busca os dados do anúncio e o feed inicial em paralelo para otimizar o carregamento
+  const [item, initialFeed] = await Promise.all([
+    getAnuncioId(anuncio as string),
+    getFeedAction(anuncio as string),
+  ]);
 
   if (!item) {
     redirect(`/anunciante`);
   }
+
+  console.log(initialFeed);
 
   return (
     <div className="container flex flex-col items-center justify-center">
@@ -25,7 +32,9 @@ export default async function Anuncio({ params }: ParamsType) {
           </Link>
         </ListAnuncios>
       </div>
-      <Feed anuncio={anuncio as string} />
+      
+      {/* Passa os dados iniciais do feed como propriedade para o componente cliente */}
+      <Feed anuncio={anuncio as string} initialFeed={initialFeed} />
     </div>
   );
 }

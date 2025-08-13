@@ -37,7 +37,7 @@ export async function serverFetch<T = any>(
     );
   }
 
-  // console.log(response);
+  console.log(response);
 
   if (!response.ok) {
     console.error(
