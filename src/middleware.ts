@@ -26,8 +26,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname, href } = request.nextUrl;
   const verificationResult = await verifyAndRefreshTokensIfNeeded();
 
-  // console.log(pathname);
-
   let isAuth = false;
   let currentAccessToken: string | undefined;
   let tokensWereRefreshed = false;
@@ -44,7 +42,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     // console.log("Middleware: User not authenticated or refresh failed.");
     if (pathname.startsWith(`/gestao`) || pathname.startsWith(`/anunciante`)) {
       // Se tentar acessar área privada sem autenticação, redireciona para a raiz e limpa os cookies
-      return createRedirectResponse(`/login?redirect=${href}`, request, true);
+      // return createRedirectResponse(`/login?redirect=${href}`, request, true);
+      return createRedirectResponse(`/login`, request, true);
     }
     // Se não é área privada, permite acesso sem autenticação (ex: login, homepage)
     return NextResponse.next();
