@@ -53,33 +53,30 @@ export async function loginAction(data: string) {
 }
 
 export async function createAnuncAction(data: string) {
-  const resp = await serverFetch(
-    api.auth.create,
-    {
-      method: "post",
-      body: data,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  await serverFetch(api.auth.create, {
+    method: "post",
+    body: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   try {
     return {
       message: `Cadastro realizado com sucesso!`,
-      sucess: true,
-      redirect: `#`,
+      success: true,
+      redirect: `/login`,
     };
   } catch (error: any) {
-    console.log(Object.entries(error))
+    console.log(Object.entries(error));
     return {
       message: error?.data?.message ?? `Falha em realizar login`,
-      sucess: false,
+      success: false,
       redirect: `#`,
     };
   }
 }
 
 export async function logoutAction() {
-  await clearTokens()
-  redirect(`/`)
+  await clearTokens();
+  redirect(`/`);
 }

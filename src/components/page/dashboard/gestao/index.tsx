@@ -60,7 +60,7 @@ export default function PostManagement() {
       return;
     }
     const res = await reprovarFeedAction(
-      rejectModal.post.id, // <<-- CORREÇÃO PRINCIPAL AQUI
+      rejectModal.post.id,
       rejectReason.trim()
     );
     if (res.success) {
@@ -99,7 +99,7 @@ export default function PostManagement() {
               height="30"
             />
           </div>
-        ) : (
+        ) : posts.length > 0 ? (
           <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full max-w-[1256px]">
             {posts.map((post) => (
               <Card
@@ -174,6 +174,10 @@ export default function PostManagement() {
                 </div>
               </Card>
             ))}
+          </div>
+        ) : (
+          <div className="bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full max-w-[1256px] flex justify-center">
+            Nenhuma postagem encontrada
           </div>
         )}
       </div>

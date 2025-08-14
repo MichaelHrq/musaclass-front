@@ -1,6 +1,7 @@
 "use client";
 
 import { updateDadosAnuncio } from "@/app/anunciante/[anuncio]/action";
+import { Button } from "@/components/ui/button";
 import ButtonPending from "@/components/ui/button/pending";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Checkbox as CheckboxCustom } from "@/components/ui/custom/checkbox";
@@ -13,6 +14,8 @@ import Select from "@/components/ui/select/select";
 import { phoneFormat } from "@/lib/format";
 import { anuncioSchema, AnuncioType } from "@/schema/anuncio";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -53,7 +56,7 @@ export default function FormAnuncio({ edit }: PropsType) {
     setValue(`combinar`, !check);
   }
 
-  const isComb = watch(`combinar`)
+  const isComb = watch(`combinar`);
 
   return (
     <Form {...form}>
@@ -93,10 +96,14 @@ export default function FormAnuncio({ edit }: PropsType) {
               onClick={handleCheckCache}
             />
             <div className="grid gap-2 items-end">
-              <Label htmlFor="terms-2" className="text-xs md:text-sm">A Combinar</Label>
+              <Label htmlFor="terms-2" className="text-xs md:text-sm">
+                A Combinar
+              </Label>
             </div>
           </div>
-          <FormMessage className="mt-2">{errors.cache_acompanhante?.message}</FormMessage>
+          <FormMessage className="mt-2">
+            {errors.cache_acompanhante?.message}
+          </FormMessage>
         </div>
 
         <Select
@@ -155,7 +162,15 @@ export default function FormAnuncio({ edit }: PropsType) {
           ]}
         />
 
-        <ButtonPending isPending={state} label="Salvar alterações" />
+        <div className="flex justify-center items-center gap-3">
+          <Link href={`/anunciante/${edit.post_id}`}>
+            <Button type="button" variant={"secondary"}>
+              <ChevronLeft />
+              Voltar
+            </Button>
+          </Link>
+          <ButtonPending isPending={state} label="Salvar alterações" />
+        </div>
       </form>
     </Form>
   );

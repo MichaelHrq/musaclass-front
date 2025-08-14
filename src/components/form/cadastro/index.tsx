@@ -48,7 +48,7 @@ export default function FormCadastro({ email, token }: PropsType) {
     try {
       setLoading((curr) => ({ ...curr, submit: true }));
       const resp = await createAnuncAction(JSON.stringify(data));
-      if (resp.sucess) {
+      if (resp.success) {
         toast.success(resp.message);
         return router.push(resp.redirect);
       }

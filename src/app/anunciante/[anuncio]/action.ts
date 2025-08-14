@@ -176,3 +176,20 @@ export const createFeedAction = withAuth(
     }
   }
 );
+
+export const deleteFeedAction = withAuth(async (idfeed: number) => {
+  try {
+    await serverFetch(`${api.anunc.deleteFeed}/${idfeed}`, {
+      method: "delete",
+    });
+    return {
+      sucess: true,
+      message: "Feed deletado com sucesso",
+    };
+  } catch (error: any) {
+    return {
+      sucess: false,
+      message: error.message ?? "Falha em deletar feed",
+    };
+  }
+});

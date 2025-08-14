@@ -1,11 +1,18 @@
 "use client";
 
-import { getFeedAction, getFeedType } from "@/app/anunciante/[anuncio]/action";
+import {
+  deleteFeedAction,
+  getFeedAction,
+  getFeedType,
+} from "@/app/anunciante/[anuncio]/action";
+import { Trash } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 import FormPost from "../form/post";
 import { Button } from "../ui/button";
-import { SquarePen, Trash } from "lucide-react";
+import { Dialog } from "../ui/dialog/dialog";
+import Loading from "../loading";
 
 type PropsType = {
   anuncio: string;
@@ -40,10 +47,29 @@ function formatarDataPublicacao(dateString: string): string {
 
 export default function Feed({ anuncio, initialFeed }: PropsType) {
   const [feed, setFeed] = useState<getFeedType[]>(initialFeed);
+  const [feedItem, setFeedItem] = useState<getFeedType>();
+  const [loading, setLoading] = useState({
+    delete: false,
+  });
+  const [showDialog, setShowDialog] = useState(false);
   const fetchData = useCallback(async () => {
     const res = await getFeedAction(anuncio);
     setFeed(res);
   }, [anuncio]);
+
+  const deleteFeedItem = async () => {
+    if (!feedItem) return;
+    setLoading((cur) => ({ ...cur, delete: true }));
+    const res = await deleteFeedAction(feedItem.id);
+    setLoading((cur) => ({ ...cur, delete: false }));
+    if (res.sucess) {
+      setFeed(feed.filter((item) => item.id !== feedItem.id));
+      setShowDialog(false);
+      setFeedItem(undefined);
+      return toast.success(res.message);
+    }
+    return toast.error(res.message);
+  };
 
   return (
     <>
@@ -51,7 +77,6 @@ export default function Feed({ anuncio, initialFeed }: PropsType) {
         <p className="text-xl md:text-2xl">Postar no Feed</p>
         <FormPost postId={anuncio as string} fetchData={fetchData} />
       </div>
-
       {feed.length > 0 ? (
         <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg space-y-6">
           <p className="text-xl md:text-2xl font-[500]">Meu Feed</p>
@@ -109,16 +134,18 @@ export default function Feed({ anuncio, initialFeed }: PropsType) {
               <p className="text-sm text-neutral-200 whitespace-pre-wrap">
                 {item.post}
               </p>
-              {/* <div className="flex gap-4 justify-end mt-2">
-                <Button className="bg-[#444444] hover:bg-[#555555]">
-                  <SquarePen />
-                  Editar
-                </Button>
-                <Button className="bg-red-700 hover:bg-red-800">
+              <div className="flex gap-4 justify-end mt-2">
+                <Button
+                  className="bg-red-700 hover:bg-red-800"
+                  onClick={() => {
+                    setFeedItem(item);
+                    setShowDialog(true);
+                  }}
+                >
                   <Trash />
                   Remover
                 </Button>
-              </div> */}
+              </div>
             </div>
           ))}
         </div>
@@ -130,6 +157,34 @@ export default function Feed({ anuncio, initialFeed }: PropsType) {
           </p>
         </div>
       )}
+
+      <Dialog
+        open={showDialog}
+        onClose={() => setShowDialog(!showDialog)}
+        title="Remover Feed"
+        subtitle="Tem certeza que deseja remover este feed? Esta ação não pode ser desfeita."
+      >
+        <div className="w-full flex justify-end gap-2 mt-4">
+          <Button
+            disabled={loading.delete}
+            onClick={() => setShowDialog(false)}
+          >
+            Cancelar
+          </Button>
+          {loading.delete ? (
+            <Button className="bg-red-700 hover:bg-red-800">
+              <Loading />
+            </Button>
+          ) : (
+            <Button
+              onClick={deleteFeedItem}
+              className="bg-red-700 hover:bg-red-800"
+            >
+              Remover
+            </Button>
+          )}
+        </div>
+      </Dialog>
     </>
   );
 }

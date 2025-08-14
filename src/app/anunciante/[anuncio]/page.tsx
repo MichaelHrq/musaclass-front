@@ -10,7 +10,6 @@ import { getAnuncioId, getFeedAction } from "./action";
 export default async function Anuncio({ params }: ParamsType) {
   const { anuncio } = await params;
 
-  // Busca os dados do anúncio e o feed inicial em paralelo para otimizar o carregamento
   const [item, initialFeed] = await Promise.all([
     getAnuncioId(anuncio as string),
     getFeedAction(anuncio as string),
@@ -33,7 +32,6 @@ export default async function Anuncio({ params }: ParamsType) {
         </ListAnuncios>
       </div>
       
-      {/* Passa os dados iniciais do feed como propriedade para o componente cliente */}
       <Feed anuncio={anuncio as string} initialFeed={initialFeed} />
     </div>
   );

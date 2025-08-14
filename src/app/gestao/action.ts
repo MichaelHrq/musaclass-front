@@ -33,7 +33,16 @@ export type getPostagensType = {
 };
 
 export async function getPostagensAction() {
-  return await serverFetch<getPostagensType>(api.gestao.dashboard);
+  try {
+    return await serverFetch<getPostagensType>(api.gestao.dashboard);
+  } catch (error) {
+    return {
+      total: 0,
+      last_page: 0,
+      current_page: 0,
+      data: [],
+    };
+  }
 }
 
 export const aprovarFeedAction = withAuth(async (id: number) => {
