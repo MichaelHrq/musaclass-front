@@ -1,16 +1,31 @@
 "use client";
 
+import { getAnunciosAction } from "@/app/anunciante/action";
 import { AnuncioType } from "@/app/gestao/anunciante/type";
 import ListAnuncios from "@/components/list/anuncio";
+import Loading from "@/components/loading";
 import ButtonIcon from "@/components/ui/button/icon";
 import { Ellipsis } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function Anuncios({ items }: { items: AnuncioType[] }) {
+export default function AnunciosList() {
+  const [anuncios, setAnuncios] = useState<AnuncioType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setAnuncios(await getAnunciosAction());
+      setLoading(false);
+    })();
+  }, []);
+
   return (
     <>
-      {items?.length > 0 ? (
-        items?.map((item) => (
+      {loading ? (
+        <Loading />
+      ) : anuncios?.length > 0 ? (
+        anuncios?.map((item) => (
           <div key={item.id} className="w-full relative">
             <ListAnuncios item={item} />
             <ButtonIcon tooltip="Ver detalhes">

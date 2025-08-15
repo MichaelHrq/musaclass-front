@@ -64,7 +64,7 @@ export default function FormPost({ postId, fetchData }: PropsType) {
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-6 w-full"
+        className="flex flex-col gap-3 w-full"
       >
         <input type="hidden" value={postId} {...register("post_id")} />
 

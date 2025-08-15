@@ -39,7 +39,7 @@ export default function FormAnuncio({ edit }: PropsType) {
     setValue,
     getValues,
     watch,
-    formState: { isSubmitting: state, errors },
+    formState: { errors },
   } = form;
 
   async function onSubmit(data: AnuncioType) {
@@ -169,7 +169,7 @@ export default function FormAnuncio({ edit }: PropsType) {
               Voltar
             </Button>
           </Link>
-          <ButtonPending isPending={state} label="Salvar alterações" />
+          <ButtonPending isPending={loading.submit} label="Salvar alterações" />
         </div>
       </form>
     </Form>
