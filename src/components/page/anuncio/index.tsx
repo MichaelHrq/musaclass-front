@@ -19,18 +19,25 @@ type PropsType = {
   anuncioId: string;
 };
 
-type dataType = {
+export type dataAnuncioPageType = {
   feed: getFeedType[];
   anuncio: AnuncioType;
 };
 
 export default function AnuncioPage({ anuncioId }: PropsType) {
-  const [data, setData] = useState<dataType>();
+  const [data, setData] = useState<dataAnuncioPageType>();
 
   const fetchData = useCallback(async () => {
     const res = await getFeedAction(anuncioId);
     setData((cur) => ({ ...cur!, feed: res }));
-  }, [anuncioId]);
+  }, []);
+
+  const onDeleteFeedItem = useCallback((id: number) => {
+    setData(cur=>({
+      ...cur!,
+      feed: cur!.feed.filter((item) => item.id !== id),
+    }))
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -38,6 +45,7 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
         getAnuncioId(anuncioId),
         getFeedAction(anuncioId),
       ]);
+      console.log({ feed, anuncio: anuncio! });
       setData({ feed, anuncio: anuncio! });
     })();
   }, []);
@@ -63,7 +71,11 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg space-y-6">
         <p className="text-xl md:text-2xl font-[500]">Meu Feed</p>
         {data?.feed ? (
-          <Feed anuncio={anuncioId} initialFeed={data.feed} />
+          <Feed
+            anuncio={anuncioId}
+            initialFeed={data.feed}
+            onDeleteFeedItem={onDeleteFeedItem}
+          />
         ) : (
           <Loading />
         )}

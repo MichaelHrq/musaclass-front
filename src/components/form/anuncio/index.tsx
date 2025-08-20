@@ -45,6 +45,7 @@ export default function FormAnuncio({ edit }: PropsType) {
   async function onSubmit(data: AnuncioType) {
     setLoading((cur) => ({ ...cur, submit: true }));
     const resp = await updateDadosAnuncio(data);
+    setLoading((cur) => ({ ...cur, submit: false }));
     if (resp.sucess) {
       return toast.success(resp.message);
     }

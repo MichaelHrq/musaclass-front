@@ -51,8 +51,8 @@ export default function FormPost({ postId, fetchData }: PropsType) {
 
     if (res.sucess) {
       toast.success("Salvo com sucesso!");
-      reset(); // Reseta para os defaultValues
-      await fetchData(); // Atualiza a lista de posts com o novo item
+      reset();
+      await fetchData();
     } else {
       toast.error(res.message);
     }

@@ -15,6 +15,7 @@ import { Dialog } from "../ui/dialog/dialog";
 type PropsType = {
   anuncio: string;
   initialFeed: getFeedType[];
+  onDeleteFeedItem: (id: number) => void
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -43,13 +44,12 @@ function formatarDataPublicacao(dateString: string): string {
   return `Data: ${dataFormatada} - Hora: ${horaFormatada}`;
 }
 
-export default function Feed({ initialFeed }: PropsType) {
-  const [feed, setFeed] = useState<getFeedType[]>(initialFeed);
+export default function Feed({ initialFeed, onDeleteFeedItem }: PropsType) {
   const [feedItem, setFeedItem] = useState<getFeedType>();
+  const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState({
     delete: false,
   });
-  const [showDialog, setShowDialog] = useState(false);
 
   const deleteFeedItem = async () => {
     if (!feedItem) return;
@@ -57,9 +57,9 @@ export default function Feed({ initialFeed }: PropsType) {
     const res = await deleteFeedAction(feedItem.id);
     setLoading((cur) => ({ ...cur, delete: false }));
     if (res.sucess) {
-      setFeed(feed.filter((item) => item.id !== feedItem.id));
       setShowDialog(false);
       setFeedItem(undefined);
+      onDeleteFeedItem(feedItem.id)
       return toast.success(res.message);
     }
     return toast.error(res.message);
@@ -67,8 +67,8 @@ export default function Feed({ initialFeed }: PropsType) {
 
   return (
     <>
-      {feed.length > 0 ? (
-        feed.map((item) => (
+      {initialFeed.length > 0 ? (
+        initialFeed.map((item) => (
           <div
             key={item.id}
             className="text-xs md:text-[16px] flex flex-col w-full p-4 border border-[#444] rounded-lg bg-[#2A2A2A] gap-2"
@@ -86,10 +86,10 @@ export default function Feed({ initialFeed }: PropsType) {
               </p>
             </div>
             {item.publish === "Reprovado" &&
-              item.notifications[0].data.motivo && (
+              item.notifications?.[0]?.data?.motivo && (
                 <div className="p-2 text-sm bg-red-900 rounded-md mb-4">
                   <span>
-                    Motivo da reprovação: {item.notifications[0].data.motivo}
+                    Motivo da reprovação: {item?.notifications?.[0]?.data?.motivo}
                   </span>
                 </div>
               )}
