@@ -53,25 +53,19 @@ export async function loginAction(data: string) {
 }
 
 export async function createAnuncAction(data: string) {
-  await serverFetch(api.auth.create, {
-    method: "post",
-    body: data,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
   try {
+    await serverFetch(api.auth.create, {
+      method: "post",
+      body: data,
+    });
     return {
       message: `Cadastro realizado com sucesso!`,
       success: true,
-      redirect: `/login`,
     };
   } catch (error: any) {
-    console.log(Object.entries(error));
     return {
-      message: error?.data?.message ?? `Falha em realizar login`,
+      message: error?.message ?? `Falha em realizar login`,
       success: false,
-      redirect: `#`,
     };
   }
 }

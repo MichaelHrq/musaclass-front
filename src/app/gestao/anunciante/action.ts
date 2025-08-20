@@ -44,7 +44,7 @@ export async function SendEmail(data: SendEmailType) {
   } catch (error: any) {
     return {
       success: false,
-      message: error?.data?.message ?? `Falha em enviar convite`,
+      message: error?.message ?? `Falha em enviar convite`,
     };
   }
 }

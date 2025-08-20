@@ -50,7 +50,7 @@ export default function FormCadastro({ email, token }: PropsType) {
       const resp = await createAnuncAction(JSON.stringify(data));
       if (resp.success) {
         toast.success(resp.message);
-        return router.push(resp.redirect);
+        return router.push('/login');
       }
       return toast.error(resp.message);
     } finally {
