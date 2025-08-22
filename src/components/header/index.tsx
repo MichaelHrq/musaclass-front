@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { logoutAction } from "@/app/(auth)/action";
 import { Menu, X } from "lucide-react";
@@ -77,11 +77,12 @@ export default function Header({ logo, nav }: PropsType) {
               </li>
             ))}
             <li>
-              <form action={logoutAction}>
-                <button className="hover:text-gray-400 cursor-pointer">
-                  Logout
-                </button>
-              </form>
+              <button
+                onClick={() => logoutAction()}
+                className="hover:text-gray-400 cursor-pointer"
+              >
+                Logout
+              </button>
             </li>
           </ul>
         </nav>
@@ -135,14 +136,15 @@ export default function Header({ logo, nav }: PropsType) {
               </li>
             ))}
             <li>
-              <form action={logoutAction}>
-                <button
-                  className="block py-2 hover:text-gray-400 cursor-pointer w-full text-left"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Logout
-                </button>
-              </form>
+              <button
+                className="block py-2 hover:text-gray-400 cursor-pointer w-full text-left"
+                onClick={() => {
+                  logoutAction();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Logout
+              </button>
             </li>
           </ul>
         </nav>
