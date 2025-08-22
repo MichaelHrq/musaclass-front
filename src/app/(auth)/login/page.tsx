@@ -3,8 +3,10 @@ import { ToastErrorHandler } from "@/components/ui/toast/error";
 import Image from "next/image";
 import { Suspense } from "react";
 import Link from "next/link";
+import { ParamsType } from "@/interface";
 
-export default async function Home() {
+export default async function Home({ searchParams }: ParamsType) {
+  const { redirect } = await searchParams;
   return (
     <main className="h-dvh bg-gradient-to-br from-[#121212] to-[#1E1E1E] flex items-center justify-center p-4">
       <div className="max-w-md w-full p-8 rounded-xl bg-[#1E1E1E]/90 backdrop-blur-sm border border-[#444] shadow-2xl">
@@ -25,7 +27,7 @@ export default async function Home() {
           </p>
         </div>
 
-        <FormLogin />
+        <FormLogin redirectTo={redirect} />
 
         <div className="mt-6 text-center text-sm text-neutral-400">
           <p className="mt-2">

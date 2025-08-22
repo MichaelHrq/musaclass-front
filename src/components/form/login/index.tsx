@@ -15,7 +15,11 @@ import { z } from "zod";
 
 type FormData = z.infer<typeof loginSchema>;
 
-export default function FormLogin() {
+type PropsType = {
+  redirectTo: string | undefined;
+};
+
+export default function FormLogin({ redirectTo }: PropsType) {
   const router = useRouter();
   const [loading, setLoading] = React.useState({
     submit: false,
@@ -32,14 +36,18 @@ export default function FormLogin() {
   } = form;
 
   async function onSubmit(data: FormData) {
-    setLoading((curr) => ({ ...curr, submit: true }));
-    const resp = await loginAction(JSON.stringify(data));
-    setLoading((curr) => ({ ...curr, submit: false }));
-    if (resp.sucess) {
-      toast.success(resp.message);
-      return router.push(resp.redirect);
+    try {
+      setLoading((curr) => ({ ...curr, submit: true }));
+      const resp = await loginAction(JSON.stringify(data), redirectTo);
+    } catch (error:any) {
+      if (error.digest?.includes("NEXT_REDIRECT")) {
+        toast.success('Login realizado com sucesso');
+        throw error;
+      }
+      toast.error(error.message || "Credenciais inválidas")
+    } finally {
+      setLoading((curr) => ({ ...curr, submit: false }));
     }
-    return toast.error(resp.message);
   }
 
   return (

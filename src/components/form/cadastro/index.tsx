@@ -9,6 +9,7 @@ import InputPassword from "@/components/ui/input/password";
 import { cpfFormat } from "@/lib/format";
 import { cadastroSchema } from "@/schema/cadastro";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -37,6 +38,7 @@ export default function FormCadastro({ email, token }: PropsType) {
   });
 
   const {
+    watch,
     control,
     handleSubmit,
     formState: { errors },
@@ -50,7 +52,7 @@ export default function FormCadastro({ email, token }: PropsType) {
       const resp = await createAnuncAction(JSON.stringify(data));
       if (resp.success) {
         toast.success(resp.message);
-        return router.push('/login');
+        return router.push("/login");
       }
       return toast.error(resp.message);
     } finally {
@@ -58,43 +60,71 @@ export default function FormCadastro({ email, token }: PropsType) {
     }
   }
 
+  const password = watch("password");
+
+  const passwordRequirements = [
+    { text: "Pelo menos 6 caracteres", met: password.length >= 6 },
+    { text: "Uma letra maiúscula", met: /[A-Z]/.test(password) },
+    { text: "Uma letra minúscula", met: /[a-z]/.test(password) },
+    { text: "Um número", met: /\d/.test(password) },
+    {
+      text: "Um caractere especial !@#$%^&*",
+      met: /[!@#$%^&*]/.test(password),
+    },
+  ];
+
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6 w-full"
       >
-      <Input
-        control={control}
-        name="email"
-        disabled
-        label="Digite seu email"
-        error={errors.email?.message}
-      />
+        <Input
+          control={control}
+          name="email"
+          disabled
+          label="Digite seu email"
+          error={errors.email?.message}
+        />
 
-      <InputMask
-        control={control}
-        name="cpf"
-        label="Digite seu CPF"
-        error={errors.cpf?.message}
-        {...cpfFormat}
-      />
+        <InputMask
+          control={control}
+          name="cpf"
+          label="Digite seu CPF"
+          error={errors.cpf?.message}
+          {...cpfFormat}
+        />
 
-      <InputPassword
-        control={control}
-        name="password"
-        label="Digite sua senha"
-        error={errors.password?.message}
-      />
+        <InputPassword
+          control={control}
+          name="password"
+          label="Digite sua senha"
+          error={errors.password?.message}
+        />
 
-      <InputPassword
-        control={control}
-        name="password_confirmation"
-        label="Confirmação de senha"
-        error={errors.password_confirmation?.message}
-      />
+        <InputPassword
+          control={control}
+          name="password_confirmation"
+          label="Confirmação de senha"
+          error={errors.password_confirmation?.message}
+        />
 
-      <ButtonPending label="Salvar" isPending={loading.submit} />
+        <div className="space-y-2">
+          {passwordRequirements.map((req, index) => (
+            <div key={index} className="flex items-center space-x-2 text-sm">
+              {req.met ? (
+                <Check className="w-4 h-4 text-green-500" />
+              ) : (
+                <X className="w-4 h-4 text-red-300" />
+              )}
+              <span className={req.met ? "text-green-700" : "text-gray-500"}>
+                {req.text}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <ButtonPending label="Salvar" isPending={loading.submit} />
       </form>
     </Form>
   );
