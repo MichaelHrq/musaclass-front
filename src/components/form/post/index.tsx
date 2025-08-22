@@ -79,7 +79,7 @@ export default function FormPost({ postId, fetchData }: PropsType) {
         <MediaPreviewInput
           name="file"
           control={control}
-          accept="image/jpeg,image/jpg,image/png,video/mp4"
+          accept="image/jpeg,image/jpg,image/png,video/mp4,video/quicktime"
         />
         <ButtonPending type="submit" isPending={isSubmitting} />
       </form>
