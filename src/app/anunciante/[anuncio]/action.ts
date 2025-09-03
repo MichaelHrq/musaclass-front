@@ -104,24 +104,7 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
   }
 });
 
-[
-  {
-    id: "d9e42174-52b2-4e17-8a65-8019a12084d5",
-    type: "App\\Notifications\\PostReprovado",
-    notifiable_type: "App\\Models\\User",
-    notifiable_id: "01989ec2-7c44-70e1-99a5-a07ac8a65263",
-    data: {
-      post_id: 137,
-      motivo:
-        "Aenean eu scelerisque sapien. Aliquam porta sit amet diam at elementum. Duis eu tellus in nisl vestibulum volutpat. Aliquam erat volutpat. Curabitur nec lorem dui. Praesent in lacus quis mi feugiat accumsan. Ut et turpis a lorem accumsan scelerisque.",
-    },
-    read_at: null,
-    created_at: "2025-08-13T16:11:34.000000Z",
-    updated_at: "2025-08-13T16:11:34.000000Z",
-  },
-];
-
-export type getFeedType = {
+export type getFeedDataType = {
   id: number;
   user_id: string;
   titulo: string;
@@ -148,13 +131,23 @@ export type getFeedType = {
   }[];
 };
 
-export const getFeedAction = async (anuncio: string) => {
-  try {
-    const resp = await serverFetch(`${api.anunc.getFeedByAnuncio}/${anuncio}`);
-    return resp.data as getFeedType[];
-  } catch (error) {
-    return [];
-  }
+export type getFeedType = {
+  total: number;
+  last_page: number;
+  current_page: number;
+  data: getFeedDataType[];
+};
+
+export const getFeedAction = async ({
+  anuncio,
+  pageParam = 1,
+}: {
+  anuncio: string;
+  pageParam?: number;
+}) => {
+  return await serverFetch<getFeedType>(
+    `${api.anunc.getFeedByAnuncio}/${anuncio}?page=${pageParam}`
+  );
 };
 
 export const createFeedAction = withAuth(

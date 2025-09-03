@@ -1,60 +1,59 @@
 "use client";
 
 import {
-  getAnuncioId,
   getFeedAction,
-  getFeedType,
+  getAnuncioId,
 } from "@/app/anunciante/[anuncio]/action";
-import { AnuncioType } from "@/app/gestao/anunciante/type";
 import Feed from "@/components/feed";
 import FormPost from "@/components/form/post";
 import ListAnuncios from "@/components/list/anuncio";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
+import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-
-import { useCallback, useEffect, useState } from "react";
 
 type PropsType = {
   anuncioId: string;
 };
 
-export type dataAnuncioPageType = {
-  feed: getFeedType[];
-  anuncio: AnuncioType;
-};
-
 export default function AnuncioPage({ anuncioId }: PropsType) {
-  const [data, setData] = useState<dataAnuncioPageType>();
+  const queryClient = useQueryClient();
 
-  const fetchData = useCallback(async () => {
-    const res = await getFeedAction(anuncioId);
-    setData((cur) => ({ ...cur!, feed: res }));
-  }, []);
+  // Query para os detalhes do anúncio (não paginado)
+  const { data: anuncioData, isLoading: isLoadingAnuncio } = useQuery({
+    queryKey: ["anuncioDetails", anuncioId],
+    queryFn: () => getAnuncioId(anuncioId),
+    enabled: !!anuncioId,
+  });
 
-  const onDeleteFeedItem = useCallback((id: number) => {
-    setData(cur=>({
-      ...cur!,
-      feed: cur!.feed.filter((item) => item.id !== id),
-    }))
-  }, []);
+  // Query infinita para o feed (paginado)
+  const {
+    data: feedData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingFeed,
+  } = useInfiniteQuery({
+    queryKey: ["feed", anuncioId],
+    queryFn: ({ pageParam }) => getFeedAction({ anuncio: anuncioId, pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.current_page < lastPage.last_page) {
+        return lastPage.current_page + 1;
+      }
+      return undefined;
+    },
+    enabled: !!anuncioId,
+  });
 
-  useEffect(() => {
-    (async () => {
-      const [anuncio, feed] = await Promise.all([
-        getAnuncioId(anuncioId),
-        getFeedAction(anuncioId),
-      ]);
-      console.log({ feed, anuncio: anuncio! });
-      setData({ feed, anuncio: anuncio! });
-    })();
-  }, []);
+  const feedItems = feedData?.pages.flatMap((page) => page.data) ?? [];
+  const isLoading = isLoadingAnuncio || isLoadingFeed;
 
   return (
     <>
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full justify-center max-w-3xl rounded-lg gap-6 mb-4">
         <p className="text-xl md:text-2xl font-[500]">Detalhes do Anúncio</p>
-        <ListAnuncios item={data?.anuncio}>
+        <ListAnuncios item={anuncioData}>
           <Button asChild className="w-full">
             <Link className="w-full" href={`${anuncioId}/editar`}>
               Editar informações
@@ -65,19 +64,25 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
 
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg gap-6 mb-4">
         <p className="text-xl md:text-2xl">Postar no Feed</p>
-        <FormPost postId={anuncioId} fetchData={fetchData} />
+        <FormPost anuncioId={anuncioId} />
       </div>
 
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg space-y-6">
         <p className="text-xl md:text-2xl font-[500]">Meu Feed</p>
-        {data?.feed ? (
-          <Feed
-            anuncio={anuncioId}
-            initialFeed={data.feed}
-            onDeleteFeedItem={onDeleteFeedItem}
-          />
-        ) : (
+        {isLoading ? (
           <Loading />
+        ) : (
+          <Feed anuncio={anuncioId} items={feedItems} />
+        )}
+        {hasNextPage && (
+          <div className="w-full flex justify-center mt-8">
+            <Button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? <Loading /> : "Mostrar mais"}
+            </Button>
+          </div>
         )}
       </div>
     </>

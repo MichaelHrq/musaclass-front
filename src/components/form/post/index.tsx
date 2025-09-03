@@ -8,22 +8,22 @@ import Textarea from "@/components/ui/input/area";
 import MediaPreviewInput from "@/components/ui/input/upload2";
 import { PostFormData, postSchema } from "@/schema/post";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type PropsType = {
-  postId: string;
-  fetchData: () => Promise<void>;
+  anuncioId: string;
 };
 
-export default function FormPost({ postId, fetchData }: PropsType) {
+export default function FormPost({ anuncioId }: PropsType) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-
+  const queryClient = useQueryClient();
   const form = useForm<PostFormData>({
     resolver: zodResolver(postSchema),
     defaultValues: {
-      post_id: postId,
+      post_id: anuncioId,
       post: "",
       file: undefined,
     },
@@ -47,12 +47,12 @@ export default function FormPost({ postId, fetchData }: PropsType) {
       formData.append("tipo", data.file[0].type);
     }
 
-    const res = await createFeedAction(formData, postId);
+    const res = await createFeedAction(formData, anuncioId);
 
     if (res.sucess) {
       toast.success("Salvo com sucesso!");
       reset();
-      await fetchData();
+      queryClient.invalidateQueries({ queryKey: ["feed", anuncioId] });
     } else {
       toast.error(res.message);
     }
@@ -66,7 +66,7 @@ export default function FormPost({ postId, fetchData }: PropsType) {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-3 w-full"
       >
-        <input type="hidden" value={postId} {...register("post_id")} />
+        <input type="hidden" value={anuncioId} {...register("post_id")} />
 
         <Textarea
           control={control}

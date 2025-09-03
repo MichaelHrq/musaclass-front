@@ -32,7 +32,7 @@ export default async function Home({ searchParams }: ParamsType) {
         <div className="mt-6 text-center text-sm text-neutral-400">
           <p className="mt-2">
             <Link
-              href="#"
+              href="/esqueci-senha"
               className="text-neutral-400 hover:text-neutral-500 transition-colors"
             >
               Esqueceu sua senha?

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "merge" :"git checkout main && git merge develop && git push origin main && git checkout develop"
+    "merge": "git checkout main && git merge develop && git push origin main && git checkout develop"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -18,10 +18,13 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "1.1.8",
     "@react-input/mask": "2.0.4",
+    "@tanstack/react-query": "^5.85.6",
+    "@tanstack/react-query-devtools": "^5.85.6",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "^1.1.1",
     "crypto-js": "^4.2.0",
+    "input-otp": "^1.4.2",
     "jwt-decode": "^4.0.0",
     "lucide-react": "0.487.0",
     "next": "^15.3.2",

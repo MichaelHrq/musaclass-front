@@ -5,10 +5,11 @@ export const api = {
     register: "api/auth/register",
     refresh: "api/auth/refresh-token",
     create: "api/auth/register",
-    // forgotPassword: "api/auth/forgot-password",
-    // resetPassword: "api/auth/reset-password",
-    // verifyEmail: "api/auth/verify-email",
-    // verifyToken: "api/auth/verify-token",
+    forgot: {
+      sendCode: "api/auth/password/forgot/send-code",
+      verifyCode: "api/auth/password/forgot/verify-code",
+      reset: "api/auth/password/forgot/reset"
+    } 
   },
   gestao: {
     searchAnuncCpf: `api/anuciante/buscar-anuncios`,

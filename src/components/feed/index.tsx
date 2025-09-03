@@ -2,8 +2,10 @@
 
 import {
   deleteFeedAction,
+  getFeedDataType,
   getFeedType
 } from "@/app/anunciante/[anuncio]/action";
+import { useQueryClient } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -14,8 +16,7 @@ import { Dialog } from "../ui/dialog/dialog";
 
 type PropsType = {
   anuncio: string;
-  initialFeed: getFeedType[];
-  onDeleteFeedItem: (id: number) => void
+  items: getFeedDataType[];
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -44,8 +45,9 @@ function formatarDataPublicacao(dateString: string): string {
   return `Data: ${dataFormatada} - Hora: ${horaFormatada}`;
 }
 
-export default function Feed({ initialFeed, onDeleteFeedItem }: PropsType) {
-  const [feedItem, setFeedItem] = useState<getFeedType>();
+export default function Feed({ items, anuncio }: PropsType) {
+  const queryClient = useQueryClient();
+  const [feedItem, setFeedItem] = useState<getFeedDataType>();
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState({
     delete: false,
@@ -59,7 +61,7 @@ export default function Feed({ initialFeed, onDeleteFeedItem }: PropsType) {
     if (res.sucess) {
       setShowDialog(false);
       setFeedItem(undefined);
-      onDeleteFeedItem(feedItem.id)
+      queryClient.invalidateQueries({ queryKey: ["feed", anuncio] });
       return toast.success(res.message);
     }
     return toast.error(res.message);
@@ -67,8 +69,8 @@ export default function Feed({ initialFeed, onDeleteFeedItem }: PropsType) {
 
   return (
     <>
-      {initialFeed.length > 0 ? (
-        initialFeed.map((item) => (
+      {items.length > 0 ? (
+        items.map((item) => (
           <div
             key={item.id}
             className="text-xs md:text-[16px] flex flex-col w-full p-4 border border-[#444] rounded-lg bg-[#2A2A2A] gap-2"

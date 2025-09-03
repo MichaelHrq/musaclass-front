@@ -49,7 +49,7 @@ export default function InputPassword<T extends FieldValues>({
                   onClick={() => setShow(!show)}
                   className="text-[12px] absolute right-3 top-[50%] translate-y-[-50%] cursor-pointer text-neutral-400 hover:text-neutral-500 transition-colors duration-200"
                 >
-                  {show ? <EyeClosed /> : <Eye />}
+                  {!show ? <EyeClosed /> : <Eye />}
                 </span>
               </div>
             </FormControl>
