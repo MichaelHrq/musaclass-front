@@ -6,13 +6,13 @@ import { AnuncioType } from "../gestao/anunciante/type";
 
 export const getAnunciosAction = async (): Promise<AnuncioType[]> => {
   try {
-      const resp = await serverFetch<AnuncioType[]>(api.anunc.getAnuncios);
+      const resp = await serverFetch(api.anunc.getAnuncios);
 
   if (!resp) {
     throw new Error("Failed to fetch anuncios");
   }
 
-  return resp;
+  return resp.data;
   } catch (error: any) {
     console.error(error.message)
     return [] as AnuncioType[]
