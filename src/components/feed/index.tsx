@@ -3,7 +3,7 @@
 import {
   deleteFeedAction,
   getFeedDataType,
-  getFeedType
+  getFeedType,
 } from "@/app/anunciante/[anuncio]/action";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
@@ -91,11 +91,13 @@ export default function Feed({ items, anuncio }: PropsType) {
               item.notifications?.[0]?.data?.motivo && (
                 <div className="p-2 text-sm bg-red-900 rounded-md mb-4">
                   <span>
-                    Motivo da reprovação: {item?.notifications?.[0]?.data?.motivo}
+                    Motivo da reprovação:{" "}
+                    {item?.notifications?.[0]?.data?.motivo}
                   </span>
                 </div>
               )}
             <div className="flex justify-center mb-4">
+              <>{console.log(item)}</>
               {item.midia?.[0]?.url ? (
                 <>
                   {item.midia[0].tipo === "image" && (

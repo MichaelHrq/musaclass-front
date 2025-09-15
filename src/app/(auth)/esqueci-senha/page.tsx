@@ -10,10 +10,11 @@ export default function ForgotPassword() {
         </h1>
         <TabForgotPassword />
       </div>
-      <Link href={"/login"}>
-        <p className="text-sm text-neutral-400 cursor-pointer text-center mt-4">
-          Gostaria de voltar para a tela de login?
-        </p>
+      <Link
+        href={"/login"}
+        className="flex items-center text-sm text-neutral-400 hover:text-neutral-200 transition-colors mt-4 gap-2"
+      >
+        Gostaria de voltar para a tela de login?
       </Link>
     </main>
   );

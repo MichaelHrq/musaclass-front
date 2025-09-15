@@ -81,7 +81,7 @@ export default function Header({ logo, nav }: PropsType) {
                 onClick={() => logoutAction()}
                 className="hover:text-gray-400 cursor-pointer"
               >
-                Logout
+                Sair
               </button>
             </li>
           </ul>
@@ -143,7 +143,7 @@ export default function Header({ logo, nav }: PropsType) {
                   setIsMobileMenuOpen(false);
                 }}
               >
-                Logout
+                Sair
               </button>
             </li>
           </ul>

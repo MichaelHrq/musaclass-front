@@ -5,6 +5,7 @@ export const api = {
     register: "api/auth/register",
     refresh: "api/auth/refresh-token",
     create: "api/auth/register",
+    change: "api/auth/reset-password",
     forgot: {
       sendCode: "api/auth/password/forgot/send-code",
       verifyCode: "api/auth/password/forgot/verify-code",

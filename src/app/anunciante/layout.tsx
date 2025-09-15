@@ -7,7 +7,10 @@ export default function GestaoLayout({
 }) {
   const props = {
     logo: `/anunciante`,
-    nav: [{ title: `Meus anúncios`, url: `/anunciante` }],
+    nav: [
+      { title: `Meus anúncios`, url: `/anunciante` },
+      { title: `Perfil`, url: `/anunciante/perfil` },
+    ],
   };
   return (
     <>
