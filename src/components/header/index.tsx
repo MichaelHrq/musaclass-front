@@ -128,7 +128,7 @@ export default function Header({ logo, nav }: PropsType) {
               <li key={item.title}>
                 <Link
                   href={item.url}
-                  className="block py-2 hover:text-gray-400"
+                  className="block pb-4 ps-2 hover:text-gray-400 text-sm border-b border-neutral-700"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.title}
@@ -137,7 +137,7 @@ export default function Header({ logo, nav }: PropsType) {
             ))}
             <li>
               <button
-                className="block py-2 hover:text-gray-400 cursor-pointer w-full text-left"
+                className="block pb-4 ps-2 hover:text-gray-400 cursor-pointer w-full text-left  text-sm"
                 onClick={() => {
                   logoutAction();
                   setIsMobileMenuOpen(false);
