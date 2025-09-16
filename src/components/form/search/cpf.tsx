@@ -31,7 +31,7 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
     if (!res.success) {
       return toast.error(res.message);
     }
-    setAnuncios(res.data);
+    setAnuncios(res.data.data);
   }
 
   return (
