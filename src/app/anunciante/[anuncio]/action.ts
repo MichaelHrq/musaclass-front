@@ -43,9 +43,10 @@ export async function getAnuncioInfos(id: string) {
   return {
     edit: {
       post_id: resp.post_id.toString(),
-      novoatendimento_acompanhante: isValidJson(
-        resp.meta.novoatendimento_acompanhante
-      ),
+      novoatendimento_acompanhante:
+        resp.meta.novoatendimento_acompanhante.length > 0
+          ? isValidJson(resp.meta.novoatendimento_acompanhante)
+          : [],
       cache_acompanhante: isComb ? undefined : cache,
       combinar: isComb ? true : false,
       cartao_acompanhante: resp.meta.cartao_acompanhante,
@@ -57,9 +58,10 @@ export async function getAnuncioInfos(id: string) {
         resp.meta.whatsapp_acompanhante.replace(/\D/g, ""),
         phoneFormat
       ),
-      novoacompanha_acompanhante: isValidJson(
-        resp.meta.novoacompanha_acompanhante
-      ),
+      novoacompanha_acompanhante:
+        resp.meta.novoacompanha_acompanhante.length > 0
+          ? isValidJson(resp.meta.novoacompanha_acompanhante)
+          : [],
     },
     infos: {
       titulo: resp.titulo,
