@@ -5,6 +5,7 @@ export default async function Home({ searchParams }: any) {
   const params = await searchParams;
 
   if (!params.email) redirect("/?error=invalid-invite");
+  
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center p-4">
