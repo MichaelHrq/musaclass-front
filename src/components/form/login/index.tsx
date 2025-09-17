@@ -36,18 +36,13 @@ export default function FormLogin({ redirectTo }: PropsType) {
   } = form;
 
   async function onSubmit(data: FormData) {
-    try {
-      setLoading((curr) => ({ ...curr, submit: true }));
-      const resp = await loginAction(JSON.stringify(data), redirectTo);
-    } catch (error:any) {
-      if (error.digest?.includes("NEXT_REDIRECT")) {
-        toast.success('Login realizado com sucesso');
-        throw error;
-      }
-      toast.error(error.message || "Credenciais inválidas")
-    } finally {
-      setLoading((curr) => ({ ...curr, submit: false }));
-    }
+    setLoading((curr) => ({ ...curr, submit: true }));
+    const resp = await loginAction(JSON.stringify(data));
+    setLoading((curr) => ({ ...curr, submit: false }));
+    if (!resp.success)
+      return toast.error(resp.message || "Credenciais inválidas");
+    toast.success("Login realizado com sucesso");
+    router.push(redirectTo || resp.redirect);
   }
 
   return (

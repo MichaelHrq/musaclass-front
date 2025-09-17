@@ -6,45 +6,60 @@ import { serverFetch } from "@/lib/fetch";
 import jwtDecode from "@/lib/jwtDecode";
 import { redirect } from "next/navigation";
 
-export async function loginAction(data: string, redirectTo?: string) {
+export async function loginAction(data: string) {
   let access_token: string;
-
   try {
-    const tokens = await serverFetch<Tokens>(api.auth.login, {
+    const tokens = await serverFetch(api.auth.login, {
       method: "post",
-      body: data,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: JSON.stringify(data),
     });
-
-    access_token = tokens.access_token!;
+    access_token = tokens.access_token;
     await setTokens({
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token,
     });
   } catch (error: any) {
-    throw new Error(error?.message ?? "Falha ao tentar fazer login");
+    return {
+      success: false,
+      message: "Falha ao tentar fazer login",
+      redirect: "#",
+    };
   }
 
   const { role } = jwtDecode(access_token!);
 
   if (!role || (role !== "admn" && role !== "anct")) {
     await clearTokens();
-    throw new Error("Role de usuário inválida");
-  }
-
-  if (redirectTo) {
-    redirect(redirectTo);
+    return {
+      success: false,
+      message: "Falha ao tentar fazer login",
+      redirect: "#",
+    };
   }
 
   if (role === `admn`) {
-    redirect(`/gestao`);
+    return {
+      success: true,
+      message: "Login realizado com sucesso!",
+      redirect: "/gestao",
+    };
   }
 
   if (role === `anct`) {
-    redirect(`/anunciante`);
+    return {
+      success: true,
+      message: "Login realizado com sucesso!",
+      redirect: "/anunciante",
+    };
   }
+
+  await clearTokens();
+
+  return {
+    success: false,
+    message: "Falha ao tentar fazer login",
+    redirect: "#",
+  };
 }
 
 export async function createAnuncAction(data: string) {
