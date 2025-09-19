@@ -2,9 +2,9 @@
 
 import { api } from "@/constants/api";
 import { serverFetch } from "@/lib/fetch";
-import { AnuncioType } from "../gestao/anunciante/type";
+import { AnuncioWPType } from "../gestao/anunciante/type";
 
-export const getAnunciosAction = async (): Promise<AnuncioType[]> => {
+export const getAnunciosAction = async (): Promise<AnuncioWPType[]> => {
   try {
       const resp = await serverFetch(api.anunc.getAnuncios);
 
@@ -15,7 +15,7 @@ export const getAnunciosAction = async (): Promise<AnuncioType[]> => {
   return resp.data;
   } catch (error: any) {
     console.error(error.message)
-    return [] as AnuncioType[]
+    return [] as AnuncioWPType[]
   }
 
 };

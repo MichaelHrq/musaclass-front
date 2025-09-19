@@ -4,10 +4,10 @@ import FormSearchCpf from "@/components/form/search/cpf";
 import FormSendEmail from "@/components/form/send/email";
 import ListAnuncios from "@/components/list/anuncio";
 import React from "react";
-import { AnuncioType } from "./type";
+import { AnuncioWPType } from "./type";
 
 export default function Anunciante() {
-  const [anuncios, setAnuncios] = React.useState<AnuncioType[]>();
+  const [anuncios, setAnuncios] = React.useState<AnuncioWPType[]>();
 
   return (
     <div className="container flex flex-col items-center">
