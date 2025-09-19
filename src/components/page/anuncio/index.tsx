@@ -54,7 +54,7 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full justify-center max-w-3xl rounded-lg gap-6 mb-4">
         <p className="text-xl md:text-2xl font-[500]">Detalhes do Anúncio</p>
         <ListAnuncios item={anuncioData}>
-          <Button asChild className="w-full">
+          <Button asChild className="w-full mt-2">
             <Link className="w-full" href={`${anuncioId}/editar`}>
               Editar informações
             </Link>

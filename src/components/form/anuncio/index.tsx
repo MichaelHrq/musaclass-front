@@ -11,12 +11,12 @@ import Input from "@/components/ui/input/input";
 import InputMask from "@/components/ui/input/mask";
 import { Label } from "@/components/ui/label";
 import Select from "@/components/ui/select/select";
-import { phoneFormat } from "@/lib/format";
+import { phoneDDDFormat, phoneFormat } from "@/lib/format";
 import { anuncioSchema, AnuncioType } from "@/schema/anuncio";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useId } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -28,6 +28,13 @@ export default function FormAnuncio({ edit }: PropsType) {
   const [loading, setLoading] = React.useState({
     submit: false,
   });
+
+  const combinarId = useId();
+  const naorespAlturaId = useId();
+  const naorespPesoId = useId();
+  const naorespQuadrilId = useId();
+  const naorespPesId = useId();
+
   const form = useForm<AnuncioType>({
     resolver: zodResolver(anuncioSchema),
     defaultValues: edit,
@@ -43,6 +50,7 @@ export default function FormAnuncio({ edit }: PropsType) {
   } = form;
 
   async function onSubmit(data: AnuncioType) {
+    // console.log(data)
     setLoading((cur) => ({ ...cur, submit: true }));
     const resp = await updateDadosAnuncio(data);
     setLoading((cur) => ({ ...cur, submit: false }));
@@ -52,12 +60,30 @@ export default function FormAnuncio({ edit }: PropsType) {
     return toast.error(resp.message);
   }
 
-  function handleCheckCache() {
-    const check = getValues()?.combinar;
-    setValue(`combinar`, !check);
+  function handleCheck(field: keyof AnuncioType) {
+    const check = getValues()?.[field];
+    setValue(field, !check);
   }
 
-  const isComb = watch(`combinar`);
+  const isComb = watch("combinar");
+  const naorespAltura = watch("naoresp_altura");
+  const naorespPeso = watch("naoresp_peso");
+  const naorespQuadril = watch("naoresp_quadril");
+  const naorespPes = watch("naoresp_pes");
+
+  function handleTryWhatsapp() {
+    const { ddi_acompanhante, whatsapp_acompanhante } = getValues();
+    if (!ddi_acompanhante || !whatsapp_acompanhante) {
+      return toast.error("Preencha o DDD e o Telefone");
+    }
+    const url = `https://api.whatsapp.com/send?phone=${ddi_acompanhante}${whatsapp_acompanhante.replace(
+      /\D/g,
+      ""
+    )}`;
+    window.open(url, "_blank");
+  }
+
+  console.log(errors)
 
   return (
     <Form {...form}>
@@ -65,14 +91,36 @@ export default function FormAnuncio({ edit }: PropsType) {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6 w-full"
       >
-        <InputMask
-          control={control}
-          name="whatsapp_acompanhante"
-          label="Digite seu telefone"
-          error={errors.whatsapp_acompanhante?.message}
-          inputMode="numeric"
-          {...phoneFormat}
-        />
+        <div className="flex gap-2">
+          <div className="flex-1/3 sm:flex-1/5">
+            <InputMask
+              control={control}
+              name="ddi_acompanhante"
+              label="DDI"
+              error={errors.whatsapp_acompanhante?.message}
+              inputMode="numeric"
+              {...phoneDDDFormat}
+            />
+          </div>
+          <InputMask
+            control={control}
+            name="whatsapp_acompanhante"
+            label="Tel/Whatsapp"
+            error={errors.whatsapp_acompanhante?.message}
+            inputMode="numeric"
+            {...phoneFormat}
+          />
+        </div>
+
+        <div>
+          <Button
+            type="button"
+            onClick={handleTryWhatsapp}
+            className="bg-green-700 hover:bg-green-800"
+          >
+            Testar Whatsapp
+          </Button>
+        </div>
 
         <CheckboxCustom
           control={control}
@@ -92,12 +140,12 @@ export default function FormAnuncio({ edit }: PropsType) {
           />
           <div className="flex items-start gap-3 mt-1">
             <Checkbox
-              id="terms-2"
-              checked={getValues()?.combinar}
-              onClick={handleCheckCache}
+              id={combinarId}
+              checked={isComb}
+              onCheckedChange={() => handleCheck("combinar")}
             />
             <div className="grid gap-2 items-end">
-              <Label htmlFor="terms-2" className="text-xs md:text-sm">
+              <Label htmlFor={combinarId} className="text-xs md:text-sm">
                 A Combinar
               </Label>
             </div>
@@ -118,38 +166,98 @@ export default function FormAnuncio({ edit }: PropsType) {
           ]}
         />
 
-        <Input
-          control={control}
-          name="novoaltura_acompanhante"
-          label="Altura (m)"
-          error={errors.novoaltura_acompanhante?.message}
-          type="number"
-          step="0.01"
-        />
+        <div>
+          <Input
+            control={control}
+            name="novoaltura_acompanhante"
+            label="Altura (m)"
+            error={errors.novoaltura_acompanhante?.message}
+            type="number"
+            step="0.01"
+            disabled={naorespAltura}
+          />
+          <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id={naorespAlturaId}
+              checked={naorespAltura}
+              onCheckedChange={() => handleCheck("naoresp_altura")}
+            />
+            <div className="grid gap-2 items-end">
+              <Label htmlFor={naorespAlturaId} className="text-xs md:text-sm">
+                Não responder
+              </Label>
+            </div>
+          </div>
+        </div>
 
-        <Input
-          control={control}
-          name="novopeso_acompanhante"
-          label="Peso (Kg)"
-          error={errors.novopeso_acompanhante?.message}
-          type="number"
-        />
+        <div>
+          <Input
+            control={control}
+            name="novopeso_acompanhante"
+            label="Peso (Kg)"
+            error={errors.novopeso_acompanhante?.message}
+            type="number"
+            disabled={naorespPeso}
+          />
+          <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id={naorespPesoId}
+              checked={naorespPeso}
+              onCheckedChange={() => handleCheck("naoresp_peso")}
+            />
+            <div className="grid gap-2 items-end">
+              <Label htmlFor={naorespPesoId} className="text-xs md:text-sm">
+                Não responder
+              </Label>
+            </div>
+          </div>
+        </div>
 
-        <Input
-          control={control}
-          name="quadril_acompanhante"
-          label="Manequim"
-          error={errors.quadril_acompanhante?.message}
-          type="number"
-        />
+        <div>
+          <Input
+            control={control}
+            name="quadril_acompanhante"
+            label="Manequim"
+            error={errors.quadril_acompanhante?.message}
+            type="number"
+            disabled={naorespQuadril}
+          />
+          <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id={naorespQuadrilId}
+              checked={naorespQuadril}
+              onCheckedChange={() => handleCheck("naoresp_quadril")}
+            />
+            <div className="grid gap-2 items-end">
+              <Label htmlFor={naorespQuadrilId} className="text-xs md:text-sm">
+                Não responder
+              </Label>
+            </div>
+          </div>
+        </div>
 
-        <Input
-          control={control}
-          name="novopes_acompanhante"
-          label="Pés"
-          error={errors.novopes_acompanhante?.message}
-          type="number"
-        />
+        <div>
+          <Input
+            control={control}
+            name="novopes_acompanhante"
+            label="Pés"
+            error={errors.novopes_acompanhante?.message}
+            type="number"
+            disabled={naorespPes}
+          />
+          <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id={naorespPesId}
+              checked={naorespPes}
+              onCheckedChange={() => handleCheck("naoresp_pes")}
+            />
+            <div className="grid gap-2 items-end">
+              <Label htmlFor={naorespPesId} className="text-xs md:text-sm">
+                Não responder
+              </Label>
+            </div>
+          </div>
+        </div>
 
         <CheckboxCustom
           control={control}

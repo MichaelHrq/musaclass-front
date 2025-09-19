@@ -3,7 +3,12 @@ export const cpfFormat = {
   replacement: { _: /\d/ },
 };
 
+export const phoneDDDFormat = {
+  mask: "___",
+  replacement: { _: /\d/ },
+};
+
 export const phoneFormat = {
-  mask: "(__) _____-____",
+  mask: "(__) __________",
   replacement: { _: /\d/ },
 };

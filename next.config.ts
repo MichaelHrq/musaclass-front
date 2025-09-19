@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "dev.musaclass.com.br",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "mcfilesdev.s3.amazonaws.com",
         pathname: "/**",
       },

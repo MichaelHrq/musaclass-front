@@ -1,7 +1,7 @@
 "use client";
 
 import { getAnunciosAction } from "@/app/anunciante/action";
-import { AnuncioType } from "@/app/gestao/anunciante/type";
+import { AnuncioWPType } from "@/app/gestao/anunciante/type";
 import ListAnuncios from "@/components/list/anuncio";
 import Loading from "@/components/loading";
 import ButtonIcon from "@/components/ui/button/icon";
@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function AnunciosList() {
-  const [anuncios, setAnuncios] = useState<AnuncioType[]>([]);
+  const [anuncios, setAnuncios] = useState<AnuncioWPType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

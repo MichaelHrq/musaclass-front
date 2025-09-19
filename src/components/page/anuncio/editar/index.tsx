@@ -40,7 +40,7 @@ export default function EditarAnuncioPage({ anuncioId }: PropsType) {
             </span>
             {data.infos.url && (
               <Link href={data.infos.url} target="_blank">
-                <Button>Vizualizar anúncio</Button>
+                <Button>Visualizar anúncio</Button>
               </Link>
             )}
           </div>

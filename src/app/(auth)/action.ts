@@ -11,7 +11,7 @@ export async function loginAction(data: string) {
   try {
     const tokens = await serverFetch(api.auth.login, {
       method: "post",
-      body: JSON.stringify(data),
+      body: data,
     });
     access_token = tokens.access_token;
     await setTokens({
@@ -21,7 +21,7 @@ export async function loginAction(data: string) {
   } catch (error: any) {
     return {
       success: false,
-      message: "Falha ao tentar fazer login",
+      message: error.message ?? "Falha ao tentar fazer login",
       redirect: "#",
     };
   }

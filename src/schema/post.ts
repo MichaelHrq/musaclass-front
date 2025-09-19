@@ -4,6 +4,7 @@ const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "video/mp4", "vide
 
 export const postSchema = z.object({
   post_id: z.string(),
+  tipo: z.enum(['post', 'story']),
   post: z
     .string({ message: "Descrição do post é obrigatório" })
     .min(1, "Descrição do post é obrigatório")

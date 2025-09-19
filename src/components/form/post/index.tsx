@@ -3,6 +3,8 @@
 
 import { createFeedAction } from "@/app/anunciante/[anuncio]/action";
 import ButtonPending from "@/components/ui/button/pending";
+import { Checkbox } from "@/components/ui/custom/checkbox";
+import { RadioGroup } from "@/components/ui/custom/radio";
 import { Form } from "@/components/ui/form";
 import Textarea from "@/components/ui/input/area";
 import MediaPreviewInput from "@/components/ui/input/upload2";
@@ -26,6 +28,7 @@ export default function FormPost({ anuncioId }: PropsType) {
       post_id: anuncioId,
       post: "",
       file: undefined,
+      tipo: "post",
     },
   });
   const {
@@ -41,10 +44,10 @@ export default function FormPost({ anuncioId }: PropsType) {
     const formData = new FormData();
     formData.append("post", data.post);
     formData.append("post_id", data.post_id);
+    formData.append("tipo", data.tipo);
 
     if (data.file?.[0]) {
       formData.append("file", data.file[0]);
-      formData.append("tipo", data.file[0].type);
     }
 
     const res = await createFeedAction(formData, anuncioId);
@@ -67,6 +70,18 @@ export default function FormPost({ anuncioId }: PropsType) {
         className="flex flex-col gap-3 w-full"
       >
         <input type="hidden" value={anuncioId} {...register("post_id")} />
+
+        <RadioGroup
+          items={[
+            { label: "Galeria", value: "post" },
+            { label: "Story", value: "story" },
+          ]}
+          control={control}
+          name="tipo"
+          label="Tipo de publicação"
+          error={errors.tipo?.message}
+          className="flex-row gap-5"
+        />
 
         <Textarea
           control={control}

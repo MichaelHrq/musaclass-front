@@ -3,7 +3,7 @@
 import { api } from "@/constants/api";
 import { currency } from "@/lib/currency";
 import { serverFetch } from "@/lib/fetch";
-import { phoneFormat } from "@/lib/format";
+import { phoneDDDFormat, phoneFormat } from "@/lib/format";
 import { isValidJson } from "@/lib/isJson";
 import withAuth from "@/lib/withAuth";
 import { AnuncioType } from "@/schema/anuncio";
@@ -29,6 +29,7 @@ type getAnuncioInfosType = {
     quadril_acompanhante: string;
     novopes_acompanhante: string;
     novoacompanha_acompanhante: string[];
+    ddi_acompanhante: string;
   };
 };
 
@@ -39,6 +40,8 @@ export async function getAnuncioInfos(id: string) {
 
   const isComb = resp.meta.cache_acompanhante === "A Combinar";
   const cache = Number(resp.meta.cache_acompanhante.replace(/\D/g, "")) / 100;
+
+  console.log(resp);
 
   return {
     edit: {
@@ -57,6 +60,10 @@ export async function getAnuncioInfos(id: string) {
       whatsapp_acompanhante: format(
         resp.meta.whatsapp_acompanhante.replace(/\D/g, ""),
         phoneFormat
+      ),
+      ddi_acompanhante: format(
+        resp.meta.ddi_acompanhante.replace(/\D/g, ""),
+        phoneDDDFormat
       ),
       novoacompanha_acompanhante:
         resp.meta.novoacompanha_acompanhante.length > 0
