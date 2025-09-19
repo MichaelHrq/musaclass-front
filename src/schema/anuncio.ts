@@ -27,7 +27,7 @@ export const anuncioSchema = z
     (data) => {
       const { cache_acompanhante, combinar } = data;
       if (combinar) {
-        data.cache_acompanhante = 0
+        data.cache_acompanhante = 0.0
         return true
       }
       if (!cache_acompanhante) return false; 
@@ -43,7 +43,7 @@ export const anuncioSchema = z
     (data) => {
       const { novoaltura_acompanhante, naoresp_altura } = data;
       if (naoresp_altura) {
-        data.novoaltura_acompanhante = "0,00";
+        data.novoaltura_acompanhante = "";
         return true;
       }
       const n = Number(novoaltura_acompanhante);
@@ -60,7 +60,7 @@ export const anuncioSchema = z
     (data) => {
       const { novopeso_acompanhante, naoresp_peso } = data;
       if (naoresp_peso) {
-        data.novopeso_acompanhante = "0,00";
+        data.novopeso_acompanhante = "";
         return true;
       }
       const n = Number(novopeso_acompanhante);
@@ -77,7 +77,7 @@ export const anuncioSchema = z
     (data) => {
       const { quadril_acompanhante, naoresp_quadril } = data;
       if (naoresp_quadril) {
-        data.quadril_acompanhante = "0";
+        data.quadril_acompanhante = "";
         return true;
       }
       return true;
@@ -91,7 +91,7 @@ export const anuncioSchema = z
     (data) => {
       const { novopes_acompanhante, naoresp_pes } = data;
       if (naoresp_pes) {
-        data.novopes_acompanhante = "0";
+        data.novopes_acompanhante = "";
         return true;
       }
       const n = Number(novopes_acompanhante);
