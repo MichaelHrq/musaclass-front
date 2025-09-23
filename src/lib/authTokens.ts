@@ -82,23 +82,23 @@ async function attemptRefreshToken(
   existingRefreshToken: string | undefined
 ): Promise<Tokens> {
   if (!existingRefreshToken) {
-    console.log("No existing refresh token provided to attemptRefreshToken.");
+    // console.log("No existing refresh token provided to attemptRefreshToken.");
     return { access_token: undefined, refresh_token: undefined };
   }
   try {
-    console.log("Attempting to refresh token with:", existingRefreshToken);
+    // console.log("Attempting to refresh token with:", existingRefreshToken);
     const newTokens = await serverFetch<Tokens>(api.auth.refresh, {
       method: "POST",
       headers: { Authorization: `Bearer ${existingRefreshToken}` },
     });
-    console.log("Refresh API call returned new tokens:", newTokens);
+    // console.log("Refresh API call returned new tokens:", newTokens);
     if (!newTokens.access_token) {
-      console.warn("Refresh API call did not return a new access_token.");
+      // console.error("Refresh API call did not return a new access_token.");
       return { access_token: undefined, refresh_token: undefined };
     }
     return newTokens;
   } catch (error) {
-    console.error("Error during refresh token API call:", error);
+    // console.error("Error during refresh token API call:", error);
     return { access_token: undefined, refresh_token: undefined };
   }
 }
@@ -119,19 +119,20 @@ export async function isTokenExpired(accessToken?: string): Promise<boolean> {
     const expirationTimeInSeconds = exp;
     const nowInSeconds = Date.now() / 1000;
     const bufferInSeconds = 3 * 60; // Buffer de 3 minutos
+    // const bufferInSeconds = 45; // Buffer de 45 segundos
     // const bufferInSeconds = 0;
 
-    console.log("token: ", expirationTimeInSeconds);
-    console.log("agora: ", nowInSeconds);
-    console.log(
-      `isTokenExpired: ${
-        expirationTimeInSeconds < nowInSeconds + bufferInSeconds
-      }`
-    );
+    // console.log("token: ", expirationTimeInSeconds);
+    // console.log("agora: ", nowInSeconds);
+    // console.log(
+    //   `isTokenExpired: ${
+    //     expirationTimeInSeconds < nowInSeconds + bufferInSeconds
+    //   }`
+    // );
 
     return expirationTimeInSeconds < nowInSeconds + bufferInSeconds;
   } catch (error) {
-    console.error("isTokenExpired: Error decoding token:", error);
+    // console.error("isTokenExpired: Error decoding token:", error);
     return true;
   }
 }
@@ -145,42 +146,43 @@ export async function verifyAndRefreshTokensIfNeeded(): Promise<VerificationOutc
   let currentTokens = await getTokens();
 
   if (!currentTokens.access_token) {
-    console.log("verifyAndRefresh: No access token found initially.");
+    // console.log("verifyAndRefresh: No access token found initially.");
     return { status: "unauthorized", reason: "no_initial_token" };
   }
 
   try {
     if (await isTokenExpired(currentTokens.access_token)) {
-      console.log(
-        "verifyAndRefresh: Access token expired. Attempting refresh."
-      );
+      // console.log(
+      //   "verifyAndRefresh: Access token expired. Attempting refresh."
+      // );
+
       const newTokens = await attemptRefreshToken(currentTokens.refresh_token);
 
       if (newTokens.access_token && newTokens.refresh_token) {
         await setTokens(newTokens);
-        console.log("verifyAndRefresh: Token refreshed and set successfully.");
+        // console.log("verifyAndRefresh: Token refreshed and set successfully.");
         return {
           status: "refreshed",
           accessToken: newTokens.access_token,
           tokens: newTokens,
         };
       } else {
-        console.log("verifyAndRefresh: Refresh failed. Clearing tokens.");
+        // console.log("verifyAndRefresh: Refresh failed. Clearing tokens.");
         await clearTokens();
         return { status: "unauthorized", reason: "refresh_failed" };
       }
     }
-    console.log("verifyAndRefresh: Access token is valid.");
+    // console.log("verifyAndRefresh: Access token is valid.");
     return {
       status: "valid",
       accessToken: currentTokens.access_token,
       tokens: currentTokens,
     };
   } catch (error: any) {
-    console.log(
-      "verifyAndRefresh: General error during verification. Clearing tokens.",
-      error.message ? error.message : error
-    );
+    // console.log(
+    //   "verifyAndRefresh: General error during verification. Clearing tokens.",
+    //   error.message ? error.message : error
+    // );
     await clearTokens();
     return { status: "unauthorized", reason: "verification_error" };
   }

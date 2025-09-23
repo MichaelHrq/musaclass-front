@@ -20,8 +20,6 @@ export default function AnunciosList() {
     })();
   }, []);
 
-  console.log(anuncios)
-
   return (
     <>
       {loading ? (

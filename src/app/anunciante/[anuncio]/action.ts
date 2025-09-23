@@ -30,6 +30,10 @@ type getAnuncioInfosType = {
     novopes_acompanhante: string;
     novoacompanha_acompanhante: string[];
     ddi_acompanhante: string;
+    novoaltura_esconder: any;
+    novopeso_esconder: any;
+    quadril_esconder: any;
+    novopes_esconder: any;
   };
 };
 
@@ -40,8 +44,6 @@ export async function getAnuncioInfos(id: string) {
 
   const isComb = resp.meta.cache_acompanhante === "A Combinar";
   const cache = Number(resp.meta.cache_acompanhante.replace(/\D/g, "")) / 100;
-
-  console.log(resp);
 
   return {
     edit: {
@@ -56,6 +58,10 @@ export async function getAnuncioInfos(id: string) {
       novoaltura_acompanhante: resp.meta.novoaltura_acompanhante,
       novopeso_acompanhante: resp.meta.novopeso_acompanhante,
       quadril_acompanhante: resp.meta.quadril_acompanhante,
+      novoaltura_esconder: !!Number(resp.meta.novoaltura_esconder),
+      novopeso_esconder: !!Number(resp.meta.novopeso_esconder),
+      quadril_esconder: !!Number(resp.meta.quadril_esconder),
+      novopes_esconder: !!Number(resp.meta.novopes_esconder),
       novopes_acompanhante: resp.meta.novopes_acompanhante,
       whatsapp_acompanhante: format(
         resp.meta.whatsapp_acompanhante.replace(/\D/g, ""),
@@ -87,6 +93,10 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
       ? "A Combinar"
       : currency(data.cache_acompanhante!),
     novoacompanha_acompanhante: JSON.stringify(data.novoacompanha_acompanhante),
+    novoaltura_esconder: data.novoaltura_esconder ? 1 : 0,
+    novopeso_esconder: data.novopeso_esconder ? 1 : 0,
+    quadril_esconder: data.quadril_esconder ? 1 : 0,
+    novopes_esconder: data.novopes_esconder ? 1 : 0,
   };
 
   try {
@@ -105,7 +115,6 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
       message: "Anúncio atualizado com sucesso",
     };
   } catch (error: any) {
-    console.log(Object.entries(error));
     return {
       sucess: false,
       message: "Falha em atualizar anúncio",

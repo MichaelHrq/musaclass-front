@@ -50,7 +50,6 @@ export default function FormAnuncio({ edit }: PropsType) {
   } = form;
 
   async function onSubmit(data: AnuncioType) {
-    // console.log(data)
     setLoading((cur) => ({ ...cur, submit: true }));
     const resp = await updateDadosAnuncio(data);
     setLoading((cur) => ({ ...cur, submit: false }));
@@ -66,10 +65,10 @@ export default function FormAnuncio({ edit }: PropsType) {
   }
 
   const isComb = watch("combinar");
-  const naorespAltura = watch("naoresp_altura");
-  const naorespPeso = watch("naoresp_peso");
-  const naorespQuadril = watch("naoresp_quadril");
-  const naorespPes = watch("naoresp_pes");
+  const naorespAltura = watch("novoaltura_esconder");
+  const naorespPeso = watch("novopeso_esconder");
+  const naorespQuadril = watch("quadril_esconder");
+  const naorespPes = watch("novopes_esconder");
 
   function handleTryWhatsapp() {
     const { ddi_acompanhante, whatsapp_acompanhante } = getValues();
@@ -82,8 +81,6 @@ export default function FormAnuncio({ edit }: PropsType) {
     )}`;
     window.open(url, "_blank");
   }
-
-  console.log(errors)
 
   return (
     <Form {...form}>
@@ -180,7 +177,7 @@ export default function FormAnuncio({ edit }: PropsType) {
             <Checkbox
               id={naorespAlturaId}
               checked={naorespAltura}
-              onCheckedChange={() => handleCheck("naoresp_altura")}
+              onCheckedChange={() => handleCheck("novoaltura_esconder")}
             />
             <div className="grid gap-2 items-end">
               <Label htmlFor={naorespAlturaId} className="text-xs md:text-sm">
@@ -203,7 +200,7 @@ export default function FormAnuncio({ edit }: PropsType) {
             <Checkbox
               id={naorespPesoId}
               checked={naorespPeso}
-              onCheckedChange={() => handleCheck("naoresp_peso")}
+              onCheckedChange={() => handleCheck("novopeso_esconder")}
             />
             <div className="grid gap-2 items-end">
               <Label htmlFor={naorespPesoId} className="text-xs md:text-sm">
@@ -226,7 +223,7 @@ export default function FormAnuncio({ edit }: PropsType) {
             <Checkbox
               id={naorespQuadrilId}
               checked={naorespQuadril}
-              onCheckedChange={() => handleCheck("naoresp_quadril")}
+              onCheckedChange={() => handleCheck("quadril_esconder")}
             />
             <div className="grid gap-2 items-end">
               <Label htmlFor={naorespQuadrilId} className="text-xs md:text-sm">
@@ -249,7 +246,7 @@ export default function FormAnuncio({ edit }: PropsType) {
             <Checkbox
               id={naorespPesId}
               checked={naorespPes}
-              onCheckedChange={() => handleCheck("naoresp_pes")}
+              onCheckedChange={() => handleCheck("novopes_esconder")}
             />
             <div className="grid gap-2 items-end">
               <Label htmlFor={naorespPesId} className="text-xs md:text-sm">

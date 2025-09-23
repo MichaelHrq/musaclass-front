@@ -57,10 +57,7 @@ export default function PostManagement() {
     },
   });
 
-  console.log(postsData);
-
   const posts = postsData?.pages.flatMap((page) => page.data) ?? [];
-
   const approveMutation = useMutation({
     mutationFn: aprovarFeedAction,
     onSuccess: (res) => {

@@ -2,16 +2,19 @@
 
 import { env } from "@/constants/env";
 import { getTokens } from "./authTokens";
+import { api } from "@/constants/api";
 
 export async function serverFetch<T = any>(
   input: RequestInfo | URL,
   init?: RequestInit
 ): Promise<T> {
-  const { access_token } = await getTokens();
+  const { access_token, refresh_token } = await getTokens();
   const headers = new Headers(init?.headers);
 
-  if (access_token && input !== "auth/refresh-token") {
-    headers.set("Authorization", `Bearer ${access_token}`);
+  if (access_token) {
+    const token = input === api.auth.refresh ? refresh_token : access_token;
+    // console.log('Adding Authorization header with token');
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
   if (
@@ -21,6 +24,8 @@ export async function serverFetch<T = any>(
   ) {
     headers.set("Content-Type", "application/json");
   }
+
+  // console.log(headers.get("Authorization"));
 
   let response: Response;
   try {

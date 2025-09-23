@@ -97,7 +97,6 @@ export default function Feed({ items, anuncio }: PropsType) {
                 </div>
               )}
             <div className="flex justify-center mb-4">
-              <>{console.log(item)}</>
               {item.midia?.[0]?.url ? (
                 <>
                   {item.midia[0].tipo === "image" && (

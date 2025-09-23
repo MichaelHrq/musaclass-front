@@ -68,7 +68,6 @@ export const reprovarFeedAction = withAuth(
         message: "Feed reprovado com sucesso",
       };
     } catch (error: any) {
-      console.log(error);
       return {
         success: false,
         message: error.message ?? "Falha ao tentar reprovado o feed",

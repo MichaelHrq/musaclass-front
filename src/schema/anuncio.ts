@@ -11,10 +11,10 @@ export const anuncioSchema = z
     cartao_acompanhante: z
       .string({ message: "É obrigatório" })
       .min(1, "É obrigatório"),
-    naoresp_altura: z.boolean().optional(),
-    naoresp_peso: z.boolean().optional(),
-    naoresp_quadril: z.boolean().optional(),
-    naoresp_pes: z.boolean().optional(),
+    novoaltura_esconder: z.boolean(),
+    novopeso_esconder: z.boolean(),
+    quadril_esconder: z.boolean(),
+    novopes_esconder: z.boolean(),
     novoaltura_acompanhante: z.string().min(1, "Altura é obrigatório"),
     novopeso_acompanhante: z.string().min(1, "Peso é obrigatório"),
     quadril_acompanhante: z.string().min(1, "Manequim é obrigatório"),
@@ -41,9 +41,9 @@ export const anuncioSchema = z
   )
   .refine(
     (data) => {
-      const { novoaltura_acompanhante, naoresp_altura } = data;
-      if (naoresp_altura) {
-        data.novoaltura_acompanhante = "";
+      const { novoaltura_acompanhante, novoaltura_esconder } = data;
+      if (novoaltura_esconder) {
+        data.novoaltura_acompanhante = "0";
         return true;
       }
       const n = Number(novoaltura_acompanhante);
@@ -58,9 +58,9 @@ export const anuncioSchema = z
   )
   .refine(
     (data) => {
-      const { novopeso_acompanhante, naoresp_peso } = data;
-      if (naoresp_peso) {
-        data.novopeso_acompanhante = "";
+      const { novopeso_acompanhante, novopeso_esconder } = data;
+      if (novopeso_esconder) {
+        data.novopeso_acompanhante = "0";
         return true;
       }
       const n = Number(novopeso_acompanhante);
@@ -75,9 +75,9 @@ export const anuncioSchema = z
   )
   .refine(
     (data) => {
-      const { quadril_acompanhante, naoresp_quadril } = data;
-      if (naoresp_quadril) {
-        data.quadril_acompanhante = "";
+      const { quadril_acompanhante, quadril_esconder } = data;
+      if (quadril_esconder) {
+        data.quadril_acompanhante = "0";
         return true;
       }
       return true;
@@ -89,9 +89,9 @@ export const anuncioSchema = z
   )
   .refine(
     (data) => {
-      const { novopes_acompanhante, naoresp_pes } = data;
-      if (naoresp_pes) {
-        data.novopes_acompanhante = "";
+      const { novopes_acompanhante, novopes_esconder } = data;
+      if (novopes_esconder) {
+        data.novopes_acompanhante = "0";
         return true;
       }
       const n = Number(novopes_acompanhante);

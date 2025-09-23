@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 // Exemplo de Server Action (substitua pela sua implementação real)
 async function reprovarPostAction(postId: string, motivo: string): Promise<{ success: boolean; message: string }> {
-  console.log("Server Action: Reprovar Post ID:", postId, "Motivo:", motivo);
+  // console.log("Server Action: Reprovar Post ID:", postId, "Motivo:", motivo);
   if (motivo.length < 5) return { success: false, message: "O motivo precisa ter pelo menos 5 caracteres."}
   await new Promise(resolve => setTimeout(resolve, 1500));
   return { success: true, message: "Post reprovado com sucesso." };
