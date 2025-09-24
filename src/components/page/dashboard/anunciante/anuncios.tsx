@@ -26,13 +26,18 @@ export default function AnunciosList() {
         <Loading />
       ) : anuncios?.length > 0 ? (
         anuncios?.map((item) => (
-          <div key={item.id} className="w-full relative">
+          <div
+            key={item.id}
+            className="w-full mt-4 p-4 border border-[#444] rounded-lg bg-[#2A2A2A] flex flex-col gap-2 text-white relative"
+          >
             <ListAnuncios item={item} />
-            <ButtonIcon tooltip="Ver detalhes">
-              <Link href={`anunciante/${item.id}`}>
-                <Ellipsis size={18} />
-              </Link>
-            </ButtonIcon>
+            {item.status !== "Não publicado" && (
+              <ButtonIcon tooltip="Ver detalhes">
+                <Link href={`anunciante/${item.id}`}>
+                  <Ellipsis size={18} />
+                </Link>
+              </ButtonIcon>
+            )}
           </div>
         ))
       ) : (

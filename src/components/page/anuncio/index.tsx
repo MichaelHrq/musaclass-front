@@ -1,15 +1,16 @@
 "use client";
 
-import {
-  getFeedAction,
-  getAnuncioId,
-} from "@/app/anunciante/[anuncio]/action";
+import { getFeedAction, getAnuncioId } from "@/app/anunciante/[anuncio]/action";
 import Feed from "@/components/feed";
 import FormPost from "@/components/form/post";
 import ListAnuncios from "@/components/list/anuncio";
 import Loading from "@/components/loading";
 import { Button } from "@/components/ui/button";
-import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Link from "next/link";
 
 type PropsType = {
@@ -35,7 +36,8 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
     isLoading: isLoadingFeed,
   } = useInfiniteQuery({
     queryKey: ["feed", anuncioId],
-    queryFn: ({ pageParam }) => getFeedAction({ anuncio: anuncioId, pageParam }),
+    queryFn: ({ pageParam }) =>
+      getFeedAction({ anuncio: anuncioId, pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage.current_page < lastPage.last_page) {
@@ -49,17 +51,20 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
   const feedItems = feedData?.pages.flatMap((page) => page.data) ?? [];
   const isLoading = isLoadingAnuncio || isLoadingFeed;
 
+  console.log(feedItems);
+
   return (
     <>
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full justify-center max-w-3xl rounded-lg gap-6 mb-4">
         <p className="text-xl md:text-2xl font-[500]">Detalhes do Anúncio</p>
-        <ListAnuncios item={anuncioData}>
+        <div className="w-full mt-4 p-4 border border-[#444] rounded-lg bg-[#2A2A2A] flex flex-col gap-2 text-white">
+          <ListAnuncios item={anuncioData} />
           <Button asChild className="w-full mt-2">
             <Link className="w-full" href={`${anuncioId}/editar`}>
               Editar informações
             </Link>
           </Button>
-        </ListAnuncios>
+        </div>
       </div>
 
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg gap-6 mb-4">

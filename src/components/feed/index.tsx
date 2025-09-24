@@ -25,26 +25,6 @@ const STATUS_COLORS: Record<string, string> = {
   Reprovado: "text-red-500",
 };
 
-function formatarDataPublicacao(dateString: string): string {
-  const parts = dateString.match(/(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})/);
-  if (!parts) return dateString;
-
-  const [day, month, year, hours, minutes] = parts;
-  const dateObj = new Date(`${year}-${month}-${day}T${hours}:${minutes}:00`);
-
-  if (isNaN(dateObj.getTime())) {
-    return dateString;
-  }
-
-  const dataFormatada = new Intl.DateTimeFormat("pt-BR").format(dateObj);
-  const horaFormatada = new Intl.DateTimeFormat("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(dateObj);
-
-  return `Data: ${dataFormatada} - Hora: ${horaFormatada}`;
-}
-
 export default function Feed({ items, anuncio }: PropsType) {
   const queryClient = useQueryClient();
   const [feedItem, setFeedItem] = useState<getFeedDataType>();
@@ -67,6 +47,13 @@ export default function Feed({ items, anuncio }: PropsType) {
     return toast.error(res.message);
   };
 
+  function handleItemTipo (tipo: string) {
+    if (tipo === 'story') {
+      return 'Story';
+    }
+    return 'Galeria'
+  }
+
   return (
     <>
       {items.length > 0 ? (
@@ -76,9 +63,14 @@ export default function Feed({ items, anuncio }: PropsType) {
             className="text-xs md:text-[16px] flex flex-col w-full p-4 border border-[#444] rounded-lg bg-[#2A2A2A] gap-2"
           >
             <div className="flex justify-between items-center mb-2">
-              <p className="text-sm text-neutral-300 ">
-                {formatarDataPublicacao(item.publicado_em)}
-              </p>
+              <div className="flex gap-1 items-center justify-center">
+                <p className="text-[12px] rounded-lg bg-neutral-600 px-1.5 py-0.5 text-neutral-300">
+                  {handleItemTipo(item?.tipo)}
+                </p>
+                <p className="text-xs md:text-sm text-neutral-300 ">
+                  {item?.publicado_em?.slice(0, 16)}
+                </p>
+              </div>
               <p
                 className={`text-sm font-semibold  ${
                   STATUS_COLORS[item.publish] ?? "text-neutral-500"

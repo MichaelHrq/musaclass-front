@@ -127,6 +127,7 @@ export type getFeedDataType = {
   user_id: string;
   titulo: string;
   post: string;
+  tipo: string
   midia_path_master: string;
   midia_path_thumbnail1: string;
   midia_path_thumbnail2: string;
