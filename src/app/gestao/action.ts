@@ -18,6 +18,7 @@ export type getDataPostagensType = {
   user_id: string;
   post: string;
   ativo: true;
+  tipo: "post" | "story";
   publicado_em: string;
   post_id: string;
   publish: "Pendente" | "Aprovado" | "Reprovado";
@@ -32,7 +33,11 @@ export type getPostagensType = {
   data: getDataPostagensType[];
 };
 
-export async function getPostagensAction({ pageParam = 1 }: { pageParam?: number }) {
+export async function getPostagensAction({
+  pageParam = 1,
+}: {
+  pageParam?: number;
+}) {
   return await serverFetch<getPostagensType>(
     `${api.gestao.dashboard}?page=${pageParam}`
   );

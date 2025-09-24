@@ -122,6 +122,13 @@ export default function PostManagement() {
     }
   };
 
+  function handleItemTipo(tipo: string) {
+    if (tipo === "story") {
+      return "Story";
+    }
+    return "Galeria";
+  }
+
   return (
     <div className="container flex flex-col items-center">
       <div className="max-w-7xl">
@@ -151,6 +158,9 @@ export default function PostManagement() {
               >
                 <div className="flex justify-between items-center text-sm text-gray-400">
                   <span className="font-medium">
+                    <span className="text-[12px] rounded-lg bg-neutral-600 px-1.5 py-0.5 text-neutral-300 mr-1">
+                      {handleItemTipo(post.tipo)}
+                    </span>
                     {post.publicado_em.replace(
                       /.*(\d{2}\/\d{2}\/\d{4}).*/,
                       "Data: $1"
