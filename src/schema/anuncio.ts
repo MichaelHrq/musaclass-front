@@ -43,7 +43,7 @@ export const anuncioSchema = z
     (data) => {
       const { novoaltura_acompanhante, novoaltura_esconder } = data;
       if (novoaltura_esconder) {
-        data.novoaltura_acompanhante = "0";
+        data.novoaltura_acompanhante = "";
         return true;
       }
       const n = Number(novoaltura_acompanhante);
@@ -60,7 +60,7 @@ export const anuncioSchema = z
     (data) => {
       const { novopeso_acompanhante, novopeso_esconder } = data;
       if (novopeso_esconder) {
-        data.novopeso_acompanhante = "0";
+        data.novopeso_acompanhante = "";
         return true;
       }
       const n = Number(novopeso_acompanhante);
@@ -77,7 +77,7 @@ export const anuncioSchema = z
     (data) => {
       const { quadril_acompanhante, quadril_esconder } = data;
       if (quadril_esconder) {
-        data.quadril_acompanhante = "0";
+        data.quadril_acompanhante = "";
         return true;
       }
       return true;
@@ -91,7 +91,7 @@ export const anuncioSchema = z
     (data) => {
       const { novopes_acompanhante, novopes_esconder } = data;
       if (novopes_esconder) {
-        data.novopes_acompanhante = "0";
+        data.novopes_acompanhante = "";
         return true;
       }
       const n = Number(novopes_acompanhante);

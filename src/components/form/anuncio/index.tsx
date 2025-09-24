@@ -94,7 +94,7 @@ export default function FormAnuncio({ edit }: PropsType) {
               control={control}
               name="ddi_acompanhante"
               label="DDI"
-              error={errors.whatsapp_acompanhante?.message}
+              error={errors.ddi_acompanhante?.message}
               inputMode="numeric"
               {...phoneDDDFormat}
             />
