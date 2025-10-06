@@ -25,6 +25,13 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
+// Mensagem padrão para a reprovação
+const defaultRejectReason = `A foto ou vídeo enviado não pôde ser publicado por não estar de acordo com as regras e diretrizes do site.
+
+Para manter um ambiente seguro e adequado para todos, todo conteúdo precisa seguir nossas políticas. Recomendamos que você revise as Diretrizes da Comunidade antes de reenviar.
+
+Agradecemos a compreensão.`;
+
 export default function PostManagement() {
   const [approveModal, setApproveModal] = useState<{
     open: boolean;
@@ -34,7 +41,7 @@ export default function PostManagement() {
     open: boolean;
     post: getDataPostagensType | null;
   }>({ open: false, post: null });
-  const [rejectReason, setRejectReason] = useState("");
+  const [rejectReason, setRejectReason] = useState(defaultRejectReason);
 
   const queryClient = useQueryClient();
 
@@ -94,7 +101,7 @@ export default function PostManagement() {
     },
     onSettled: () => {
       setRejectModal({ open: false, post: null });
-      setRejectReason("");
+      setRejectReason(defaultRejectReason);
     },
   });
 
@@ -110,7 +117,8 @@ export default function PostManagement() {
 
   const handleReject = (post: getDataPostagensType) => {
     setRejectModal({ open: true, post });
-    setRejectReason("");
+    // Define a mensagem padrão ao abrir o modal de rejeição
+    setRejectReason(defaultRejectReason);
   };
 
   const confirmReject = async () => {
