@@ -7,7 +7,6 @@ export const postSchema = z.object({
   tipo: z.enum(['post', 'story']),
   post: z
     .string({ message: "Descrição do post é obrigatório" })
-    .min(1, "Descrição do post é obrigatório")
     .trim(),
   file: z
     .any()

@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["local-origin.dev", "*.local-origin.dev", "192.168.1.13"],
   experimental: {
     serverActions: {
-      bodySizeLimit: "100mb",
+      bodySizeLimit: "500mb",
     },
   },
   images: {
