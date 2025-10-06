@@ -22,7 +22,7 @@ export default function InputCurrency<T extends FieldValues>({
   name,
   label,
   description,
-  placeholder = "R$ 0,00",
+  placeholder = "0",
   error,
   ...rest
 }: PropsType<T>) {
@@ -44,11 +44,13 @@ export default function InputCurrency<T extends FieldValues>({
               <Input_
                 {...field}
                 {...rest}
-                value={formattedValue}
+                // value={formattedValue}
+                value={field.value}
                 onChange={(e) => {
                   const rawValue = e.target.value.replace(/\D/g, "");
-                  const numericValue = parseFloat(rawValue) / 100;
-                  field.onChange(isNaN(numericValue) ? 0 : numericValue);
+                  // const numericValue = parseFloat(rawValue) / 100;
+                  // field.onChange(isNaN(numericValue) ? 0 : numericValue);
+                  field.onChange(Number(rawValue));
                 }}
                 id={name}
                 placeholder={placeholder}
