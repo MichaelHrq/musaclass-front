@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "video/mp4", "video/quicktime"];
+const MAX_FILE_SIZE_MB = 250;
 
 export const postSchema = z.object({
   post_id: z.string(),
@@ -24,8 +25,11 @@ export const postSchema = z.object({
       "O arquivo deve ser uma imagem ou vídeo."
     )
     .refine(
-      (files) => allowedTypes.includes(files?.[0]?.type),
-      "O arquivo deve ser do tipo PNG, JPEG, JPG ou MP4"
+      (files) => allowedTypes.includes(files?.[0]?.type), "O arquivo deve ser do tipo PNG, JPEG, JPG, MP4 ou MOV."
+    )
+    .refine(
+      (files) => files?.[0]?.size <= MAX_FILE_SIZE_MB * 1024 * 1024,
+      `O tamanho máximo do arquivo é de ${MAX_FILE_SIZE_MB} MB.`
     ),
 });
 
