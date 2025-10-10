@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import Loading from "../loading";
 import { Button } from "../ui/button";
 import { Dialog } from "../ui/dialog/dialog";
+import Link from "next/link";
 
 type PropsType = {
   anuncio: string;
@@ -47,11 +48,11 @@ export default function Feed({ items, anuncio }: PropsType) {
     return toast.error(res.message);
   };
 
-  function handleItemTipo (tipo: string) {
-    if (tipo === 'story') {
-      return 'Story';
+  function handleItemTipo(tipo: string) {
+    if (tipo === "story") {
+      return "Story";
     }
-    return 'Galeria'
+    return "Galeria";
   }
 
   return (
@@ -82,10 +83,15 @@ export default function Feed({ items, anuncio }: PropsType) {
             {item.publish === "Reprovado" &&
               item.notifications?.[0]?.data?.motivo && (
                 <div className="p-2 text-sm bg-red-900 rounded-md mb-4">
-                  <span>
+                  <p>
                     Motivo da reprovação:{" "}
                     {item?.notifications?.[0]?.data?.motivo}
-                  </span>
+                  </p>
+                  <div className="text-sm mt-2 hover:underline">
+                    <Link href="/anunciante/diretrizes">
+                      Clique aqui para ver as diretrizes completas.
+                    </Link>
+                  </div>
                 </div>
               )}
             <div className="flex justify-center mb-4">

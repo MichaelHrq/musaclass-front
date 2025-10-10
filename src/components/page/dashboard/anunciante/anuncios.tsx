@@ -31,7 +31,7 @@ export default function AnunciosList() {
             className="w-full mt-4 p-4 border border-[#444] rounded-lg bg-[#2A2A2A] flex flex-col gap-2 text-white relative"
           >
             <ListAnuncios item={item} />
-            {item.status !== "Não publicado" && (
+            {(item.status !== "Não publicado" && !!item.cidadeanome) && (
               <ButtonIcon tooltip="Ver detalhes">
                 <Link href={`anunciante/${item.id}`}>
                   <Ellipsis size={18} />

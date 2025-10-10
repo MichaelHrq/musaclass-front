@@ -51,8 +51,6 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
   const feedItems = feedData?.pages.flatMap((page) => page.data) ?? [];
   const isLoading = isLoadingAnuncio || isLoadingFeed;
 
-  console.log(feedItems);
-
   return (
     <>
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full justify-center max-w-3xl rounded-lg gap-6 mb-4">

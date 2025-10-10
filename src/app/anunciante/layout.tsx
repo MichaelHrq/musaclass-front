@@ -10,6 +10,7 @@ export default function GestaoLayout({
     nav: [
       { title: `Meus anúncios`, url: `/anunciante` },
       { title: `Perfil`, url: `/anunciante/perfil` },
+      { title: `Diretrizes`, url: `/anunciante/diretrizes` },
     ],
   };
   return (
