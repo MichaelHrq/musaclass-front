@@ -21,7 +21,9 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { MapPin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -129,6 +131,8 @@ export default function PostManagement() {
     return "Galeria";
   }
 
+  console.log(posts)
+
   return (
     <div className="container flex flex-col items-center">
       <div className="max-w-7xl">
@@ -156,6 +160,13 @@ export default function PostManagement() {
                 key={post.id}
                 className="bg-[#2A2A2A] border border-[#444444] rounded-md p-4 break-inside-avoid-column flex flex-col mb-6 gap-4 shadow-md"
               >
+                <h1 className="text-xl font-semibold">{post.posts_info.nome}</h1>
+                <div className="flex justify-between items-center text-sm text-gray-400">
+                  <p className="flex items-center gap-1"><MapPin size={16} className="text-gray-500" />{` `}{post.posts_info.cidade}</p>
+                  <Button asChild variant={"outline"}>
+                    <Link target="_blank" href={post.posts_info.url}>Ver Anúncio</Link>
+                  </Button>
+                </div>
                 <div className="flex justify-between items-center text-sm text-gray-400">
                   <span className="font-medium">
                     <span className="text-[12px] rounded-lg bg-neutral-600 px-1.5 py-0.5 text-neutral-300 mr-1">

@@ -13,10 +13,18 @@ export type getDataMidiaPostagensType = {
   tipo: "image" | "video";
 };
 
+export type getDataPostType = {
+  id: string
+  cidade: string
+  nome: string
+  url: string
+}
+
 export type getDataPostagensType = {
   id: number;
   user_id: string;
   post: string;
+  posts_info: getDataPostType;
   ativo: true;
   tipo: "post" | "story";
   publicado_em: string;
