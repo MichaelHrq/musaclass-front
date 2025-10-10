@@ -139,8 +139,6 @@ export default function PostManagement() {
     return "Galeria";
   }
 
-  console.log(posts)
-
   return (
     <div className="container flex flex-col items-center">
       <div className="max-w-7xl">

@@ -5,7 +5,7 @@ import { AnuncioWPType } from "@/app/gestao/anunciante/type";
 import ListAnuncios from "@/components/list/anuncio";
 import Loading from "@/components/loading";
 import ButtonIcon from "@/components/ui/button/icon";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, FilePen } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -33,8 +33,8 @@ export default function AnunciosList() {
             <ListAnuncios item={item} />
             {(item.status !== "Não publicado" && !!item.cidadeanome) && (
               <ButtonIcon tooltip="Ver detalhes">
-                <Link href={`anunciante/${item.id}`}>
-                  <Ellipsis size={18} />
+                <Link href={`anunciante/${item.id}`} className="flex gap-1 items-center text-xs">
+                  <FilePen size={16} /> Editar
                 </Link>
               </ButtonIcon>
             )}
