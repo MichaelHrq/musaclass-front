@@ -71,7 +71,7 @@ export default function FormPost({ anuncioId }: PropsType) {
       >
         <input type="hidden" value={anuncioId} {...register("post_id")} />
 
-        <RadioGroup
+        {/* <RadioGroup
           items={[
             { label: "Galeria", value: "post" },
             { label: "Story", value: "story" },
@@ -81,7 +81,7 @@ export default function FormPost({ anuncioId }: PropsType) {
           label="Tipo de publicação"
           error={errors.tipo?.message}
           className="flex-row gap-5"
-        />
+        /> */}
 
         <Textarea
           control={control}

@@ -29,11 +29,11 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
   async function onSubmit(data: SearchCpfType) {
     const res = await searchCpfAction(data);
     if (!res.success) {
+      console.log(123);
       return toast.error(res.message);
     }
-    setAnuncios(res.data.data);
+    setAnuncios(res.data.data ?? []);
   }
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
