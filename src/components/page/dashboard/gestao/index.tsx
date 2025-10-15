@@ -274,12 +274,12 @@ export default function PostManagement() {
         <DialogContent className="bg-[#2A2A2A] border border-[#444444] text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">
-              Aprovar Anúncio
+              Aprovar mídia
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <p className="text-gray-300 mb-6">
-              Tem certeza de que deseja aprovar este anúncio?
+              Tem certeza de que deseja aprovar esta mídia?
             </p>
             <div className="flex gap-3 justify-end">
               <Button
@@ -312,12 +312,12 @@ export default function PostManagement() {
         <DialogContent className="bg-[#2A2A2A] border border-[#444444] text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold">
-              Reprovar Anúncio
+              Reprovar mídia
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <p className="text-gray-300 mb-4">
-              Você está reprovando o anúncio. Por favor, forneça o motivo
+              Você está reprovando a mídia. Por favor, forneça o motivo
               abaixo.
             </p>
             <Textarea

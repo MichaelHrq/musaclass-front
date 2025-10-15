@@ -66,12 +66,12 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
       </div>
 
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg gap-6 mb-4">
-        <p className="text-xl md:text-2xl">Postar no Feed</p>
+        <p className="text-xl md:text-2xl">Postar mídia</p>
         <FormPost anuncioId={anuncioId} />
       </div>
 
       <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg space-y-6">
-        <p className="text-xl md:text-2xl font-[500]">Meu Feed</p>
+        <p className="text-xl md:text-2xl font-[500]">Minhas mídias</p>
         {isLoading ? (
           <Loading />
         ) : (
