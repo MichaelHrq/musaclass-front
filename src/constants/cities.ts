@@ -8,5 +8,5 @@ export const cities = [
   { name: "Salvador", slug: "salvador" },
   { name: "São Luís", slug: "sao-luis" },
   { name: "Aracaju", slug: "aracaju" },
-  { name: "Teste", slug: "teste" },
+  // { name: "Teste", slug: "teste" },
 ];
