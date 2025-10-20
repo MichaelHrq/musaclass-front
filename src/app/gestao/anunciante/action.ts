@@ -14,7 +14,6 @@ export const searchCpfAction = withAuth(async (data: SearchCpfType) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(resp);
     return {
       success: true,
       message: undefined,
@@ -38,7 +37,6 @@ export async function SendEmail(data: SendEmailType) {
         "Content-Type": "application/json",
       },
     });
-    console.log(resp);
     return {
       success: true,
       message: resp?.message ?? `Convite enviado com sucesso!`,
