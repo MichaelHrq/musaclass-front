@@ -146,8 +146,8 @@ export default function Feed({ items, anuncio }: PropsType) {
       <Dialog
         open={showDialog}
         onClose={() => setShowDialog(!showDialog)}
-        title="Remover Feed"
-        subtitle="Tem certeza que deseja remover este feed? Esta ação não pode ser desfeita."
+        title="Remover mídia"
+        subtitle="Tem certeza que deseja remover esta mídia? Esta ação não pode ser desfeita."
       >
         <div className="w-full flex justify-end gap-2 mt-4">
           <Button

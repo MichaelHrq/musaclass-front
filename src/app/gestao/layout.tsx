@@ -9,6 +9,7 @@ export default function GestaoLayout({
     logo: `/gestao`,
     nav: [
       { title: `Dashboard`, url: `/gestao` },
+      { title: `Mídias`, url: `/gestao/midias` },
       { title: `Anunciante`, url: `/gestao/anunciante` },
       { title: `Perfil`, url: `/gestao/perfil` },
     ],

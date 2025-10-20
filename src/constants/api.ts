@@ -17,6 +17,7 @@ export const api = {
     sendInvite: `api/convite`,
     dashboard: `api/posts`,
     aprovarFeed: `api/post/aprovar`, // /id_feed
+    getApprovedMidias: `api/anuncios`, // ?city=slug_cidade
   },
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`,
