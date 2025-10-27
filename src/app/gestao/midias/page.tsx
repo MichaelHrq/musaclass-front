@@ -5,21 +5,19 @@ import { cities } from "@/constants/cities";
 import React from "react";
 import { toast } from "sonner";
 
-import {
-  getApprovedMidiasByCity,
-  getDataApprovedMidiasByCityType,
-} from "./action";
-import { Card } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
+import { deleteFeedAction } from "@/app/anunciante/[anuncio]/action";
 import { Button } from "@/components/ui/button";
-import { set } from "zod";
+import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { deleteFeedAction } from "@/app/anunciante/[anuncio]/action";
+import {
+  getApprovedMidiasByCity,
+  getDataApprovedMidiasByCityType,
+} from "./action";
 
 export default function SearchMidias() {
   const [slug, setSlug] = React.useState<string>();
@@ -121,20 +119,20 @@ export default function SearchMidias() {
         )}
 
         {slug && !loading.city && midias.length > 0 && (
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full max-w-[1256px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-start gap-4 bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full max-w-[1256px]">
             {midias.map((item) => (
               <Card
                 key={item.id}
-                className="bg-[#2A2A2A] border border-[#444444] rounded-md p-4 break-inside-avoid-column flex flex-col mb-6 gap-4 shadow-md"
+                className="bg-[#2A2A2A] border border-[#444444] shrink-0 grow-0 rounded-md p-4 flex flex-col gap-4 shadow-md"
               >
                 <h1 className="text-xl font-semibold">{item.nome}</h1>
-                <div className="flex justify-between items-center text-sm text-gray-400">
-                  {/* <Button asChild variant={"outline"}>
+                {/* <div className="flex justify-between items-center text-sm text-gray-400">
+                  <Button asChild variant={"outline"}>
                     <Link target="_blank" href={post.posts_info.url}>
                       Ver Anúncio
                     </Link>
-                  </Button> */}
-                </div>
+                  </Button>
+                </div> */}
                 <div className="flex justify-between items-center text-sm text-gray-400">
                   <span className="font-medium">
                     {item.publicado_em.replace(

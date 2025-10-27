@@ -160,11 +160,11 @@ export default function PostManagement() {
             Falha ao carregar as postagens. Tente novamente mais tarde.
           </div>
         ) : posts.length > 0 ? (
-          <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full max-w-[1256px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 items-start gap-4 bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full max-w-[1256px]">
             {posts?.map((post) => (
               <Card
                 key={post.id}
-                className="bg-[#2A2A2A] border border-[#444444] rounded-md p-4 break-inside-avoid-column flex flex-col mb-6 gap-4 shadow-md"
+                className="bg-[#2A2A2A] border border-[#444444] shrink-0 grow-0 rounded-md p-4 flex flex-col gap-4 shadow-md"
               >
                 <h1 className="text-xl font-semibold">{post.posts_info.nome}</h1>
                 <div className="flex justify-between items-center text-sm text-gray-400">
