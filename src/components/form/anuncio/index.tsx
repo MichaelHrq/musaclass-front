@@ -269,7 +269,7 @@ export default function FormAnuncio({ edit }: PropsType) {
         />
 
         <div className="flex justify-center items-center gap-3">
-          <Link href={`/anunciante/${edit.post_id}`}>
+          <Link href={`/anunciante`}>
             <Button type="button" variant={"secondary"}>
               <ChevronLeft />
               Voltar
