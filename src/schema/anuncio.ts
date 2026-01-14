@@ -6,8 +6,10 @@ export const anuncioSchema = z
     ddi_acompanhante: z.string().min(1, "DDD é obrigatório").max(4, "DDD inválido"),
     whatsapp_acompanhante: z.string().min(11, "Digite um telefone válido"),
     novoatendimento_acompanhante: z.array(z.string()),
-    cache_acompanhante: z.number().optional(),
-    combinar: z.boolean(),
+    cache_acompanhante: z.number().refine((val) => val >= 500, {
+      message: "Cachê deve ser a partir de 500 reais",
+    }),
+    // combinar: z.boolean(),
     cartao_acompanhante: z
       .string({ message: "É obrigatório" })
       .min(1, "É obrigatório"),
@@ -23,22 +25,22 @@ export const anuncioSchema = z
       .array(z.string())
       .min(1, `É obrigatório quem acompanha`),
   })
-  .refine(
-    (data) => {
-      const { cache_acompanhante, combinar } = data;
-      if (combinar) {
-        data.cache_acompanhante = 0.0
-        return true
-      }
-      if (!cache_acompanhante) return false; 
-      if (cache_acompanhante < 500) return false; 
-      return true;
-    },
-    {
-      message: "Cachê deve ser no mínimo R$ 500,00 ou a combinar",
-      path: ["cache_acompanhante"],
-    }
-  )
+  // .refine(
+  //   (data) => {
+  //     const { cache_acompanhante, combinar } = data;
+  //     if (combinar) {
+  //       data.cache_acompanhante = 0.0
+  //       return true
+  //     }
+  //     if (!cache_acompanhante) return false; 
+  //     if (cache_acompanhante < 500) return false; 
+  //     return true;
+  //   },
+  //   {
+  //     message: "Cachê deve ser no mínimo R$ 500,00 ou a combinar",
+  //     path: ["cache_acompanhante"],
+  //   }
+  // )
   .refine(
     (data) => {
       const { novoaltura_acompanhante, novoaltura_esconder } = data;

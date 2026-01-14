@@ -42,7 +42,6 @@ export async function getAnuncioInfos(id: string) {
     `${api.anunc.getAnuncioDadosById}/${id}`
   );
 
-  const isComb = resp.meta.cache_acompanhante === "A Combinar";
   const cache = Number(resp.meta.cache_acompanhante.replace(/\D/g, "")) / 100;
 
   return {
@@ -52,8 +51,7 @@ export async function getAnuncioInfos(id: string) {
         resp.meta.novoatendimento_acompanhante.length > 0
           ? isValidJson(resp.meta.novoatendimento_acompanhante)
           : [],
-      cache_acompanhante: isComb ? undefined : cache,
-      combinar: isComb ? true : false,
+      cache_acompanhante: cache,
       cartao_acompanhante: resp.meta.cartao_acompanhante,
       novoaltura_acompanhante: resp.meta.novoaltura_acompanhante,
       novopeso_acompanhante: resp.meta.novopeso_acompanhante,
@@ -89,9 +87,7 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
     novoatendimento_acompanhante: JSON.stringify(
       data.novoatendimento_acompanhante
     ),
-    cache_acompanhante: data.combinar
-      ? "A Combinar"
-      : currency(data.cache_acompanhante!),
+    cache_acompanhante: currency(data.cache_acompanhante!),
     novoacompanha_acompanhante: JSON.stringify(data.novoacompanha_acompanhante),
     novoaltura_esconder: data.novoaltura_esconder ? 1 : 0,
     novopeso_esconder: data.novopeso_esconder ? 1 : 0,

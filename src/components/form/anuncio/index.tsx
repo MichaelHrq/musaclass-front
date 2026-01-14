@@ -64,7 +64,7 @@ export default function FormAnuncio({ edit }: PropsType) {
     setValue(field, !check);
   }
 
-  const isComb = watch("combinar");
+  // const isComb = watch("combinar");
   const naorespAltura = watch("novoaltura_esconder");
   const naorespPeso = watch("novopeso_esconder");
   const naorespQuadril = watch("quadril_esconder");
@@ -132,10 +132,10 @@ export default function FormAnuncio({ edit }: PropsType) {
             control={control}
             name="cache_acompanhante"
             label="Cachê"
-            disabled={isComb}
+            // disabled={isComb}
             inputMode="numeric"
           />
-          <div className="flex items-start gap-3 mt-1">
+          {/* <div className="flex items-start gap-3 mt-1">
             <Checkbox
               id={combinarId}
               checked={isComb}
@@ -146,7 +146,7 @@ export default function FormAnuncio({ edit }: PropsType) {
                 A Combinar
               </Label>
             </div>
-          </div>
+          </div> */}
           <FormMessage className="mt-2">
             {errors.cache_acompanhante?.message}
           </FormMessage>
