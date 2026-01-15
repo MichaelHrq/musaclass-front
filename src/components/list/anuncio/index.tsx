@@ -76,7 +76,7 @@ export default function ListAnuncios({
               className={`${buttonBaseClass} ${buttonGrayClass}`}
             >
               <FilePen size={14} />
-              Editar anúncio
+              Editar dados do anúncio
             </Link>
 
             {/* Botão 2: Ver Mídias */}
