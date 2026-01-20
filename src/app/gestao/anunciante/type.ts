@@ -5,5 +5,5 @@ export type AnuncioWPType = {
   vencimento: string;
   status: string;
   imgcapa:string
-  cidadeanome:string
+  cidade:string
 };

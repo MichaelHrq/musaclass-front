@@ -14,8 +14,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-
-
 export default function ListAnuncios({
   item,
   btn,
@@ -39,15 +37,17 @@ export default function ListAnuncios({
 
   return (
     // Removida a borda, padding extra e background do container principal
-    <div className="w-full flex flex-col md:flex-row items-start gap-4 mb-6 last:mb-0">
-      {/* Imagem */}
-      <Image
-        src={item.imgcapa}
-        alt={`Capa do anúncio de ${item.title}`}
-        width={360}
-        height={360}
-        className="w-full h-48 md:w-36 md:h-36 rounded-md object-cover flex-shrink-0 bg-neutral-800"
-      />
+    <div className="w-full flex flex-col md:flex-row items-start gap-4 mb-4 last:mb-0">
+
+      {item?.imgcapa && (
+        <Image
+          src={item.imgcapa}
+          alt={`Capa do anúncio de ${item.title}`}
+          width={360}
+          height={360}
+          className="w-full h-48 md:w-36 md:h-36 rounded-md object-cover flex-shrink-0 bg-neutral-800"
+        />
+      )}
 
       <div className="flex flex-col w-full h-full min-h-[144px]">
         {/* Título */}
@@ -59,7 +59,7 @@ export default function ListAnuncios({
         <div className="flex flex-col sm:flex-row sm:flex-wrap gap-y-2 gap-x-4 text-sm text-gray-400 mb-4">
           <div className="flex items-center gap-1.5">
             <MapPin size={16} className="text-gray-500" />
-            <span>{item.cidadeanome}</span>
+            <span>{item.cidade}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <CalendarDays size={16} className="text-gray-500" />
@@ -82,9 +82,9 @@ export default function ListAnuncios({
             {/* Botão 2: Ver Mídias */}
             <Link
               href={`anunciante/${item.id}?title=${encodeURIComponent(
-                item.title
+                item.title,
               )}&cidade=${encodeURIComponent(
-                item.cidadeanome
+                item.cidade,
               )}&vencimento=${encodeURIComponent(item.vencimento)}`}
               className={`${buttonBaseClass} ${buttonGrayClass}`}
             >
