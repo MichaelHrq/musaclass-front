@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-export type SearchCpfType = z.infer<typeof SearchCpfSchema>;
-
-export type SendEmailType = z.infer<typeof SendEmailSchema>;
-
 export const SearchCpfSchema = z.object({
   cpf: z
     .string()
@@ -13,12 +9,29 @@ export const SearchCpfSchema = z.object({
     .max(14, "CPF inválido"),
 });
 
+export type SearchCpfType = z.infer<typeof SearchCpfSchema>;
+
 export const SendEmailSchema = z.object({
   email: z
     .string()
-    .nonempty("E-mail é obrigatório")
-    .email("E-mail inválido")
+    .nonempty("Email é obrigatório")
+    .email("Email inválido")
     .trim(),
 });
 
+export type SendEmailType = z.infer<typeof SendEmailSchema>;
 
+export const ChangeEmailSchema = z.object({
+  lastEmail: z
+    .string()
+    .nonempty("Email é obrigatório")
+    .email("Email inválido")
+    .trim(),
+  newEmail: z
+    .string()
+    .nonempty("Email é obrigatório")
+    .email("Email inválido")
+    .trim(),
+});
+
+export type ChangeEmailType = z.infer<typeof ChangeEmailSchema>;

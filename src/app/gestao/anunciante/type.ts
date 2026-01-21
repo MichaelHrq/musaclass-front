@@ -7,3 +7,10 @@ export type AnuncioWPType = {
   imgcapa:string
   cidade:string
 };
+
+export type SearchCPFGetType = {
+  profile?: {
+    email:string
+  }
+  data: AnuncioWPType[]
+}

@@ -18,6 +18,7 @@ export const api = {
     dashboard: `api/posts`,
     aprovarFeed: `api/post/aprovar`, // /id_feed
     getApprovedMidias: `api/anuncios`, // ?city=slug_cidade
+    updateEmailAnunc: `api/auth/admin/update-email`
   },
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`,

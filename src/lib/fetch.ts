@@ -25,6 +25,8 @@ export async function serverFetch<T = any>(
     headers.set("Content-Type", "application/json");
   }
 
+  headers.set("Accept", "application/json");
+
   // console.log(headers.get("Authorization"));
 
   let response: Response;
@@ -42,7 +44,7 @@ export async function serverFetch<T = any>(
     );
   }
 
-  // console.log(response);
+  console.log(response);
 
   if (!response.ok) {
     console.error(

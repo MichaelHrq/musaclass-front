@@ -14,9 +14,10 @@ import { toast } from "sonner";
 
 type PropType = {
   setAnuncios: React.Dispatch<React.SetStateAction<any>>;
+  setisSearched: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function FormSearchCpf({ setAnuncios }: PropType) {
+export default function FormSearchCpf({ setAnuncios, setisSearched }: PropType) {
   const {
     register,
     handleSubmit,
@@ -31,12 +32,17 @@ export default function FormSearchCpf({ setAnuncios }: PropType) {
     if (!res.success) {
       return toast.error(res.message);
     }
-    setAnuncios(res.data.data ?? []);
+    setAnuncios(
+      res.data || {
+        data: [],
+      },
+    );
+    setisSearched(true);
   }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col w-full mt-4 gap-6"
+      className="flex flex-col w-full mt-4 gap-6 mb-4"
     >
       <InputField>
         <Label htmlFor="cpf" className="text-left mb-2">

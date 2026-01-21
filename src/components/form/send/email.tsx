@@ -44,7 +44,7 @@ export default function FormSendEmail() {
         <Input {...register("email")} id="email" />
         <InputError error={errors?.email} />
       </InputField>
-      <ButtonPending isPending={loading.submit} />
+      <ButtonPending isPending={loading.submit} label="Enviar convite" />
     </form>
   );
 }
