@@ -1,6 +1,6 @@
 export type AnuncioWPType = {
   id: number;
-  title: string;
+  nome: string;
   url: boolean;
   vencimento: string;
   status: string;

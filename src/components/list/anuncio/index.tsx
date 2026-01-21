@@ -42,7 +42,7 @@ export default function ListAnuncios({
       {item?.imgcapa && (
         <Image
           src={item.imgcapa}
-          alt={`Capa do anúncio de ${item.title}`}
+          alt={`Capa do anúncio de ${item.nome}`}
           width={360}
           height={360}
           className="w-full h-48 md:w-36 md:h-36 rounded-md object-cover flex-shrink-0 bg-neutral-800"
@@ -52,7 +52,7 @@ export default function ListAnuncios({
       <div className="flex flex-col w-full h-full min-h-[144px]">
         {/* Título */}
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-bold text-lg text-white">{item.title}</h3>
+          <h3 className="font-bold text-lg text-white">{item.nome}</h3>
         </div>
 
         {/* Metadados (Cidade, Data, Status) */}
@@ -82,7 +82,7 @@ export default function ListAnuncios({
             {/* Botão 2: Ver Mídias */}
             <Link
               href={`anunciante/${item.id}?title=${encodeURIComponent(
-                item.title,
+                item.nome,
               )}&cidade=${encodeURIComponent(
                 item.cidade,
               )}&vencimento=${encodeURIComponent(item.vencimento)}`}
