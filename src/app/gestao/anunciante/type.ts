@@ -12,5 +12,5 @@ export type SearchCPFGetType = {
   profile?: {
     email:string
   }
-  data: AnuncioWPType[]
+  anuncios: AnuncioWPType[]
 }

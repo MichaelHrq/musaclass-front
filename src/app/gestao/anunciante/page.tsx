@@ -13,6 +13,8 @@ export default function Anunciante() {
   const [anuncios, setAnuncios] = React.useState<SearchCPFGetType>();
   const [isSearched, setisSearched] = useState(false);
 
+  console.log(anuncios)
+
   return (
     <div className="container flex flex-col items-center">
       <div className="flex flex-col items-center w-full max-w-2xl">
@@ -23,12 +25,12 @@ export default function Anunciante() {
             setisSearched={setisSearched}
           />
 
-          {anuncios?.data && (
+          {anuncios?.anuncios && (
             <>
-              {anuncios.data.length === 0 ? (
+              {anuncios.anuncios.length === 0 ? (
                 <p className="mt-8">Nenhum anúncio encontrado</p>
               ) : (
-                anuncios?.data.map((item) => (
+                anuncios?.anuncios.map((item) => (
                   <ListAnuncios key={item.id} item={item} />
                 ))
               )}
