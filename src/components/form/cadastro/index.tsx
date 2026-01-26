@@ -49,7 +49,9 @@ export default function FormCadastro({ email, token }: PropsType) {
   async function onSubmit(data: FormData) {
     try {
       setLoading((curr) => ({ ...curr, submit: true }));
-      const resp = await createAnuncAction(JSON.stringify(data));
+      const resp = await createAnuncAction(
+        JSON.stringify({ ...data, email: data.email.toLowerCase() }),
+      );
       if (resp.success) {
         toast.success(resp.message);
         return router.push("/login");

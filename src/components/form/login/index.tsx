@@ -37,7 +37,9 @@ export default function FormLogin({ redirectTo }: PropsType) {
 
   async function onSubmit(data: FormData) {
     setLoading((curr) => ({ ...curr, submit: true }));
-    const resp = await loginAction(JSON.stringify(data));
+    const resp = await loginAction(
+      JSON.stringify({ ...data, email: data.email.toLowerCase() }),
+    );
     setLoading((curr) => ({ ...curr, submit: false }));
     if (!resp.success)
       return toast.error(resp.message || "Credenciais inválidas");

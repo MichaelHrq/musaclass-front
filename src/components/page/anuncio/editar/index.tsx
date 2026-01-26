@@ -17,6 +17,7 @@ export default function EditarAnuncioPage({ anuncioId }: PropsType) {
     infos: {} as any,
     edit: {} as any,
   });
+  
   useEffect(() => {
     (async () => {
       const { edit, infos } = await getAnuncioInfos(anuncioId);

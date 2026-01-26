@@ -67,11 +67,11 @@ export default function Header({ logo, nav }: PropsType) {
         </Link>
 
         {/* Menu Desktop */}
-        <nav className="hidden md:block">
+        <nav className="hidden md:block font-medium">
           <ul className="flex space-x-6">
             {nav.map((item) => (
               <li key={item.title}>
-                <Link href={item.url} className="hover:text-gray-400">
+                <Link href={item.url} className="hover:text-gray-400 text-sm">
                   {item.title}
                 </Link>
               </li>
@@ -79,7 +79,7 @@ export default function Header({ logo, nav }: PropsType) {
             <li>
               <button
                 onClick={() => logoutAction()}
-                className="hover:text-gray-400 cursor-pointer"
+                className="hover:text-gray-400 cursor-pointer text-sm"
               >
                 Sair
               </button>
@@ -123,7 +123,7 @@ export default function Header({ logo, nav }: PropsType) {
         </div>
 
         <nav className="p-4">
-          <ul className="space-y-4">
+          <ul className="space-y-4 text-sm font-medium">
             {nav.map((item) => (
               <li key={item.title}>
                 <Link

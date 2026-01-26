@@ -7,13 +7,13 @@ import ListAnuncios from "@/components/list/anuncio";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
-import { AnuncioWPType, SearchCPFGetType } from "./type";
+import { SearchCPFGetType } from "./type";
 
 export default function Anunciante() {
   const [anuncios, setAnuncios] = React.useState<SearchCPFGetType>();
   const [isSearched, setisSearched] = useState(false);
 
-  console.log(anuncios)
+  console.log(anuncios);
 
   return (
     <div className="container flex flex-col items-center">
@@ -64,7 +64,6 @@ export default function Anunciante() {
             )}
           </>
         ) : null}
-
       </div>
     </div>
   );

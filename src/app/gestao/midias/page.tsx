@@ -88,7 +88,7 @@ export default function SearchMidias() {
         </h2>
 
         <div className="bg-[#1E1E1E] rounded-lg p-4 sm:p-8 w-full mb-4">
-          <h2 className="text-sm md:text-base font-semibold mb-2">
+          <h2 className="text-sm font-semibold mb-2">
             Selecione uma cidade:
           </h2>
           <div className="w-full grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">

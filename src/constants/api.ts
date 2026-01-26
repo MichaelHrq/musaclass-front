@@ -9,8 +9,8 @@ export const api = {
     forgot: {
       sendCode: "api/auth/password/forgot/send-code",
       verifyCode: "api/auth/password/forgot/verify-code",
-      reset: "api/auth/password/forgot/reset"
-    } 
+      reset: "api/auth/password/forgot/reset",
+    },
   },
   gestao: {
     searchAnuncCpf: `api/anuciante/buscar-anuncios`,
@@ -18,7 +18,12 @@ export const api = {
     dashboard: `api/posts`,
     aprovarFeed: `api/post/aprovar`, // /id_feed
     getApprovedMidias: `api/anuncios`, // ?city=slug_cidade
-    updateEmailAnunc: `api/auth/admin/update-email`
+    updateEmailAnunc: `api/auth/admin/update-email`,
+    anuncioImagens: `api/galeria`,
+      // /id_anuncio (get) -> get imagens
+      // /upload/id_anuncio (post) -> upload imagens
+      // /id_anuncio/reorder -> reordenar imagens
+      // /id_anuncio/delete/id_imagem (delete) -> soft delete
   },
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`,
