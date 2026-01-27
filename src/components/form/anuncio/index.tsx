@@ -1,5 +1,6 @@
 "use client";
 
+import { updateDadosAnuncio } from "@/app/anunciante/[anuncio]/action";
 import { Button } from "@/components/ui/button";
 import ButtonPending from "@/components/ui/button/pending";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -49,14 +50,14 @@ export default function FormAnuncio({ edit }: PropsType) {
   } = form;
 
   async function onSubmit(data: AnuncioType) {
-    alert(JSON.stringify(data, null, 2));
-    // setLoading((cur) => ({ ...cur, submit: true }));
-    // const resp = await updateDadosAnuncio(data);
-    // setLoading((cur) => ({ ...cur, submit: false }));
-    // if (resp.sucess) {
-    //   return toast.success(resp.message);
-    // }
-    // return toast.error(resp.message);
+    // alert(JSON.stringify(data, null, 2));
+    setLoading((cur) => ({ ...cur, submit: true }));
+    const resp = await updateDadosAnuncio(data);
+    setLoading((cur) => ({ ...cur, submit: false }));
+    if (resp.sucess) {
+      return toast.success(resp.message);
+    }
+    return toast.error(resp.message);
   }
 
   function handleCheck(field: keyof AnuncioType) {
