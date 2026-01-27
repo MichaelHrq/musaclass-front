@@ -231,9 +231,11 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
       }
     }
 
-    queryClient.invalidateQueries({ queryKey: ["edit-anuncio", postId] });
-    toast.success("Processo de importação finalizado!", { id: toastId });
-    handleCloseModal();
+    setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ["edit-anuncio", postId] });
+      toast.success("Processo de importação finalizado!", { id: toastId });
+      handleCloseModal();
+    }, 1000 * 10); // Aguarda 10 segundos antes de invalidar a query
   }
 
   return (
