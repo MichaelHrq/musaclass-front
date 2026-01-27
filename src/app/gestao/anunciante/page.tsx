@@ -13,7 +13,7 @@ export default function Anunciante() {
   const [anuncios, setAnuncios] = React.useState<SearchCPFGetType>();
   const [isSearched, setisSearched] = useState(false);
 
-  console.log(anuncios);
+  // console.log(anuncios);
 
   return (
     <div className="container flex flex-col items-center">

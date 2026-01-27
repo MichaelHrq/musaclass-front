@@ -9,7 +9,7 @@ import { toast } from "sonner"; // Ou sua biblioteca de toast preferida
 
 // Exemplo de Server Action (substitua pela sua implementação real)
 async function aprovarPostAction(postId: string): Promise<{ success: boolean; message: string }> {
-  console.log("Server Action: Aprovar Post ID:", postId);
+  // console.log("Server Action: Aprovar Post ID:", postId);
   await new Promise(resolve => setTimeout(resolve, 1500)); // Simula latência
   // return { success: false, message: "Erro simulado ao aprovar." };
   return { success: true, message: "Post aprovado com sucesso!" };

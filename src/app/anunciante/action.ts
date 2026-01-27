@@ -12,7 +12,7 @@ export const getAnunciosAction = async (): Promise<AnuncioWPType[]> => {
     throw new Error("Failed to fetch anuncios");
   }
 
-  console.log(resp)
+  // console.log(resp)
 
   return resp;
   } catch (error: any) {
