@@ -1,6 +1,5 @@
 "use client";
 
-import { updateDadosAnuncio } from "@/app/anunciante/[anuncio]/action";
 import { Button } from "@/components/ui/button";
 import ButtonPending from "@/components/ui/button/pending";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,7 +28,7 @@ export default function FormAnuncio({ edit }: PropsType) {
     submit: false,
   });
 
-  const combinarId = useId();
+  // const naorespCacheId = useId();
   const naorespAlturaId = useId();
   const naorespPesoId = useId();
   const naorespQuadrilId = useId();
@@ -50,13 +49,14 @@ export default function FormAnuncio({ edit }: PropsType) {
   } = form;
 
   async function onSubmit(data: AnuncioType) {
-    setLoading((cur) => ({ ...cur, submit: true }));
-    const resp = await updateDadosAnuncio(data);
-    setLoading((cur) => ({ ...cur, submit: false }));
-    if (resp.sucess) {
-      return toast.success(resp.message);
-    }
-    return toast.error(resp.message);
+    alert(JSON.stringify(data, null, 2));
+    // setLoading((cur) => ({ ...cur, submit: true }));
+    // const resp = await updateDadosAnuncio(data);
+    // setLoading((cur) => ({ ...cur, submit: false }));
+    // if (resp.sucess) {
+    //   return toast.success(resp.message);
+    // }
+    // return toast.error(resp.message);
   }
 
   function handleCheck(field: keyof AnuncioType) {
@@ -69,6 +69,7 @@ export default function FormAnuncio({ edit }: PropsType) {
   const naorespPeso = watch("novopeso_esconder");
   const naorespQuadril = watch("quadril_esconder");
   const naorespPes = watch("novopes_esconder");
+  // const naorespCache = watch("cache_acompanhante_esconder");
 
   function handleTryWhatsapp() {
     const { ddi_acompanhante, whatsapp_acompanhante } = getValues();
@@ -77,7 +78,7 @@ export default function FormAnuncio({ edit }: PropsType) {
     }
     const url = `https://api.whatsapp.com/send?phone=${ddi_acompanhante}${whatsapp_acompanhante.replace(
       /\D/g,
-      ""
+      "",
     )}`;
     window.open(url, "_blank");
   }
@@ -132,24 +133,24 @@ export default function FormAnuncio({ edit }: PropsType) {
             control={control}
             name="cache_acompanhante"
             label="Cachê"
-            // disabled={isComb}
+            // disabled={naorespCache}
             inputMode="numeric"
           />
-          {/* <div className="flex items-start gap-3 mt-1">
-            <Checkbox
-              id={combinarId}
-              checked={isComb}
-              onCheckedChange={() => handleCheck("combinar")}
-            />
-            <div className="grid gap-2 items-end">
-              <Label htmlFor={combinarId} className="text-xs md:text-sm">
-                A Combinar
-              </Label>
-            </div>
-          </div> */}
           <FormMessage className="mt-2">
             {errors.cache_acompanhante?.message}
           </FormMessage>
+          {/* <div className="flex items-start gap-3 mt-1">
+            <Checkbox
+              id={naorespCacheId}
+              checked={naorespCache}
+              onCheckedChange={() => handleCheck("cache_acompanhante_esconder")}
+            />
+            <div className="grid gap-2 items-end">
+              <Label htmlFor={naorespCacheId} className="text-xs md:text-sm">
+                Não responder
+              </Label>
+            </div>
+          </div> */}
         </div>
 
         <Select

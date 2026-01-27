@@ -36,6 +36,8 @@ export default function EditarAnuncio() {
     { id: "video", label: "Vídeos", icon: Video },
   ];
 
+  // console.log(data)
+
   return (
     <div className="container flex flex-col items-center">
       <div className="flex flex-col w-full max-w-6xl overflow-hidden">

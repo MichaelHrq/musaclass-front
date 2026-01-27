@@ -27,7 +27,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useQueryClient } from "@tanstack/react-query";
 import { Move, Plus, Save, Trash, Upload, X } from "lucide-react";
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { toast } from "sonner";
 
 // --- COMPONENTE DO ITEM ARRASTÁVEL ---
@@ -106,6 +106,10 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
     id: number;
     url: string;
   } | null>(null);
+
+  useEffect(() => {
+    setItems(images);
+  }, [images]);
 
   const queryClient = useQueryClient();
 

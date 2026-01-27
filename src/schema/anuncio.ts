@@ -3,13 +3,14 @@ import { z } from "zod";
 export const anuncioSchema = z
   .object({
     post_id: z.string().min(1, "ID do post é obrigatório"),
-    ddi_acompanhante: z.string().min(1, "DDD é obrigatório").max(4, "DDD inválido"),
+    ddi_acompanhante: z
+      .string()
+      .min(1, "DDD é obrigatório")
+      .max(4, "DDD inválido"),
     whatsapp_acompanhante: z.string().min(11, "Digite um telefone válido"),
     novoatendimento_acompanhante: z.array(z.string()),
-    cache_acompanhante: z.number().refine((val) => val >= 500, {
-      message: "Cachê deve ser a partir de 500 reais",
-    }),
-    // combinar: z.boolean(),
+    cache_acompanhante: z.number().optional().nullable(),
+    // cache_acompanhante_esconder: z.boolean(),
     cartao_acompanhante: z
       .string({ message: "É obrigatório" })
       .min(1, "É obrigatório"),
@@ -17,30 +18,30 @@ export const anuncioSchema = z
     novopeso_esconder: z.boolean(),
     quadril_esconder: z.boolean(),
     novopes_esconder: z.boolean(),
-    novoaltura_acompanhante: z.string().min(1, "Altura é obrigatório"),
-    novopeso_acompanhante: z.string().min(1, "Peso é obrigatório"),
-    quadril_acompanhante: z.string().min(1, "Manequim é obrigatório"),
-    novopes_acompanhante: z.string().min(1, "Tamanho dos pés é obrigatório"),
+    novoaltura_acompanhante: z.string().optional(),
+    novopeso_acompanhante: z.string().optional(),
+    quadril_acompanhante: z.string().optional(),
+    novopes_acompanhante: z.string().optional(),
     novoacompanha_acompanhante: z
       .array(z.string())
       .min(1, `É obrigatório quem acompanha`),
   })
-  // .refine(
-  //   (data) => {
-  //     const { cache_acompanhante, combinar } = data;
-  //     if (combinar) {
-  //       data.cache_acompanhante = 0.0
-  //       return true
-  //     }
-  //     if (!cache_acompanhante) return false; 
-  //     if (cache_acompanhante < 500) return false; 
-  //     return true;
-  //   },
-  //   {
-  //     message: "Cachê deve ser no mínimo R$ 500,00 ou a combinar",
-  //     path: ["cache_acompanhante"],
-  //   }
-  // )
+  .refine(
+    (data) => {
+      const { cache_acompanhante } = data;
+      const n = Number(cache_acompanhante);
+      if (!n){
+        data.cache_acompanhante = null;
+        return true;
+      };
+      if (n < 500) return false;
+      return true;
+    },
+    {
+      message: "Cachê deve ser no mínimo R$ 500,00",
+      path: ["cache_acompanhante"],
+    },
+  )
   .refine(
     (data) => {
       const { novoaltura_acompanhante, novoaltura_esconder } = data;
@@ -56,7 +57,7 @@ export const anuncioSchema = z
     {
       message: "Altura deve estar entre 1,45 e 1,90 (m)",
       path: ["novoaltura_acompanhante"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -73,7 +74,7 @@ export const anuncioSchema = z
     {
       message: "Peso deve estar entre 40 e 89 (kg)",
       path: ["novopeso_acompanhante"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -82,12 +83,13 @@ export const anuncioSchema = z
         data.quadril_acompanhante = "";
         return true;
       }
+      if (!quadril_acompanhante) return false;
       return true;
     },
     {
       message: "Manequim é obrigatório",
       path: ["quadril_acompanhante"],
-    }
+    },
   )
   .refine(
     (data) => {
@@ -104,7 +106,7 @@ export const anuncioSchema = z
     {
       message: "Tamanho dos pés devem estar entre 31 e 42",
       path: ["novopes_acompanhante"],
-    }
+    },
   );
 
 export type AnuncioType = z.infer<typeof anuncioSchema>;

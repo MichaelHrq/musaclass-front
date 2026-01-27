@@ -93,6 +93,7 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
     novopeso_esconder: data.novopeso_esconder ? 1 : 0,
     quadril_esconder: data.quadril_esconder ? 1 : 0,
     novopes_esconder: data.novopes_esconder ? 1 : 0,
+    // cache_acompanhante_esconder: data.cache_acompanhante_esconder ? 1 : 0,
   };
 
   try {
