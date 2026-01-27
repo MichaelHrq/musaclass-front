@@ -231,6 +231,10 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
       }
     }
 
+    toast.loading(`Atualizando galeria de imagens...`, {
+      id: toastId,
+    });
+
     setTimeout(() => {
       queryClient.invalidateQueries({ queryKey: ["edit-anuncio", postId] });
       toast.success("Processo de importação finalizado!", { id: toastId });
