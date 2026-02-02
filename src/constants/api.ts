@@ -32,6 +32,7 @@ export const api = {
     updateAnuncio: `api/anuciante/post`, // /id_anuncio
     craeteFeed: `api/post-feed`,
     getFeedByAnuncio: `api/posts/feed`, // /id_anuncio
-    deleteFeed: `api/delete/feed`, // /id_feed
+    deleteMidia: `api/delete/feed`, // /id_feed
+    reorderMidias: `api/reorder/feed`
   },
 };

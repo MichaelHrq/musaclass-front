@@ -1,66 +1,54 @@
 "use client";
 
-import { getAnuncioId, getFeedAction } from "@/app/anunciante/[anuncio]/action";
-import Feed from "@/components/feed";
+import { getFeedAction } from "@/app/anunciante/[anuncio]/action";
 import FormPost from "@/components/form/post";
 import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button";
-import { getStatusBadge } from "@/lib/statusBadge";
+import { TabOption, TabSwitcher } from "@/components/tab-switcher";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { CalendarDays, ChevronLeft, MapPin } from "lucide-react";
+  CalendarDays,
+  ChevronLeft,
+  CircleCheck,
+  CircleEllipsis,
+  CircleX,
+  MapPin,
+} from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import TabMidias from "./editar/tab-midia";
 
 type PropsType = {
   anuncioId: string;
 };
 
+export type tabMidiaType = "aprovado" | "reprovado" | "pendente";
+
 export default function AnuncioPage({ anuncioId }: PropsType) {
   const queryClient = useQueryClient();
 
-  // Query para os detalhes do anúncio (não paginado)
-  const { data: anuncioData, isLoading: isLoadingAnuncio } = useQuery({
-    queryKey: ["anuncioDetails", anuncioId],
-    queryFn: () => getAnuncioId(anuncioId),
+  const { data, isLoading } = useQuery({
+    queryKey: ["midias", anuncioId],
+    queryFn: () => getFeedAction({ anuncio: anuncioId }),
     enabled: !!anuncioId,
   });
-
-  // Query infinita para o feed (paginado)
-  const {
-    data: feedData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading: isLoadingFeed,
-  } = useInfiniteQuery({
-    queryKey: ["feed", anuncioId],
-    queryFn: ({ pageParam }) =>
-      getFeedAction({ anuncio: anuncioId, pageParam }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      if (lastPage.current_page < lastPage.last_page) {
-        return lastPage.current_page + 1;
-      }
-      return undefined;
-    },
-    enabled: !!anuncioId,
-  });
-
-  const feedItems = feedData?.pages.flatMap((page) => page.data) ?? [];
-  const isLoading = isLoadingAnuncio || isLoadingFeed;
 
   const search = useSearchParams();
   const title = search.get("title") || "";
   const cidade = search.get("cidade") || "";
   const vencimento = search.get("vencimento") || "";
 
+  const [tab, setTab] = useState<tabMidiaType>("aprovado");
+
+  const tabOptions: TabOption<tabMidiaType>[] = [
+    { id: "aprovado", label: "Aprovado", icon: CircleCheck },
+    { id: "reprovado", label: "Reprovado", icon: CircleX },
+    { id: "pendente", label: "Pendente", icon: CircleEllipsis },
+  ];
+
   return (
     <>
-      <div className="w-full max-w-3xl mx-auto bg-[#1E1E1E] rounded-xl p-4 flex items-center gap-5 shadow-lg mb-4">
+      <div className="w-full bg-[#1E1E1E] rounded-xl p-4 flex items-center gap-5 shadow-lg mb-4">
         {/* Botão Voltar */}
         <Link
           href="/anunciante" // Coloque a rota correta de voltar aqui
@@ -102,29 +90,55 @@ export default function AnuncioPage({ anuncioId }: PropsType) {
         </div>
       </div>
 
-      <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg gap-6 mb-4">
+      <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full rounded-lg gap-6 mb-6 sm:mb-8">
         <p className="text-xl md:text-2xl">Postar mídia</p>
         <FormPost anuncioId={anuncioId} />
       </div>
 
-      <div className="flex flex-col bg-[#1E1E1E] items-center p-6 w-full max-w-3xl rounded-lg space-y-6">
-        <p className="text-xl md:text-2xl font-[500]">Minhas mídias</p>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <Feed anuncio={anuncioId} items={feedItems} />
-        )}
-        {hasNextPage && (
-          <div className="w-full flex justify-center mt-8">
-            <Button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-            >
-              {isFetchingNextPage ? <Loading /> : "Mostrar mais"}
-            </Button>
-          </div>
-        )}
-      </div>
+      <TabSwitcher
+        options={tabOptions}
+        activeTab={tab}
+        onTabChange={setTab}
+        disabled={isLoading}
+      />
+
+      {isLoading ? (
+        <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
+          <Loading className="mx-auto mb-4 opacity-20" />
+          <p>Buscando mídias</p>
+        </div>
+      ) : (
+        <section className="w-full">
+          {tab === "aprovado" && (
+            <TabMidias
+              tab={tab}
+              anuncioId={anuncioId}
+              data={data?.aprovado ?? { imagem: [], video: [] }}
+            />
+          )}
+
+          {tab === "reprovado" && (
+            <TabMidias
+              tab={tab}
+              anuncioId={anuncioId}
+              data={data?.reprovado ?? { imagem: [], video: [] }}
+            />
+          )}
+
+          {tab === "pendente" && (
+            <TabMidias
+              tab={tab}
+              anuncioId={anuncioId}
+              data={data?.pendente ?? { imagem: [], video: [] }}
+            />
+          )}
+        </section>
+      )}
     </>
   );
 }
+
+// <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
+//   <CircleEllipsis size={48} className="mx-auto mb-4 opacity-20" />
+//   <p>Conteúdo Pendente Aqui</p>
+// </div>

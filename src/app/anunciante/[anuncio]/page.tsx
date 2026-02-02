@@ -4,7 +4,7 @@ import { ParamsType } from "@/interface";
 export default async function Anuncio({ params }: ParamsType) {
   const { anuncio } = await params;
   return (
-    <div className="container flex flex-col items-center justify-center">
+    <div className="container flex flex-col items-center justify-center  max-w-6xl w-full">
       <AnuncioPage anuncioId={anuncio as string} />
     </div>
   );

@@ -39,7 +39,7 @@ type getAnuncioInfosType = {
 
 export async function getAnuncioInfos(id: string) {
   const resp = await serverFetch<getAnuncioInfosType>(
-    `${api.anunc.getAnuncioDadosById}/${id}`
+    `${api.anunc.getAnuncioDadosById}/${id}`,
   );
 
   const cache = Number(resp.meta.cache_acompanhante.replace(/\D/g, "")) / 100;
@@ -63,11 +63,11 @@ export async function getAnuncioInfos(id: string) {
       novopes_acompanhante: resp.meta.novopes_acompanhante,
       whatsapp_acompanhante: format(
         resp.meta.whatsapp_acompanhante.replace(/\D/g, ""),
-        phoneFormat
+        phoneFormat,
       ),
       ddi_acompanhante: format(
         resp.meta.ddi_acompanhante.replace(/\D/g, ""),
-        phoneDDDFormat
+        phoneDDDFormat,
       ),
       novoacompanha_acompanhante:
         resp.meta.novoacompanha_acompanhante.length > 0
@@ -85,7 +85,7 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
   const submit = {
     ...data,
     novoatendimento_acompanhante: JSON.stringify(
-      data.novoatendimento_acompanhante
+      data.novoatendimento_acompanhante,
     ),
     cache_acompanhante: currency(data.cache_acompanhante!),
     novoacompanha_acompanhante: JSON.stringify(data.novoacompanha_acompanhante),
@@ -105,7 +105,7 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
     return {
       sucess: true,
@@ -119,12 +119,56 @@ export const updateDadosAnuncio = withAuth(async (data: AnuncioType) => {
   }
 });
 
+export type midiaResponseType = {
+  id: number;
+  user_id: string;
+  post: string;
+  ativo: boolean;
+  publicado_em: string;
+  post_id: number;
+  publish: string;
+  tipo: string;
+  expires_at: string;
+  tipo_arquivo: string;
+  notifications: {
+    id: string;
+    data: {
+      motivo: string;
+    };
+  }[];
+  anunciante: {
+    id: string;
+  };
+  midia: {
+    id: number;
+    feed_id: number;
+    midia: string;
+    url: string;
+    tipo: string;
+  }[];
+};
+
+export type getMidiasResponseType = {
+  aprovado: {
+    imagem: midiaResponseType[];
+    video: midiaResponseType[];
+  };
+  reprovado: {
+    imagem: midiaResponseType[];
+    video: midiaResponseType[];
+  };
+  pendente: {
+    imagem: midiaResponseType[];
+    video: midiaResponseType[];
+  };
+};
+
 export type getFeedDataType = {
   id: number;
   user_id: string;
   titulo: string;
   post: string;
-  tipo: string
+  tipo: string;
   midia_path_master: string;
   midia_path_thumbnail1: string;
   midia_path_thumbnail2: string;
@@ -154,15 +198,9 @@ export type getFeedType = {
   data: getFeedDataType[];
 };
 
-export const getFeedAction = async ({
-  anuncio,
-  pageParam = 1,
-}: {
-  anuncio: string;
-  pageParam?: number;
-}) => {
-  return await serverFetch<getFeedType>(
-    `${api.anunc.getFeedByAnuncio}/${anuncio}?page=${pageParam}`
+export const getFeedAction = async ({ anuncio }: { anuncio: string }) => {
+  return await serverFetch<getMidiasResponseType>(
+    `${api.anunc.getFeedByAnuncio}/${anuncio}`,
   );
 };
 
@@ -183,22 +221,45 @@ export const createFeedAction = withAuth(
         message: error.message ?? "Falha em salvar feed",
       };
     }
-  }
+  },
 );
 
-export const deleteFeedAction = withAuth(async (idfeed: number) => {
+export const deleteMidiaAction = withAuth(async (idfeed: number) => {
   try {
-    await serverFetch(`${api.anunc.deleteFeed}/${idfeed}`, {
+    await serverFetch(`${api.anunc.deleteMidia}/${idfeed}`, {
       method: "delete",
     });
     return {
       sucess: true,
-      message: "Feed deletado com sucesso",
     };
   } catch (error: any) {
     return {
       sucess: false,
-      message: error.message ?? "Falha em deletar feed",
     };
   }
 });
+
+export const reOrderMidiaAction = withAuth(
+  async (anuncio: string, reorder: number[], type: string, status: string) => {
+    try {
+      await serverFetch(`${api.anunc.reorderMidias}`, {
+        method: "post",
+        body: JSON.stringify({
+          anuncio: anuncio,
+          ordem: reorder,
+          tipo: type,
+          status: status,
+        }),
+      });
+      return {
+        success: true,
+        message: "Mídias reordenadas com sucesso",
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message || "Erro ao reordenar mídias",
+      };
+    }
+  },
+);

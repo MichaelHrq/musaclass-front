@@ -156,7 +156,7 @@ export default function TabVideosAnuncio() {
   }
 
   function handleSaveOrder() {
-    console.log("Ordem e lista final de vídeos:", items);
+    // console.log("Ordem e lista final de vídeos:", items);
   }
 
   return (
@@ -232,7 +232,7 @@ export default function TabVideosAnuncio() {
           <div className="relative w-full max-w-sm aspect-[9/16] max-h-[90vh] bg-black rounded-2xl overflow-hidden shadow-2xl border border-neutral-800 mx-4">
             <video
               src={previewVideo}
-              className="w-full h-full object-cover" // object-cover garante que preencha tudo
+              className="w-full h-full object-cover"
               controls
               autoPlay
             />

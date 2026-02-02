@@ -12,7 +12,7 @@ import {
   Video,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { getPostAnuncioInfosById } from "../../action";
 
@@ -20,6 +20,7 @@ type tabType = "form" | "image" | "video";
 
 export default function EditarAnuncio() {
   const { id } = useParams();
+  const cidade = (useSearchParams()).get('cidade');
 
   const { data, isLoading } = useQuery({
     queryKey: ["edit-anuncio", id],
@@ -43,7 +44,7 @@ export default function EditarAnuncio() {
       <div className="flex flex-col w-full max-w-6xl overflow-hidden">
         <div className="w-full bg-[#1E1E1E] rounded-xl p-4 flex items-center gap-3 sm:gap-5 shadow-lg border border-[#333] mb-6 sm:mb-8">
           <Link
-            href="/gestao/anuncios"
+            href={`/gestao/anuncios?cidade=${cidade}`}
             className="group flex flex-col items-center justify-center gap-1 text-neutral-500 hover:text-white transition-colors min-w-[50px] sm:min-w-[60px]"
           >
             <div className="p-1.5 sm:p-2 rounded-full bg-[#2a2a2a] group-hover:bg-[#333] transition-all border border-[#333] group-hover:border-[#444]">
