@@ -24,6 +24,13 @@ export const api = {
       // /upload/id_anuncio (post) -> upload imagens
       // /id_anuncio/reorder -> reordenar imagens
       // /id_anuncio/delete/id_imagem (delete) -> soft delete
+    anuncioVideos: `api/galeria/video`,
+      // /id_anuncio (get) -> get videos
+      // /upload/id_anuncio (post) -> upload videos
+      // /id_anuncio/reorder/id_video (post) -> reordenar videos
+      // /id_anuncio/delete/id_video (delete) -> soft delete
+    anucioPost : `api/anuciante/dados-completo`, // /id_anuncio
+    anucioPostUpdate : `api/anuciante/admin/post`, // /id_anuncio (post)
   },
   anunc: {
     getAnuncios: `api/anuciante/meus-anuncios`,

@@ -33,6 +33,7 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
   const [dialogShow, setDialogShow] = useState(false);
 
   const [dialogDeleteShow, setDialogDeleteShow] = useState(false);
+  
   const [imageDelete, setImageDelete] = useState<{
     id: number;
     url: string;
@@ -63,7 +64,7 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
     }),
   );
 
-  const MAX_SIZE_MB = 3;
+  const MAX_SIZE_MB = 5;
   const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
   const hasOversizedFile = midias.some((file) => file.size > MAX_SIZE_BYTES);
 
@@ -96,7 +97,7 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
     if (res.success) {
       setTimeout(() => {
         toast.success(res.message, { id: toastId });
-        queryClient.invalidateQueries({ queryKey: ["edit-anuncio", postId] });
+        queryClient.invalidateQueries({ queryKey: ["edit-anuncio-imagens", postId] });
         setDialogDeleteShow(false);
         setImageDelete(null);
       }, 1000 * 3);
@@ -111,7 +112,7 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
     const res = await reorderImagensAnuncio(postId, reorder);
     if (res.success) {
       setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ["edit-anuncio", postId] });
+        queryClient.invalidateQueries({ queryKey: ["edit-anuncio-imagens", postId] });
         return toast.success(res.message, { id: toastId });
       }, 1000 * 3);
     } else {
@@ -161,7 +162,7 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
     toast.loading(`Atualizando galeria de imagens...`, { id: toastId });
 
     setTimeout(() => {
-      queryClient.invalidateQueries({ queryKey: ["edit-anuncio", postId] });
+      queryClient.invalidateQueries({ queryKey: ["edit-anuncio-imagens", postId] });
       toast.success("Processo de importação finalizado!", { id: toastId });
       handleCloseModal();
     }, 1000 * 5);
@@ -362,6 +363,7 @@ export default function TabImagensAnuncio({ images, postId }: propsType) {
           </div>
         </div>
       </Dialog>
+
     </div>
   );
 }

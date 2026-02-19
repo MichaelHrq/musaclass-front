@@ -1,44 +1,39 @@
 "use client";
 
-import { updateDadosAnuncio } from "@/app/anunciante/[anuncio]/action";
+import {
+  getAdminFormAnucioMetaType,
+  updateFormPostAnuncioById,
+} from "@/app/gestao/anuncios/action";
 import { Button } from "@/components/ui/button";
-import ButtonPending from "@/components/ui/button/pending";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Checkbox as CheckboxCustom } from "@/components/ui/custom/checkbox";
 import { Form, FormMessage } from "@/components/ui/form";
 import InputCurrency from "@/components/ui/input/currency";
 import Input from "@/components/ui/input/input";
 import InputMask from "@/components/ui/input/mask";
-import { Label } from "@/components/ui/label";
 import Select from "@/components/ui/select/select";
 import { phoneDDDFormat, phoneFormat } from "@/lib/format";
-import { anuncioSchema, AnuncioType } from "@/schema/anuncio";
+import { metaAnuncioSchema, typeMetaAnucio } from "@/schema/meta-anuncio";
 import { handleTestWhatsapp } from "@/utils/whatsapp";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import React, { useId } from "react";
+import { format } from "@react-input/mask";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type PropsType = {
-  edit: AnuncioType;
+  edit: getAdminFormAnucioMetaType;
+  postId: string;
 };
 
-export default function FormAnuncio({ edit }: PropsType) {
-  const [loading, setLoading] = React.useState({
-    submit: false,
-  });
-
-  // const naorespCacheId = useId();
-  const naorespAlturaId = useId();
-  const naorespPesoId = useId();
-  const naorespQuadrilId = useId();
-  const naorespPesId = useId();
-
-  const form = useForm<AnuncioType>({
-    resolver: zodResolver(anuncioSchema),
-    defaultValues: edit,
+export default function MetaPostForm({ edit, postId }: PropsType) {
+  const form = useForm<typeMetaAnucio>({
+    resolver: zodResolver(metaAnuncioSchema),
+    defaultValues: {
+      ...edit,
+      whatsapp_acompanhante: format(edit.whatsapp_acompanhante, phoneFormat),
+      ddi_acompanhante: format(edit.ddi_acompanhante, phoneDDDFormat),
+      cache_acompanhante:
+        Number(edit?.cache_acompanhante?.replace("R$ ", "")) || null,
+    },
   });
 
   const {
@@ -47,31 +42,27 @@ export default function FormAnuncio({ edit }: PropsType) {
     setValue,
     getValues,
     watch,
+    register,
     formState: { errors },
   } = form;
 
-  async function onSubmit(data: AnuncioType) {
-    // alert(JSON.stringify(data, null, 2));
-    setLoading((cur) => ({ ...cur, submit: true }));
-    const resp = await updateDadosAnuncio(data);
-    setLoading((cur) => ({ ...cur, submit: false }));
-    if (resp.sucess) {
-      return toast.success(resp.message);
+  async function onSubmit(data: typeMetaAnucio) {
+    const toastId = toast.loading("Atualizando anúncio...");
+    const submit = {
+      ...edit,
+      ...data,
+      whatsapp_acompanhante: data.whatsapp_acompanhante.replace(/\D/g, ""),
+      cache_acompanhante: data.cache_acompanhante?.toString(),
+      termino_acompanhante: edit.termino_acompanhante.split(' ')[0]
+    };
+    console.log(submit)
+    const resp = await updateFormPostAnuncioById(postId, submit);
+    if (resp.success) {
+      toast.success(resp.message, { id: toastId });
+    } else {
+      toast.error(resp.message, { id: toastId });
     }
-    return toast.error(resp.message);
   }
-
-  function handleCheck(field: keyof AnuncioType) {
-    const check = getValues()?.[field];
-    setValue(field, !check);
-  }
-
-  // const isComb = watch("combinar");
-  const naorespAltura = watch("novoaltura_esconder");
-  const naorespPeso = watch("novopeso_esconder");
-  const naorespQuadril = watch("quadril_esconder");
-  const naorespPes = watch("novopes_esconder");
-  // const naorespCache = watch("cache_acompanhante_esconder");
 
   return (
     <Form {...form}>
@@ -98,9 +89,6 @@ export default function FormAnuncio({ edit }: PropsType) {
             inputMode="numeric"
             {...phoneFormat}
           />
-        </div>
-
-        <div>
           <Button
             type="button"
             onClick={() => {
@@ -108,19 +96,14 @@ export default function FormAnuncio({ edit }: PropsType) {
               const whatsapp = getValues("whatsapp_acompanhante");
               handleTestWhatsapp({ ddi, whatsapp });
             }}
-            className="bg-green-700 hover:bg-green-800"
+            className="sm:flex-1/5 sm:flex mt-[22px] flex items-center justify-center gap-1 px-4 py-2 bg-green-500/10 hover:bg-green-500/20 text-green-400 hover:text-green-300 border border-green-500/20 hover:border-green-500/50 rounded-md transition-all text-xs sm:text-sm  whitespace-nowrap"
           >
-            Testar Whatsapp
+            <span className="hidden sm:inline-block">Testar</span>
+            <span>Whatsapp</span>
           </Button>
         </div>
 
-        <CheckboxCustom
-          control={control}
-          name="novoatendimento_acompanhante"
-          label="Local"
-          error={errors.novoatendimento_acompanhante?.message}
-          items={[{ value: "Flat próprio", label: "Flat próprio" }]}
-        />
+        <input type="hidden" {...register("post_id")} value={postId} />
 
         <div>
           <InputCurrency
@@ -133,18 +116,6 @@ export default function FormAnuncio({ edit }: PropsType) {
           <FormMessage className="mt-2">
             {errors.cache_acompanhante?.message}
           </FormMessage>
-          {/* <div className="flex items-start gap-3 mt-1">
-            <Checkbox
-              id={naorespCacheId}
-              checked={naorespCache}
-              onCheckedChange={() => handleCheck("cache_acompanhante_esconder")}
-            />
-            <div className="grid gap-2 items-end">
-              <Label htmlFor={naorespCacheId} className="text-xs md:text-sm">
-                Não responder
-              </Label>
-            </div>
-          </div> */}
         </div>
 
         <Select
@@ -166,9 +137,9 @@ export default function FormAnuncio({ edit }: PropsType) {
             error={errors.novoaltura_acompanhante?.message}
             type="number"
             step="0.01"
-            disabled={naorespAltura}
+            // disabled={naorespAltura}
           />
-          <div className="flex items-start gap-3 mt-1">
+          {/* <div className="flex items-start gap-3 mt-1">
             <Checkbox
               id={naorespAlturaId}
               checked={naorespAltura}
@@ -179,7 +150,7 @@ export default function FormAnuncio({ edit }: PropsType) {
                 Não responder
               </Label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div>
@@ -189,9 +160,9 @@ export default function FormAnuncio({ edit }: PropsType) {
             label="Peso (Kg)"
             error={errors.novopeso_acompanhante?.message}
             type="number"
-            disabled={naorespPeso}
+            // disabled={naorespPeso}
           />
-          <div className="flex items-start gap-3 mt-1">
+          {/* <div className="flex items-start gap-3 mt-1">
             <Checkbox
               id={naorespPesoId}
               checked={naorespPeso}
@@ -202,7 +173,7 @@ export default function FormAnuncio({ edit }: PropsType) {
                 Não responder
               </Label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div>
@@ -212,9 +183,9 @@ export default function FormAnuncio({ edit }: PropsType) {
             label="Manequim"
             error={errors.quadril_acompanhante?.message}
             type="number"
-            disabled={naorespQuadril}
+            // disabled={naorespQuadril}
           />
-          <div className="flex items-start gap-3 mt-1">
+          {/* <div className="flex items-start gap-3 mt-1">
             <Checkbox
               id={naorespQuadrilId}
               checked={naorespQuadril}
@@ -225,7 +196,7 @@ export default function FormAnuncio({ edit }: PropsType) {
                 Não responder
               </Label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div>
@@ -235,9 +206,9 @@ export default function FormAnuncio({ edit }: PropsType) {
             label="Pés"
             error={errors.novopes_acompanhante?.message}
             type="number"
-            disabled={naorespPes}
+            // disabled={naorespPes}
           />
-          <div className="flex items-start gap-3 mt-1">
+          {/* <div className="flex items-start gap-3 mt-1">
             <Checkbox
               id={naorespPesId}
               checked={naorespPes}
@@ -248,7 +219,7 @@ export default function FormAnuncio({ edit }: PropsType) {
                 Não responder
               </Label>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <CheckboxCustom
@@ -263,15 +234,12 @@ export default function FormAnuncio({ edit }: PropsType) {
           ]}
         />
 
-        <div className="flex justify-center items-center gap-3">
-          <Link href={`/anunciante`}>
-            <Button type="button" variant={"secondary"}>
-              <ChevronLeft />
-              Voltar
-            </Button>
-          </Link>
-          <ButtonPending isPending={loading.submit} label="Salvar alterações" />
-        </div>
+        <Button
+          type="submit"
+          className="flex-1/3 sm:flex-1/5 sm:flex mt-[22px] flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:border-blue-500/50 rounded-md transition-all font-medium text-sm  whitespace-nowrap"
+        >
+          Atualizar Anúncio
+        </Button>
       </form>
     </Form>
   );

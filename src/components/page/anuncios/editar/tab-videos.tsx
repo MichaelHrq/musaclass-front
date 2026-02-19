@@ -1,12 +1,22 @@
 "use client";
 
+import {
+  deleteVideosAnuncio,
+  getVideosPostAnuncioByIdType,
+  reorderVideosAnuncio,
+  uploadVideosAnuncio,
+} from "@/app/gestao/anuncios/action";
+import PreviewVideo from "@/components/preview-video";
+import SortableItem from "@/components/sorteble-item";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog/dialog";
 import {
   closestCenter,
   DndContext,
   DragEndEvent,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -15,123 +25,52 @@ import {
   rectSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
-  useSortable,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Move, Play, Save, Trash, Upload, X } from "lucide-react";
-import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Move, Play, Plus, Save, Trash, Upload, X } from "lucide-react";
+import { MouseEvent, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-interface SortableVideoProps {
-  url: string;
-  id: string;
-  onRemove: (id: string) => void;
-  onPlay: (url: string) => void;
-}
+type propsType = {
+  postId: string;
+  videos: getVideosPostAnuncioByIdType[];
+};
 
-function SortableVideo({ url, id, onRemove, onPlay }: SortableVideoProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 10 : 1,
-    opacity: isDragging ? 0.5 : 1,
-    touchAction: "none" as React.CSSProperties["touchAction"],
-  };
-
-  function handleRemove(e: React.MouseEvent) {
-    e.stopPropagation();
-    e.preventDefault();
-    onRemove(id);
-  }
-
-  function handlePlayClick(e: React.MouseEvent) {
-    e.stopPropagation();
-    e.preventDefault();
-    onPlay(url);
-  }
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={`group relative overflow-hidden rounded-xl border bg-neutral-900 shadow-lg aspect-[9/16] cursor-grab active:cursor-grabbing hover:border-neutral-500 transition-colors touch-none
-        ${isDragging ? "border-amber-500 shadow-xl" : "border-neutral-800"}
-      `}
-    >
-      <video
-        src={url}
-        className="h-full w-full object-cover pointer-events-none bg-black"
-        muted
-        playsInline
-        preload="metadata"
-      />
-
-      <button
-        type="button"
-        onClick={handlePlayClick}
-        onPointerDown={(e) => e.stopPropagation()}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 hover:scale-110 transition-all p-4 rounded-full backdrop-blur-sm cursor-pointer z-20 group-hover:bg-amber-500/80"
-        title="Visualizar vídeo"
-      >
-        <Play size={24} className="text-white fill-white" />
-      </button>
-
-      <div className="absolute top-2 right-2 bg-black/40 p-1 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
-        <Move size={12} className="text-white" />
-      </div>
-
-      <div
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={handleRemove}
-        className="absolute bottom-2 right-2 bg-red-600/60 hover:bg-red-600 duration-200 p-2 z-20 rounded-full backdrop-blur shadow-lg cursor-pointer"
-        title="Remover vídeo"
-      >
-        <Trash size={16} className="text-white" />
-      </div>
-    </div>
-  );
-}
-
-export default function TabVideosAnuncio() {
-  const [items, setItems] = useState([
-    {
-      id: "v1",
-      url: "https://media.musaclass.com.br/019adfe8-f983-7389-ae6b-0b3054cc2d49/posts/video-697203d3e4cbf.mp4",
-    },
-    {
-      id: "v2",
-      url: "https://media.musaclass.com.br/019b47cd-dfc7-7171-8a58-928568f84e6a/posts/video-6972260ff0541.mp4",
-    },
-    {
-      id: "v3",
-      url: "https://media.musaclass.com.br/019b6b90-5aa2-71d0-a88f-beae8243d28e/posts/video-6970ece5aa5ee.mp4",
-    },
-    {
-      id: "v4",
-      url: "https://media.musaclass.com.br/0199ee40-a679-706d-980f-f6b30e25c6cd/posts/video-6970fc12878c1.mp4",
-    },
-    {
-      id: "v5",
-      url: "https://media.musaclass.com.br/019b6b90-5aa2-71d0-a88f-beae8243d28e/posts/video-6970ebc8ad9e6.mp4",
-    },
-  ]);
-
+export default function TabVideosAnuncio({ postId, videos }: propsType) {
+  const [items, setItems] = useState<getVideosPostAnuncioByIdType[]>([]);
   const [previewVideo, setPreviewVideo] = useState<string | null>(null);
 
+  const [dialogShow, setDialogShow] = useState(false);
+  const [midias, setMidias] = useState<File[]>([]);
+
+  const [dialogDeleteShow, setDialogDeleteShow] = useState(false);
+  const [videoDelete, setVideoDelete] = useState<{
+    id: number;
+    url: string;
+  } | null>(null);
+
+  const MAX_SIZE_MB = 20;
+  const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+  const hasOversizedFile = midias.some((file) => file.size > MAX_SIZE_BYTES);
+
+  useEffect(() => {
+    setItems(videos);
+  }, [videos]);
+
+  const queryClient = useQueryClient();
+
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    // 1. MouseSensor: Só ativa com mouse. Evita conflito no mobile.
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 8, // Arrasta logo ao mover o mouse
+      },
+    }),
+    // 2. TouchSensor: Configurado especificamente para o dedo.
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250, // Segure por 250ms para ativar o "Drag"
+        tolerance: 8, // Aumentei a tolerância para 8px (dedos tremem um pouco ao segurar)
       },
     }),
     useSensor(KeyboardSensor, {
@@ -151,12 +90,95 @@ export default function TabVideosAnuncio() {
     }
   }
 
-  function handleRemoveItem(id: string) {
-    setItems((currentItems) => currentItems.filter((item) => item.id !== id));
+  function handleOnRemove(
+    e: MouseEvent<HTMLDivElement>,
+    id: number,
+    url: string,
+  ) {
+    e.stopPropagation();
+    setVideoDelete({ id, url });
+    setDialogDeleteShow(true);
   }
 
-  function handleSaveOrder() {
-    // console.log("Ordem e lista final de vídeos:", items);
+  async function handleRemoveVideo() {
+    if (!videoDelete) return;
+    const toastId = toast.loading("Removendo vídeo...");
+    const res = await deleteVideosAnuncio(postId, videoDelete.url);
+    if (res.success) {
+      setTimeout(() => {
+        toast.success(res.message, { id: toastId });
+        queryClient.invalidateQueries({
+          queryKey: ["edit-anuncio-videos", postId],
+        });
+        setDialogDeleteShow(false);
+        setVideoDelete(null);
+      }, 1000 * 3);
+    } else {
+      toast.error(res.message, { id: toastId });
+    }
+  }
+
+  async function handleSaveOrder() {
+    const reorder = items.map((item) => item.url);
+    const toastId = toast.loading("Reordenando os vídeos...");
+    const res = await reorderVideosAnuncio(postId, reorder);
+    if (res.success) {
+      toast.success("Vídeos reordenados com sucesso", { id: toastId });
+      queryClient.invalidateQueries({
+        queryKey: ["edit-anuncio-videos", postId],
+      });
+    } else {
+      toast.error(res.message, { id: toastId });
+    }
+  }
+
+  function handleCloseModal() {
+    setDialogShow(false);
+    setMidias([]);
+  }
+
+  function handleAddFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setMidias((prev) => [...prev, ...Array.from(files)]);
+    e.target.value = "";
+  }
+
+  function handleRemoveFile(indexToRemove: number) {
+    setMidias((prev) => prev.filter((_, index) => index !== indexToRemove));
+  }
+
+  async function handleConfirmUpload() {
+    if (midias.length === 0 || hasOversizedFile) return;
+    const totalFiles = midias.length;
+    const toastId = toast.loading(
+      `Iniciando processamento de ${totalFiles} arquivo(s)...`,
+    );
+
+    for (const [index, file] of midias.entries()) {
+      const numVideo = index + 1;
+      toast.loading(`Importando vídeo ${numVideo} de ${totalFiles}`, {
+        id: toastId,
+      });
+
+      const formData = new FormData();
+      formData.append("postId", postId);
+      formData.append("file", file);
+
+      const res = await uploadVideosAnuncio(formData, postId);
+      if (!res.success) {
+        toast.error(res.message, { id: toastId });
+      }
+    }
+
+    toast.loading(`Atualizando galeria de vídeos...`, { id: toastId });
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["edit-anuncio-videos", postId],
+      });
+      toast.success("Processo de importação finalizado!", { id: toastId });
+      handleCloseModal();
+    }, 1000 * 5);
   }
 
   return (
@@ -171,13 +193,14 @@ export default function TabVideosAnuncio() {
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <label className="flex-1 sm:flex-none cursor-pointer">
-              <input type="file" className="hidden" accept="video/*" />
-              <div className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:border-blue-500/50 rounded-md transition-all font-medium text-sm h-10 whitespace-nowrap">
-                <Upload size={16} />
-                Importar Vídeo
-              </div>
-            </label>
+            <Button
+              onClick={() => setDialogShow(true)}
+              variant="outline"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 border border-blue-500/20 hover:border-blue-500/50 transition-all font-medium text-sm h-10"
+            >
+              <Upload size={16} />
+              Importar vídeos
+            </Button>
             <Button
               onClick={handleSaveOrder}
               className="flex items-center justify-center gap-2 px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/50 rounded-md transition-all font-medium text-sm h-10 whitespace-nowrap"
@@ -198,13 +221,36 @@ export default function TabVideosAnuncio() {
               <SortableContext items={items} strategy={rectSortingStrategy}>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {items.map((item) => (
-                    <SortableVideo
-                      key={item.id}
-                      id={item.id}
-                      url={item.url}
-                      onRemove={handleRemoveItem}
-                      onPlay={setPreviewVideo}
-                    />
+                    <SortableItem key={item.id} id={item.id}>
+                      <video
+                        src={item.url}
+                        className="h-full w-full object-cover pointer-events-none bg-black"
+                        muted
+                        playsInline
+                        preload="metadata"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPreviewVideo(item.url)}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 hover:scale-110 transition-all p-4 rounded-full backdrop-blur-sm cursor-pointer z-20 group-hover:bg-amber-500/80"
+                        title="Visualizar vídeo"
+                      >
+                        <Play size={24} className="text-white fill-white" />
+                      </button>
+
+                      <div className="absolute top-2 right-2 bg-black/40 p-1 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Move size={12} className="text-white" />
+                      </div>
+
+                      <div
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={(e) => handleOnRemove(e, item.id, item.url)}
+                        className="absolute bottom-2 right-2 bg-red-600/60 hover:bg-red-600 duration-200 p-2 z-20 rounded-full backdrop-blur shadow-lg cursor-pointer pointer-events-auto"
+                      >
+                        <Trash size={16} className="text-white" />
+                      </div>
+                    </SortableItem>
                   ))}
                 </div>
               </SortableContext>
@@ -220,30 +266,155 @@ export default function TabVideosAnuncio() {
         </DndContext>
       </div>
 
-      {previewVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-200">
-          <button
-            onClick={() => setPreviewVideo(null)}
-            className="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition-all z-50"
-          >
-            <X size={32} />
-          </button>
-
-          <div className="relative w-full max-w-sm aspect-[9/16] max-h-[90vh] bg-black rounded-2xl overflow-hidden shadow-2xl border border-neutral-800 mx-4">
-            <video
-              src={previewVideo}
-              className="w-full h-full object-cover"
-              controls
-              autoPlay
-            />
+      {/* MODAL IMPORTAR */}
+      <Dialog
+        open={dialogShow}
+        onClose={handleCloseModal}
+        title="Importar Vídeos"
+        subtitle={`Selecione os vídeos (Máx. ${MAX_SIZE_MB}MB por vídeo).`}
+        className="max-w-6xl"
+      >
+        <div className="flex flex-col gap-6 max-h-[70vh] overflow-y-auto pr-1">
+          <div className="flex items-center gap-4">
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                multiple
+                className="hidden"
+                accept="video/*"
+                onChange={handleAddFiles}
+              />
+              <div className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 transition-colors px-4 py-2.5 rounded-lg border border-neutral-700 text-sm font-medium">
+                <Plus size={16} />
+                Escolher vídeos...
+              </div>
+            </label>
+            <span className="text-xs text-neutral-500">
+              {midias.length > 0
+                ? `${midias.length} arquivo(s)`
+                : "Nenhum arquivo"}
+            </span>
           </div>
 
-          <div
-            className="absolute inset-0 -z-10"
-            onClick={() => setPreviewVideo(null)}
+          {midias.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-neutral-900/50 rounded-xl border border-neutral-800">
+              {midias.map((file, index) => {
+                const previewUrl = URL.createObjectURL(file);
+                const fileSizeMB = file.size / (1024 * 1024);
+                const isOverSize = file.size > MAX_SIZE_BYTES;
+
+                return (
+                  <div
+                    key={index}
+                    className={`group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden ${
+                      isOverSize
+                        ? "border-red-600 border-2"
+                        : "border border-neutral-700"
+                    }`}
+                  >
+                    {/* <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    /> */}
+
+                    <video
+                      src={previewUrl}
+                      className="h-full w-full object-cover pointer-events-none bg-black"
+                      muted
+                      playsInline
+                      preload="metadata"
+                    />
+                    <div
+                      className={`absolute bottom-0 left-0 right-0 text-[10px] text-center py-1 text-white backdrop-blur-sm ${
+                        isOverSize ? "bg-red-600/80" : "bg-black/60"
+                      }`}
+                    >
+                      {fileSizeMB.toFixed(1)} MB
+                    </div>
+                    <button
+                      onClick={() => handleRemoveFile(index)}
+                      className="absolute top-1 right-1 bg-red-600 hover:bg-red-500 text-white p-1 rounded-full shadow-md transition-colors"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-neutral-800">
+            <Button variant="ghost" onClick={handleCloseModal}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmUpload}
+              disabled={midias.length === 0 || hasOversizedFile}
+              className={`text-white transition-colors ${
+                midias.length === 0 || hasOversizedFile
+                  ? "bg-neutral-600 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              <Upload size={16} className="mr-2" />
+              {hasOversizedFile
+                ? "Remova inválidas"
+                : `Enviar ${midias.length}`}
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog
+        open={dialogDeleteShow}
+        onClose={() => {
+          setDialogDeleteShow(false);
+          setVideoDelete(null);
+        }}
+        title="Remover vídeo"
+        subtitle="Deseja realmente remover esse vídeo?"
+        className="max-w-xl"
+      >
+        <div
+          className={`group relative aspect-square bg-neutral-800 rounded-lg overflow-hidden`}
+        >
+          {/* <img
+            src={videoDelete?.url}
+            alt="Preview"
+            className="w-full h-full object-cover"
+          /> */}
+          <video
+            src={videoDelete?.url}
+            className="h-full w-full object-cover pointer-events-none bg-black"
+            muted
+            playsInline
+            preload="metadata"
           />
         </div>
-      )}
+        <div className="w-full flex items-center justify-end gap-2">
+          <Button
+            onClick={() => {
+              setDialogDeleteShow(false);
+              setVideoDelete(null);
+            }}
+            className="bg-neutral-800 hover:bg-neutral-700"
+          >
+            Cancelar
+          </Button>
+          <Button
+            className="bg-red-800 hover:bg-red-700"
+            onClick={handleRemoveVideo}
+          >
+            Remover
+          </Button>
+        </div>
+      </Dialog>
+
+      <PreviewVideo
+        previewVideo={previewVideo}
+        setPreviewVideo={setPreviewVideo}
+      />
     </>
   );
 }

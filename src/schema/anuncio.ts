@@ -30,10 +30,10 @@ export const anuncioSchema = z
     (data) => {
       const { cache_acompanhante } = data;
       const n = Number(cache_acompanhante);
-      if (!n){
+      if (!n) {
         data.cache_acompanhante = null;
         return true;
-      };
+      }
       if (n < 500) return false;
       return true;
     },

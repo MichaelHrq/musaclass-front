@@ -1,6 +1,10 @@
 "use client";
 
+import { getAnuncioInfos } from "@/app/anunciante/[anuncio]/action";
+import Loading from "@/components/loading";
+import TabForm from "@/components/page/anuncios/editar/tab-form";
 import TabImagensAnuncio from "@/components/page/anuncios/editar/tab-imagens";
+import TabVideosAnuncio from "@/components/page/anuncios/editar/tab-videos";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -14,19 +18,36 @@ import {
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { getPostAnuncioInfosById } from "../../action";
+import {
+  getFormPostAnuncioById,
+  getImagesPostAnuncioById,
+  getVideosPostAnuncioById,
+} from "../../action";
 
 type tabType = "form" | "image" | "video";
 
 export default function EditarAnuncio() {
   const { id } = useParams();
-  const cidade = (useSearchParams()).get('cidade');
+  const cidade = useSearchParams().get("cidade");
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["edit-anuncio", id],
-    queryFn: () => getPostAnuncioInfosById(id as string),
-    // gcTime: 0,
-    // staleTime: 0,
+  const { data: dataForm, isLoading: loadingForm } = useQuery({
+    queryKey: ["edit-anuncio-form", id],
+    queryFn: () => getAnuncioInfos(id as string),
+  });
+
+  const { data: dataImagens, isLoading: loadingImagens } = useQuery({
+    queryKey: ["edit-anuncio-imagens", id],
+    queryFn: () => getImagesPostAnuncioById(id as string),
+  });
+
+  const { data: dataVideos, isLoading: loadingVideos } = useQuery({
+    queryKey: ["edit-anuncio-videos", id],
+    queryFn: () => getVideosPostAnuncioById(id as string),
+  });
+
+  const { data: dataFormDetails, isLoading: loadingFormDetails } = useQuery({
+    queryKey: ["edit-anuncio-form-details", id],
+    queryFn: () => getFormPostAnuncioById(id as string),
   });
 
   const [tab, setTab] = useState<tabType>("form");
@@ -36,8 +57,6 @@ export default function EditarAnuncio() {
     { id: "image", label: "Imagens", icon: ImageIcon },
     { id: "video", label: "Vídeos", icon: Video },
   ];
-
-  // console.log(data)
 
   return (
     <div className="container flex flex-col items-center">
@@ -62,15 +81,15 @@ export default function EditarAnuncio() {
               Editando Anúncio
             </span>
             <h3 className="font-bold text-base sm:text-xl text-white leading-tight truncate">
-              {isLoading
+              {loadingForm
                 ? "Carregando..."
-                : data?.form?.infos?.titulo || "Sem título"}
+                : dataForm?.infos?.titulo || "Sem título"}
             </h3>
           </div>
 
           <div>
             <Link
-              href={data?.form.infos.url || "#"}
+              href={dataForm?.infos?.url || "#"}
               target="_blank"
               className="group flex flex-col items-center justify-center gap-1 text-neutral-500 hover:text-white transition-colors min-w-[50px] sm:min-w-[60px]"
             >
@@ -93,7 +112,7 @@ export default function EditarAnuncio() {
               return (
                 <button
                   key={item.id}
-                  // disabled={isLoading}
+                  // disabled={loadingImagens}
                   onClick={() => setTab(item.id as tabType)}
                   className={cn(
                     "flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 rounded-lg sm:rounded-full font-medium transition-all duration-300 ease-out whitespace-nowrap",
@@ -114,37 +133,64 @@ export default function EditarAnuncio() {
           </div>
         </div>
 
-        <section key={tab} className="w-full animate-in fade-in duration-500">
-          {tab === "form" && (
-            <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
-              <FileText size={48} className="mx-auto mb-4 opacity-20" />
-              <p>Conteúdo do Formulário Aqui</p>
-            </div>
-          )}
+        {loadingImagens || loadingVideos || loadingFormDetails ? (
+          <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
+            <Loading className="mx-auto mb-4 opacity-20" />
+            <p>
+              Buscando{" "}
+              {tab === "form"
+                ? "formulário"
+                : tab === "image"
+                  ? "imagens"
+                  : "vídeos"}
+              ...
+            </p>
+          </div>
+        ) : (
+          <section key={tab} className="w-full animate-in fade-in duration-500">
+            {tab === "form" && (
+              <>
+                {dataFormDetails ? (
+                  <TabForm postId={id as string} form={dataFormDetails} />
+                ) : (
+                  <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
+                    <FileText size={48} className="mx-auto mb-4 opacity-20" />
+                    <p>Nenhum conteúdo do formulário disponível</p>
+                  </div>
+                )}
+              </>
+            )}
 
-          {tab === "image" && (
-            <>
-              {data?.imagens ? (
-                <TabImagensAnuncio
-                  postId={id as string}
-                  images={data.imagens}
-                />
-              ) : (
-                <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
-                  <Image size={48} className="mx-auto mb-4 opacity-20" />
-                  <p>Nehuma imagem encontrada</p>
-                </div>
-              )}
-            </>
-          )}
+            {tab === "image" && (
+              <>
+                {dataImagens ? (
+                  <TabImagensAnuncio
+                    postId={id as string}
+                    images={dataImagens}
+                  />
+                ) : (
+                  <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
+                    <Image size={48} className="mx-auto mb-4 opacity-20" />
+                    <p>Nehuma imagem encontrada</p>
+                  </div>
+                )}
+              </>
+            )}
 
-          {tab === "video" && (
-            <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
-              <Video size={48} className="mx-auto mb-4 opacity-20" />
-              <p>Conteúdo dos Vídeos Aqui</p>
-            </div>
-          )}
-        </section>
+            {tab === "video" && (
+              <>
+                {dataVideos ? (
+                  <TabVideosAnuncio postId={id as string} videos={dataVideos} />
+                ) : (
+                  <div className="w-full bg-[#1E1E1E] p-6 sm:p-10 rounded-xl border border-[#333] text-center text-neutral-500">
+                    <Video size={48} className="mx-auto mb-4 opacity-20" />
+                    <p>Nenhum vídeo encontrado</p>
+                  </div>
+                )}
+              </>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );
